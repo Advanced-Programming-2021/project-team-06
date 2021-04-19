@@ -1,5 +1,8 @@
+import controller.menus.RegisterMenu;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Empty Yo Gi Oh Project");
+
+        RegisterMenu.getInstance().register("mhdi","aliz");
     }
 }
