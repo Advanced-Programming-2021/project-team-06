@@ -1,7 +1,5 @@
 package view;
 
-import controller.Database;
-
 public class Output {
     private Output(){}
 

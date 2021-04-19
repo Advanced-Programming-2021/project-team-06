@@ -1,4 +1,4 @@
-package models.card;
+package models.cards;
 
 public class Trap {
 }

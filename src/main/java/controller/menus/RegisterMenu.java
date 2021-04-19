@@ -1,6 +1,7 @@
 package controller.menus;
 
-import controller.Database;
+import controller.FileWorker;
+import models.Database;
 import controller.ErrorChecker;
 import models.Player;
 import view.Output;
@@ -23,7 +24,7 @@ public class RegisterMenu {
     public void register(String username, String password) {
         String response;
         if (!ErrorChecker.isExistUsername(username)) {
-            Database.getInstance().writeUserJSON(new Player(username, password));
+            new Player(username, password);
             response = "register successfully!";
         } else response = "a user exists with this username";
 
@@ -31,10 +32,16 @@ public class RegisterMenu {
     }
 
     public void login(String username, String password) {
-        String response;
-        if (ErrorChecker.isExistUsername(username)) {
 
-            response = "login successfully!";
-        } else response = "no user exists with this username";
+        if (!ErrorChecker.isExistUsername(username)) {
+            Output.getInstance().showMessage("no user exists with this username");
+            return;
+        }
+        Player player = Database.getPlayerByUsername(username);
+        if (!ErrorChecker.isPasswordCorrect(player, password)) {
+            Output.getInstance().showMessage("password is wrong");
+            return;
+        }
+        MainMenu.getInstance(player);
     }
 }

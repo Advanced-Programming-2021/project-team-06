@@ -3,7 +3,6 @@ package models;
 import java.util.ArrayList;
 
 public class Player {
-    public static ArrayList<Player> allPlayers = new ArrayList<>();
 
     private String username;
     private String password;
@@ -21,7 +20,7 @@ public class Player {
         this.username = username;
         this.password = password;
         this.score = 0;
-        allPlayers.add(this);
+        Database.allPlayers.add(this);
     }
 
 

@@ -1,29 +1,30 @@
 package controller;
 
-import models.Player;
-
-import com.google.gson.*;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import models.Database;
+import models.Player;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class Database {
+public class FileWorker {
+
     private String usersDateBase = ".\\src\\main\\resources\\Database\\Users\\";
 
-
-    private Database() {
+    private FileWorker() {
     }
 
-    private static Database instance;
+    private static FileWorker instance;
 
-    public static Database getInstance() {
+    public static FileWorker getInstance() {
         if (instance == null)
-            instance = new Database();
+            instance = new FileWorker();
         return instance;
     }
+
 
     public Player readPlayerJSON(String username) {
         String fileAddress = usersDateBase + username + ".json";
@@ -44,7 +45,7 @@ public class Database {
 
     public void writeUserJSON(Player player) {
         String fileAddress = usersDateBase + player.getUsername() + ".json";
-        System.out.printf("1");
+
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         FileWriter writer;
@@ -53,7 +54,6 @@ public class Database {
             writer = new FileWriter(fileAddress);
             writer.write(gson.toJson(player));
             writer.close();
-            System.out.printf("");
         } catch (IOException e) {
             e.printStackTrace();
         }
