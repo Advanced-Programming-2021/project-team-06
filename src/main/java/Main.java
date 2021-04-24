@@ -1,6 +1,13 @@
+import models.Database;
+import view.ConsoleBasedMenus;
+
 public class Main {
+
+
+
     public static void main(String[] args) {
-        System.out.println("Empty Yo Gi Oh Project");
-        System.out.println("safa salam");
+        Database.getInstance().loadingDatabase();
+        ConsoleBasedMenus.getInstance().runRegisterMenu();
+        Database.getInstance().updatingDatabase();
     }
 }
