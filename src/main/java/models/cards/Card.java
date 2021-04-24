@@ -1,6 +1,5 @@
 package models.cards;
 
-import models.Database;
 
 public class Card {
     String Name;
