@@ -63,4 +63,13 @@ public class Player {
     public void setAllDeck(ArrayList<Deck> allDeck) {
         this.allDeck = allDeck;
     }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "username='" + username + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", score=" + score +
+                '}';
+    }
 }

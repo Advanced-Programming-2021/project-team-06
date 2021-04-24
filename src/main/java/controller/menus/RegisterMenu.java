@@ -37,7 +37,7 @@ public class RegisterMenu {
             Output.getInstance().showMessage("no user exists with this username");
             return;
         }
-        Player player = Database.getPlayerByUsername(username);
+        Player player = Database.getInstance().getPlayerByUsername(username);
         if (!ErrorChecker.isPasswordCorrect(player, password)) {
             Output.getInstance().showMessage("password is wrong");
             return;

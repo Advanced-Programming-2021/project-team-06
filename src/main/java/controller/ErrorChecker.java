@@ -6,7 +6,7 @@ import models.Player;
 public class ErrorChecker {
 
     public static boolean isExistUsername(String username) {
-        Player player = Database.getPlayerByUsername(username);
+        Player player = Database.getInstance().getPlayerByUsername(username);
         if (player == null) return false;
         return true;
     }

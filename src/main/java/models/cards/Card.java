@@ -3,19 +3,18 @@ package models.cards;
 import models.Database;
 
 public class Card {
-    String name;
+    String Name;
 
 
     public Card(String name){
-        this.name = name;
-        Database.allCards.add(this);
+        this.Name = name;
     }
 
     public String getName() {
-        return name;
+        return Name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.Name = name;
     }
 }

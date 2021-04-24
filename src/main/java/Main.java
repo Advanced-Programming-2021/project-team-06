@@ -1,8 +1,9 @@
 import controller.menus.RegisterMenu;
+import models.Database;
 
 public class Main {
     public static void main(String[] args) {
 
-        RegisterMenu.getInstance().register("mhdi","aliz");
+        Database.getInstance().loadSpells();
     }
 }

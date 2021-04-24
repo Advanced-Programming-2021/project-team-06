@@ -4,15 +4,20 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import models.Database;
 import models.Player;
+import models.cards.Card;
+import models.cards.Monster;
+import models.cards.Spell;
+import models.cards.Trap;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class FileWorker {
 
-    private String usersDateBase = ".\\src\\main\\resources\\Database\\Users\\";
+    private final String usersDateBase = ".\\src\\main\\resources\\Database\\Users\\";
+    private final String monsterDateBase = ".\\src\\main\\resources\\Database\\card-informations\\monsters";
+    private final String spellDateBase = ".\\src\\main\\resources\\Database\\card-informations\\spells";
+    private final String trapDateBase = ".\\src\\main\\resources\\Database\\card-informations\\traps";
+
 
     private FileWorker() {
     }
@@ -26,8 +31,8 @@ public class FileWorker {
     }
 
 
-    public Player readPlayerJSON(String username) {
-        String fileAddress = usersDateBase + username + ".json";
+    public Player readPlayerJSON(String fileAddress) {
+
         try (FileReader reader = new FileReader(fileAddress)) {
             GsonBuilder builder = new GsonBuilder();
             Gson gson = builder.create();
@@ -45,7 +50,6 @@ public class FileWorker {
 
     public void writeUserJSON(Player player) {
         String fileAddress = usersDateBase + player.getUsername() + ".json";
-
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         FileWriter writer;
@@ -56,6 +60,56 @@ public class FileWorker {
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+    }
+    public Monster readMonsterJSON(String fileAddress) {
+
+        try (FileReader reader = new FileReader(fileAddress)) {
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+
+            BufferedReader bufferedReader = new BufferedReader(reader);
+
+            Monster monster = gson.fromJson(bufferedReader, Monster.class);
+            return monster;
+
+        } catch (IOException e) {
+            return null;
+        }
+
+    }
+
+    public Spell readSpellJSON(String fileAddress) {
+
+        try (FileReader reader = new FileReader(fileAddress)) {
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+
+            BufferedReader bufferedReader = new BufferedReader(reader);
+
+            Spell spell = gson.fromJson(bufferedReader, Spell.class);
+            return spell;
+
+        } catch (IOException e) {
+            return null;
+        }
+
+    }
+
+    public Trap readTrapJSON(String fileAddress) {
+
+        try (FileReader reader = new FileReader(fileAddress)) {
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+
+            BufferedReader bufferedReader = new BufferedReader(reader);
+
+            Trap trap = gson.fromJson(bufferedReader, Trap.class);
+            return trap;
+
+        } catch (IOException e) {
+            return null;
         }
 
     }
