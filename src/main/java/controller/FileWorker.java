@@ -21,9 +21,7 @@ public class FileWorker {
 
     private FileWorker() {
     }
-
     private static FileWorker instance;
-
     public static FileWorker getInstance() {
         if (instance == null)
             instance = new FileWorker();

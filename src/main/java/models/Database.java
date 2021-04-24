@@ -26,9 +26,7 @@ public class Database {
 
     private Database() {
     }
-
     private static Database instance;
-
     public static Database getInstance() {
         if (instance == null)
             instance = new Database();
@@ -38,6 +36,15 @@ public class Database {
     public Player getPlayerByUsername(String username){
         for(Player player : allPlayers) {
             if (player.getUsername().equals(username))
+                return player;
+        }
+        return null;
+
+    }
+
+    public Player getPlayerByNickname(String nickname){
+        for(Player player : allPlayers) {
+            if (player.getNickname().equals(nickname))
                 return player;
         }
         return null;
@@ -117,6 +124,17 @@ public class Database {
         for (Player player : allPlayers)
             FileWorker.getInstance().writeUserJSON(player);
 
+    }
+
+    public void loadingDatabase(){
+        loadPlayers();
+        loadMonsters();
+        loadSpells();
+        loadTraps();
+    }
+
+    public void updatingDatabase(){
+        setPlayers();
     }
 
 

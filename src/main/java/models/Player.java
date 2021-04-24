@@ -8,6 +8,7 @@ public class Player {
     private String password;
     private String nickname;
     private int score;
+    private int rank;
     private int health;
     private ArrayList<Deck> allDeck = new ArrayList<>();
     private ArrayList<Deck> gameDecks = new ArrayList<>();
@@ -16,11 +17,13 @@ public class Player {
     private int roundsWon;
 
 
-    public Player(String username, String password){
+    public Player(String username, String nickname, String password) {
         this.username = username;
         this.password = password;
+        this.nickname = nickname;
         this.score = 0;
         Database.allPlayers.add(this);
+
     }
 
 
@@ -55,6 +58,10 @@ public class Player {
     public void setScore(int score) {
         this.score = score;
     }
+
+    public int getRank() { return rank; }
+
+    public void setRank(int rank) { this.rank = rank; }
 
     public ArrayList<Deck> getAllDeck() {
         return allDeck;

@@ -1,10 +1,9 @@
 package view;
 
 public class Output {
+
     private Output(){}
-
     private static Output instance;
-
     public static Output getInstance(){
         if(instance==null)
             instance = new Output();
@@ -12,7 +11,9 @@ public class Output {
     }
 
     public void showMessage(String message){
+
         System.out.println(message);
     }
+
 
 }

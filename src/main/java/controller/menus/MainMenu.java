@@ -1,22 +1,31 @@
 package controller.menus;
 
-import controller.FileWorker;
 import models.Player;
 
 public class MainMenu {
-    Player playerLoggedIn;
 
-    private MainMenu(Player playerLoggedIn) {
-        this.playerLoggedIn = playerLoggedIn;
+
+    private Player playerLoggedIn;
+
+    private MainMenu() {
     }
 
     private static MainMenu instance;
 
-    public static MainMenu getInstance(Player playerLoggedIn) {
+    public static MainMenu getInstance() {
         if (instance == null)
-            instance = new MainMenu(playerLoggedIn);
+            instance = new MainMenu();
         return instance;
     }
+
+    public Player getPlayerLoggedIn() {
+        return playerLoggedIn;
+    }
+
+    public void setPlayerLoggedIn(Player playerLoggedIn) {
+        this.playerLoggedIn = playerLoggedIn;
+    }
+
 
 
 }
