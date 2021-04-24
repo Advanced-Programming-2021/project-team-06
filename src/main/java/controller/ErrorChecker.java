@@ -21,6 +21,11 @@ public class ErrorChecker {
             return true;
         return false;
     }
+    public static boolean isEqualsOldPassWithNewPass(String oldPass, String newPass){
+        if(oldPass.equals(newPass))
+            return true;
+        return false;
+    }
     public static boolean isUserLoggedIn(){
         if(MainMenu.getInstance().getPlayerLoggedIn()==null)
             return false;
