@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a98af59e-312f-4a30-a47b-d4173e35fb25" name="Default Changelist" comment="add Profile Menu">
+    <list default="true" id="a98af59e-312f-4a30-a47b-d4173e35fb25" name="Default Changelist" comment="fix git">
       <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +61,7 @@
       <updated>1618840769838</updated>
       <workItem from="1618840775986" duration="11944000" />
       <workItem from="1619217518296" duration="25097000" />
-      <workItem from="1619353550670" duration="646000" />
+      <workItem from="1619353550670" duration="1176000" />
     </task>
     <task id="LOCAL-00001" summary="add register">
       <created>1618859654114</created>
@@ -113,7 +112,14 @@
       <option name="project" value="LOCAL" />
       <updated>1619270288393</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="fix git">
+      <created>1619354237824</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1619354237824</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -137,6 +143,7 @@
     <MESSAGE value="Complete the database" />
     <MESSAGE value="add Scoreboard and MainMenu and complete the RegisterMenu" />
     <MESSAGE value="add Profile Menu" />
-    <option name="LAST_COMMIT_MESSAGE" value="add Profile Menu" />
+    <MESSAGE value="fix git" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix git" />
   </component>
 </project>
