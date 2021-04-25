@@ -110,6 +110,10 @@ public class Player {
         this.allDeck = allDeck;
     }
 
+    public void deleteDeck(Deck deck){
+        allDeck.remove(deck);
+    }
+
     @Override
     public String toString() {
         return "Player{" +

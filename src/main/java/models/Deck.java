@@ -1,6 +1,7 @@
 package models;
 
 import models.cards.Card;
+import models.cards.Monster;
 
 import java.util.ArrayList;
 
@@ -35,6 +36,14 @@ public class Deck {
         return null;
     }
 
+    public ArrayList<Card> getCards() {
+        return cards;
+    }
+
+    public void setCards(ArrayList<Card> cards) {
+        this.cards = cards;
+    }
+
     public void setOwner(Player owner) {
         this.owner = owner;
     }
@@ -59,10 +68,6 @@ public class Deck {
         this.type = type;
     }
 
-    public void setCards(ArrayList<Card> cards) {
-        this.cards = cards;
-    }
-
     public void addCard(Card card) {
         cards.add(card);
     }
@@ -70,11 +75,13 @@ public class Deck {
     public void removeCard(Card card) {
         cards.remove(card);
     }
-//    public int getSumOfAttackPowers(){
-//        int sum = 0;
-//        for (Card card:cards) {
-//            sum +
-//
-//        }
-//    }
+
+   public int getSumOfAttackPowers() {
+        int sum = 0;
+        for (Card card : cards) {
+            Monster monster = (Monster)card;
+            sum += monster.getATTACK_POWER();
+        }
+        return sum;
+    }
 }
