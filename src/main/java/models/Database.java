@@ -80,7 +80,6 @@ public class Database {
 
     public void loadPlayers(){
         File file = new File(usersDateBase);
-        System.out.println(file.exists());
         File[] files = file.listFiles();
         for(File filePointer: files){
             allPlayers.add(FileWorker.getInstance().readPlayerJSON(filePointer.toString()));

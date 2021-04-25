@@ -18,6 +18,9 @@ public class Monster extends Card {
     String gettingRaidTimeActions;
 
 
+    private String condition;
+    private String action;
+    private String cancellation;
     public Monster(String name) {
         super(name);
     }
