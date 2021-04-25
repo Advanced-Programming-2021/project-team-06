@@ -23,7 +23,7 @@ public class ProfileController {
             Output.getInstance().showMessage("user with this nickname " + nickName + " is already exists");
             return;
         }
-        player.setNickname(nickName);
+        Player.setNickname(nickName);
         Output.getInstance().showMessage("nickname changed successfully!");
     }
 

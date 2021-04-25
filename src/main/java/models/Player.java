@@ -3,7 +3,7 @@ package models;
 import java.util.*;
 
 public class Player {
-    static Arraylist<Player> players;
+    static ArrayList<Player> players;
 
     static {
         players = new ArrayList<>();
@@ -71,6 +71,10 @@ public class Player {
 
     public void setRank(int rank) {
         this.rank = rank;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public void setActiveDeck(Deck activeDeck) {
