@@ -18,23 +18,25 @@ public class Database {
     public static ArrayList<Trap> allTraps = new ArrayList<>();
 
 
-    private final String usersDateBase = "./src/main/resources/Database/Users";
-    private final String monsterDateBase = "./src/main/resources/Database/card-informations/monsters";
-    private final String spellDateBase = "./src/main/resources/Database/card-informations/spells";
-    private final String trapDateBase = "./src/main/resources/Database/card-informations/traps";
+    private final String usersDateBase = "./src/main/resources/Database/Users/";
+    private final String monsterDateBase = "./src/main/resources/Database/card-informations/monsters/";
+    private final String spellDateBase = "./src/main/resources/Database/card-informations/spells/";
+    private final String trapDateBase = "./src/main/resources/Database/card-informations/traps/";
 
 
     private Database() {
     }
+
     private static Database instance;
+
     public static Database getInstance() {
         if (instance == null)
             instance = new Database();
         return instance;
     }
 
-    public Player getPlayerByUsername(String username){
-        for(Player player : allPlayers) {
+    public Player getPlayerByUsername(String username) {
+        for (Player player : allPlayers) {
             if (player.getUsername().equals(username))
                 return player;
         }
@@ -42,8 +44,8 @@ public class Database {
 
     }
 
-    public Player getPlayerByNickname(String nickname){
-        for(Player player : allPlayers) {
+    public Player getPlayerByNickname(String nickname) {
+        for (Player player : allPlayers) {
             if (player.getNickname().equals(nickname))
                 return player;
         }
@@ -51,8 +53,8 @@ public class Database {
 
     }
 
-    public Monster getMonsterByName(String name){
-        for(Monster monster : allMonsters) {
+    public Monster getMonsterByName(String name) {
+        for (Monster monster : allMonsters) {
             if (monster.getName().equals(name))
                 return monster;
         }
@@ -60,8 +62,8 @@ public class Database {
 
     }
 
-    public Spell getSpellByName(String name){
-        for(Spell spell : allSpells) {
+    public Spell getSpellByName(String name) {
+        for (Spell spell : allSpells) {
             if (spell.getName().equals(name))
                 return spell;
         }
@@ -69,8 +71,8 @@ public class Database {
 
     }
 
-    public Trap getTrapByName(String name){
-        for(Trap trap : allTraps) {
+    public Trap getTrapByName(String name) {
+        for (Trap trap : allTraps) {
             if (trap.getName().equals(name))
                 return trap;
         }
@@ -78,19 +80,19 @@ public class Database {
 
     }
 
-    public void loadPlayers(){
+    public void loadPlayers() {
         File file = new File(usersDateBase);
         File[] files = file.listFiles();
-        for(File filePointer: files){
+        for (File filePointer : files) {
             allPlayers.add(FileWorker.getInstance().readPlayerJSON(filePointer.toString()));
         }
 
     }
 
-    public void loadMonsters(){
+    public void loadMonsters() {
         File file = new File(monsterDateBase);
         File[] files = file.listFiles();
-        for(File filePointer: files){
+        for (File filePointer : files) {
             Monster monster = FileWorker.getInstance().readMonsterJSON(filePointer.toString());
             allMonsters.add(monster);
             allCards.add(monster);
@@ -98,10 +100,10 @@ public class Database {
 
     }
 
-    public void loadSpells(){
+    public void loadSpells() {
         File file = new File(spellDateBase);
         File[] files = file.listFiles();
-        for(File filePointer: files){
+        for (File filePointer : files) {
             Spell spell = FileWorker.getInstance().readSpellJSON(filePointer.toString());
             allSpells.add(spell);
             allCards.add(spell);
@@ -109,10 +111,10 @@ public class Database {
 
     }
 
-    public void loadTraps(){
+    public void loadTraps() {
         File file = new File(trapDateBase);
         File[] files = file.listFiles();
-        for(File filePointer: files){
+        for (File filePointer : files) {
             Trap trap = FileWorker.getInstance().readTrapJSON(filePointer.toString());
             allTraps.add(trap);
             allCards.add(trap);
@@ -120,20 +122,20 @@ public class Database {
 
     }
 
-    public void setPlayers(){
+    public void setPlayers() {
         for (Player player : allPlayers)
             FileWorker.getInstance().writeUserJSON(player);
 
     }
 
-    public void loadingDatabase(){
+    public void loadingDatabase() {
         loadPlayers();
         loadMonsters();
         loadSpells();
         loadTraps();
     }
 
-    public void updatingDatabase(){
+    public void updatingDatabase() {
         setPlayers();
     }
 

@@ -3,12 +3,6 @@ package models;
 import java.util.*;
 
 public class Player {
-    static ArrayList<Player> players;
-
-    static {
-        players = new ArrayList<>();
-    }
-
     private String username;
     private String password;
     private String nickname;
@@ -28,14 +22,13 @@ public class Player {
         this.score = 0;
         this.health = 5000;
         this.roundsWon = 0;
-        players.add(this);
         Database.allPlayers.add(this);
     }
 
     public static Player getUsernameByPlayer(String username) {
-        for (Player playeruser : players) {
-            if (username.equals(playeruser.getUsername())) {
-                return playeruser;
+        for (Player playerUser : Database.allPlayers) {
+            if (username.equals(playerUser.getUsername())) {
+                return playerUser;
             }
         }
         return null;
@@ -110,7 +103,7 @@ public class Player {
         this.allDeck = allDeck;
     }
 
-    public void deleteDeck(Deck deck){
+    public void deleteDeck(Deck deck) {
         allDeck.remove(deck);
     }
 

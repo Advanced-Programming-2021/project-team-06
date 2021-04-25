@@ -1,12 +1,12 @@
 package models.cards;
 
 
+import models.Database;
 import models.Deck;
 
 import java.util.ArrayList;
 
 public class Card {
-    private static Deck ALL_CARDS_TEMPLATES;
     String name;
     private String overriddenName;
     private CardType type;
@@ -18,25 +18,10 @@ public class Card {
 
     public Card(String name) {
         this.name = name;
-        ALL_CARDS_TEMPLATES.addCard(this);
         setType(this.type);
-        setDESCRIPTION(this.DESCRIPTION);
         setCurrentDeck(this.currentDeck);
         setEffectedCards(this.effectedCards);
         setPossiblePlays(this.possiblePlays);
-    }
-
-    public static void setAllCardsTemplates(Deck allCardsTemplates) {
-        ALL_CARDS_TEMPLATES = allCardsTemplates;
-    }
-
-    public static Card getCardByName(String cardName) {
-        for (Card card : ALL_CARDS_TEMPLATES.getCards()) {
-            if (card.getName().equals(cardName)) {
-                return card;
-            }
-        }
-        return null;
     }
 
     public String getName() {
@@ -66,11 +51,12 @@ public class Card {
     public void setDESCRIPTION(String DESCRIPTION) {
         this.DESCRIPTION = DESCRIPTION;
     }
-    public void goTo(Deck deck){
+
+    public void goTo(Deck deck) {
         setCurrentDeck(deck);
     }
 
-    public Boolean is(CardType type){
+    public Boolean is(CardType type) {
         return type == this.type;
     }
 }

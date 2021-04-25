@@ -4,19 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a98af59e-312f-4a30-a47b-d4173e35fb25" name="Default Changelist" comment="set DeckType">
-      <change afterPath="$PROJECT_DIR$/src/main/java/models/cards/CardPlacement.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/models/cards/CardType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/models/cards/MonsterAttribute.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/models/cards/MonsterType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/models/cards/PlayType.java" afterDir="false" />
+    <list default="true" id="a98af59e-312f-4a30-a47b-d4173e35fb25" name="Default Changelist" comment="fix git">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/models/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Deck.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/models/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Database.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/models/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/models/cards/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/cards/Card.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/models/cards/Monster.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/cards/Monster.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/models/cards/Spell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/cards/Spell.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/models/cards/Trap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/cards/Trap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/models/Database.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/models/Database.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/models/Deck.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/models/Deck.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/models/Player.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/models/Player.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,6 +31,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitSEFilterConfiguration">
     <file-type-list>
@@ -63,17 +62,6 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="YuGiOh" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
