@@ -1,19 +1,20 @@
 package models.cards;
 
-
 public class Card {
-    String Name;
+    String name;
+    int price;
+    String description;
 
 
     public Card(String name){
-        this.Name = name;
+        this.name = name;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        this.Name = name;
+        this.name = name;
     }
 }

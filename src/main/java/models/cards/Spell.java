@@ -9,7 +9,7 @@ public class Spell extends Card{
     @Override
     public String toString() {
         return "Spell{" +
-                "Name='" + Name + '\'' +
+                "Name='" + name + '\'' +
                 '}';
     }
 }

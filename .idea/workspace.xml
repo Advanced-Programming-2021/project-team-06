@@ -5,11 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a98af59e-312f-4a30-a47b-d4173e35fb25" name="Default Changelist" comment="set DeckType">
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/project-team-06.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/project-team-06.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/models/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Database.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/models/Database.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/models/Database.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/models/cards/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/cards/Card.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/models/cards/Monster.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/cards/Monster.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/models/cards/Spell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/cards/Spell.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +85,7 @@
       <workItem from="1618840775986" duration="11944000" />
       <workItem from="1619217518296" duration="25097000" />
       <workItem from="1619353550670" duration="1176000" />
-      <workItem from="1619365270520" duration="378000" />
+      <workItem from="1619365270520" duration="1800000" />
     </task>
     <task id="LOCAL-00001" summary="add register">
       <created>1618859654114</created>
