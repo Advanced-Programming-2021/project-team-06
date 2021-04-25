@@ -53,6 +53,15 @@ public class Player {
         return this.username;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+
     public void setUsername(String username) {
         this.username = username;
     }
