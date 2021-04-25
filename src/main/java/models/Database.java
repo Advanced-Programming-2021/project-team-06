@@ -18,10 +18,10 @@ public class Database {
     public static ArrayList<Trap> allTraps = new ArrayList<>();
 
 
-    private final String usersDateBase = ".\\src\\main\\resources\\Database\\Users\\";
-    private final String monsterDateBase = ".\\src\\main\\resources\\Database\\card-informations\\monsters";
-    private final String spellDateBase = ".\\src\\main\\resources\\Database\\card-informations\\spells";
-    private final String trapDateBase = ".\\src\\main\\resources\\Database\\card-informations\\traps";
+    private final String usersDateBase = "./src/main/resources/Database/Users";
+    private final String monsterDateBase = "./src/main/resources/Database/card-informations/monsters";
+    private final String spellDateBase = "./src/main/resources/Database/card-informations/spells";
+    private final String trapDateBase = "./src/main/resources/Database/card-informations/traps";
 
 
     private Database() {
@@ -80,6 +80,7 @@ public class Database {
 
     public void loadPlayers(){
         File file = new File(usersDateBase);
+        System.out.println(file.exists());
         File[] files = file.listFiles();
         for(File filePointer: files){
             allPlayers.add(FileWorker.getInstance().readPlayerJSON(filePointer.toString()));
