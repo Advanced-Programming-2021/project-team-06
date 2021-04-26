@@ -175,28 +175,28 @@ public class ConsoleBasedMenus {
         while (true) {
             command = scanner.nextLine().replaceAll("\\s+", " ");
 
-            commandMatcher = findMatcher(command, MAIN_MENUS_REGEXES[0]);
+            commandMatcher = findMatcher(command, PROFILE_MENUS_REGEXES[0]);
             if(commandMatcher.find()){
                 ProfileController.getInstance().changeNickname(playerLoggedIn,commandMatcher.group("nickname"));
                 isMatchCommand = true;
             }
-            commandMatcher = findMatcher(command, MAIN_MENUS_REGEXES[1]);
+            commandMatcher = findMatcher(command, PROFILE_MENUS_REGEXES[1]);
             if(commandMatcher.find()){
                 String oldPass = commandMatcher.group("oldPass");
                 String newPass = commandMatcher.group("newPass");
                 ProfileController.getInstance().changePassword(playerLoggedIn,oldPass, newPass);
                 isMatchCommand = true;
             }
-            commandMatcher = findMatcher(command, MAIN_MENUS_REGEXES[2]);
+            commandMatcher = findMatcher(command, PROFILE_MENUS_REGEXES[2]);
             if(commandMatcher.find()){
                 String oldPass = commandMatcher.group("oldPass");
                 String newPass = commandMatcher.group("newPass");
                 ProfileController.getInstance().changePassword(playerLoggedIn,oldPass, newPass);
                 isMatchCommand = true;
             }
-            commandMatcher = findMatcher(command, MAIN_MENUS_REGEXES[3]);
+            commandMatcher = findMatcher(command, PROFILE_MENUS_REGEXES[3]);
             if(commandMatcher.find()) Output.getInstance().showMessage("Profile Menu");
-            commandMatcher = findMatcher(command, MAIN_MENUS_REGEXES[4]);
+            commandMatcher = findMatcher(command, PROFILE_MENUS_REGEXES[4]);
             if (commandMatcher.find()) return;
             if (!isMatchCommand) Output.getInstance().showMessage("invalid command");
         }
