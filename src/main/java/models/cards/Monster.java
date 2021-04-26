@@ -1,13 +1,11 @@
 package models.cards;
 
-import javax.lang.model.element.Name;
-
 public class Monster extends Card {
-    int ATTACK_POWER;
+    int attackPower;
     int additionalAttackPower;
-    int DEFENCE_POWER;
+    int defencePower;
     int additionalDefencePower;
-    MonsterType TYPE;
+    MonsterType monsterType;
     MonsterAttribute monsterAttribute;
     int LEVEL;
     CardPlacement cardPlacement;
@@ -34,12 +32,12 @@ public class Monster extends Card {
         this.additionalDefencePower = additionalDefencePower;
     }
 
-    public int getATTACK_POWER() {
-        return ATTACK_POWER;
+    public int getAttackPower() {
+        return attackPower;
     }
 
-    public int getDEFENCE_POWER() {
-        return DEFENCE_POWER;
+    public int getDefencePower() {
+        return defencePower;
     }
 
     public int getLEVEL() {

@@ -80,7 +80,7 @@ public class Deck {
         int sum = 0;
         for (Card card : cards) {
             Monster monster = (Monster)card;
-            sum += monster.getATTACK_POWER();
+            sum += monster.getAttackPower();
         }
         return sum;
     }

@@ -21,7 +21,7 @@ public class ConsoleBasedMenus {
         REGISTER_MENUS_REGEXES[1] = "^user create (--username|-u) (?<username>\\w+) (--password|-p) (?<password>\\w+) (--nickname|-n) (?<nickname>\\w+)$";
         REGISTER_MENUS_REGEXES[2] = "^user login (--username|-u) (?<username>\\w+) (--password|-p) (?<password>\\w+)$";
         REGISTER_MENUS_REGEXES[3] = "^user login (--password|-p) (?<password>\\w+) (--username|-u) (?<username>\\w+)$";
-        REGISTER_MENUS_REGEXES[4] = "^menu enter (Duel|Deck|Scoreboard|Profile|Shop)$";
+        REGISTER_MENUS_REGEXES[4] = "^menu enter (Main|Duel|Deck|Scoreboard|Profile|Shop)$";
         REGISTER_MENUS_REGEXES[5] = "^menu show-current$";
         REGISTER_MENUS_REGEXES[6] = "^menu exit$";
     }
@@ -60,6 +60,7 @@ public class ConsoleBasedMenus {
         Matcher commandMatcher;
         String command;
         while (true) {
+            isMatchCommand = false;
             command = scanner.nextLine().replaceAll("\\s+", " ");
 
             commandMatcher = findMatcher(command, REGISTER_MENUS_REGEXES[0]);

@@ -6,8 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class Main {
 
-    public static void main(String[] args) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        ActionJsonParser.getInstance().doActionList("say hello;say hello");
+    public static void main(String[] args) {
         Database.getInstance().loadingDatabase();
         ConsoleBasedMenus.getInstance().runRegisterMenu();
         Database.getInstance().updatingDatabase();

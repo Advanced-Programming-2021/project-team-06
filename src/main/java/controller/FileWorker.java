@@ -13,10 +13,10 @@ import java.io.*;
 
 public class FileWorker {
 
-    private final String usersDateBase = ".\\src\\main\\resources\\Database\\Users\\";
-    private final String monsterDateBase = ".\\src\\main\\resources\\Database\\card-informations\\monsters";
-    private final String spellDateBase = ".\\src\\main\\resources\\Database\\card-informations\\spells";
-    private final String trapDateBase = ".\\src\\main\\resources\\Database\\card-informations\\traps";
+    private final String usersDateBase = "./src/main/resources/Database/Users/";
+    private final String monsterDateBase = "./src/main/resources/Database/card-informations/monsters";
+    private final String spellDateBase = "./src/main/resources/Database/card-informations/spells";
+    private final String trapDateBase = "./src/main/resources/Database/card-informations/traps";
 
 
     private FileWorker() {
