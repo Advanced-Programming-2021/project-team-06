@@ -45,6 +45,8 @@ public class RegisterMenuController {
             Output.getInstance().showMessage("username and password didn't match!");
             return;
         }
+
         MainMenu.getInstance().setPlayerLoggedIn(player);
+        Output.getInstance().showMessage("user loggedIn successfully!");
     }
 }

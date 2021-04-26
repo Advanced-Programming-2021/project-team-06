@@ -26,21 +26,21 @@ public class ConsoleBasedMenus {
         REGISTER_MENUS_REGEXES[6] = "^menu exit$";
     }
 
-    private String[] Main_MENUS_REGEXES = new String[4];
+    private String[] MAIN_MENUS_REGEXES = new String[4];
     {
-        Main_MENUS_REGEXES[0] = "^menu enter (?<name>Duel|Deck|Scoreboard|Profile|Shop)$";
-        Main_MENUS_REGEXES[1] = "^user logout$";
-        Main_MENUS_REGEXES[2] = "^menu show-current$";
-        Main_MENUS_REGEXES[3] = "^menu exit$";
+        MAIN_MENUS_REGEXES[0] = "^menu enter (?<name>Duel|Deck|Scoreboard|Profile|Shop)$";
+        MAIN_MENUS_REGEXES[1] = "^user logout$";
+        MAIN_MENUS_REGEXES[2] = "^menu show-current$";
+        MAIN_MENUS_REGEXES[3] = "^menu exit$";
     }
 
-    private String[] Profile_MENUS_REGEXES = new String[5];
+    private String[] PROFILE_MENUS_REGEXES = new String[5];
     {
-        Profile_MENUS_REGEXES[0] = "^profile change (--nickname|-n) (?<nickname>\\w+)$";
-        Profile_MENUS_REGEXES[1] = "^profile change (--password|-p) --current (?<oldPass>\\w+) --new (?<newPass>\\w+)$";
-        Profile_MENUS_REGEXES[2] = "^profile change (--password|-p) --new (?<newPass>\\w+) --current (?<oldPass>\\w+)$";
-        Profile_MENUS_REGEXES[3] = "^menu show-current$";
-        Profile_MENUS_REGEXES[4] = "^menu exit$";
+        PROFILE_MENUS_REGEXES[0] = "^profile change (--nickname|-n) (?<nickname>\\w+)$";
+        PROFILE_MENUS_REGEXES[1] = "^profile change (--password|-p) --current (?<oldPass>\\w+) --new (?<newPass>\\w+)$";
+        PROFILE_MENUS_REGEXES[2] = "^profile change (--password|-p) --new (?<newPass>\\w+) --current (?<oldPass>\\w+)$";
+        PROFILE_MENUS_REGEXES[3] = "^menu show-current$";
+        PROFILE_MENUS_REGEXES[4] = "^menu exit$";
     }
 
     private ConsoleBasedMenus() {
@@ -113,7 +113,7 @@ public class ConsoleBasedMenus {
         while (true) {
             command = scanner.nextLine().replaceAll("\\s+", " ");
 
-            commandMatcher = findMatcher(command, Main_MENUS_REGEXES[0]);
+            commandMatcher = findMatcher(command, MAIN_MENUS_REGEXES[0]);
             if (commandMatcher.find()) {
                 String menuName = commandMatcher.group("name");
                 if (menuName.equals("Duel")) runDuelMenu();
@@ -123,14 +123,14 @@ public class ConsoleBasedMenus {
                 if (menuName.equals("Shop")) runShopping();
                 isMatchCommand = true;
             }
-            commandMatcher = findMatcher(command, REGISTER_MENUS_REGEXES[2]);
+            commandMatcher = findMatcher(command, MAIN_MENUS_REGEXES[2]);
             if (commandMatcher.find()){
                 Output.getInstance().showMessage("Main Menu");
                 isMatchCommand = true;
             }
-            commandMatcher = findMatcher(command, Main_MENUS_REGEXES[1]);
+            commandMatcher = findMatcher(command, MAIN_MENUS_REGEXES[1]);
             if (commandMatcher.find()) return;
-            commandMatcher = findMatcher(command, Main_MENUS_REGEXES[3]);
+            commandMatcher = findMatcher(command, MAIN_MENUS_REGEXES[3]);
             if (commandMatcher.find()) return;
             if (!isMatchCommand) Output.getInstance().showMessage("invalid command");
         }
@@ -175,28 +175,28 @@ public class ConsoleBasedMenus {
         while (true) {
             command = scanner.nextLine().replaceAll("\\s+", " ");
 
-            commandMatcher = findMatcher(command, Main_MENUS_REGEXES[0]);
+            commandMatcher = findMatcher(command, MAIN_MENUS_REGEXES[0]);
             if(commandMatcher.find()){
                 ProfileController.getInstance().changeNickname(playerLoggedIn,commandMatcher.group("nickname"));
                 isMatchCommand = true;
             }
-            commandMatcher = findMatcher(command, Main_MENUS_REGEXES[1]);
+            commandMatcher = findMatcher(command, MAIN_MENUS_REGEXES[1]);
             if(commandMatcher.find()){
                 String oldPass = commandMatcher.group("oldPass");
                 String newPass = commandMatcher.group("newPass");
                 ProfileController.getInstance().changePassword(playerLoggedIn,oldPass, newPass);
                 isMatchCommand = true;
             }
-            commandMatcher = findMatcher(command, Main_MENUS_REGEXES[2]);
+            commandMatcher = findMatcher(command, MAIN_MENUS_REGEXES[2]);
             if(commandMatcher.find()){
                 String oldPass = commandMatcher.group("oldPass");
                 String newPass = commandMatcher.group("newPass");
                 ProfileController.getInstance().changePassword(playerLoggedIn,oldPass, newPass);
                 isMatchCommand = true;
             }
-            commandMatcher = findMatcher(command, Main_MENUS_REGEXES[3]);
+            commandMatcher = findMatcher(command, MAIN_MENUS_REGEXES[3]);
             if(commandMatcher.find()) Output.getInstance().showMessage("Profile Menu");
-            commandMatcher = findMatcher(command, Main_MENUS_REGEXES[4]);
+            commandMatcher = findMatcher(command, MAIN_MENUS_REGEXES[4]);
             if (commandMatcher.find()) return;
             if (!isMatchCommand) Output.getInstance().showMessage("invalid command");
         }
