@@ -43,6 +43,12 @@ public class ConsoleBasedMenus {
             "^menu show-current$",
             "^menu exit$"
     };
+    private final String[] deckMenuRegexes = {
+            "^deck create (?<name>\\w+)$",
+            "^deck delete (?<name>\\w+)$",
+            "^deck set-activate (?<name>\\w+)$",
+            "^$"
+    };
 
     private ConsoleBasedMenus() {
     }

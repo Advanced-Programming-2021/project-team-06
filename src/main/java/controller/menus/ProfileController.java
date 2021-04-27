@@ -1,7 +1,6 @@
 package controller.menus;
 
 import controller.ErrorChecker;
-import models.Database;
 import models.Player;
 import view.Output;
 
@@ -19,7 +18,7 @@ public class ProfileController {
     }
 
     public void changeNickname(Player player, String nickName){
-        if(ErrorChecker.isExistNickname(nickName)){
+        if(ErrorChecker.doesNicknameExist(nickName)){
             Output.getInstance().showMessage("user with this nickname " + nickName + " is already exists");
             return;
         }
@@ -32,7 +31,7 @@ public class ProfileController {
             Output.getInstance().showMessage("current password is invalid");
             return;
         }
-        if(ErrorChecker.isEqualsOldPassWithNewPass(oldPassword,newPassword)){
+        if(ErrorChecker.doesOldPassEqualsNewPass(oldPassword,newPassword)){
             Output.getInstance().showMessage("please enter a new password");
             return;
         }

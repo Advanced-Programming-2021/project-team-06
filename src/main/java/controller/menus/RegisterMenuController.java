@@ -21,11 +21,11 @@ public class RegisterMenuController {
     }
 
     public void createUser(String username, String nickname, String password) {
-        if (ErrorChecker.isExistUsername(username)) {
+        if (ErrorChecker.doesUsernameExist(username)) {
             Output.getInstance().showMessage("user with username " + username + " already exists");
             return;
         }
-        if (ErrorChecker.isExistNickname(nickname)){
+        if (ErrorChecker.doesNicknameExist(nickname)){
             Output.getInstance().showMessage("user with nickname " + nickname + " already exists");
             return;
         }
@@ -36,7 +36,7 @@ public class RegisterMenuController {
 
     public void login(String username, String password) {
 
-        if (!ErrorChecker.isExistUsername(username)) {
+        if (!ErrorChecker.doesUsernameExist(username)) {
             Output.getInstance().showMessage("username and password didn't match!");
             return;
         }

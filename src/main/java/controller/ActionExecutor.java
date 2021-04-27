@@ -31,9 +31,9 @@ public class ActionExecutor {
     }
 
     private void getCardsFromTheirDeck(ArrayList<Deck> decks , String ofClass) {
-        ArrayList<Card> cards = collectedDeck.getCards();
+        ArrayList<Card> cards = collectedDeck.getMainCards();
         for (Deck deck : decks)
-           cards.addAll(deck.getCards());
+           cards.addAll(deck.getMainCards());
         switch (ofClass) {
             case "Any":
                 return;
