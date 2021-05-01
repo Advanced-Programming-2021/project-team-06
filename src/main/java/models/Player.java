@@ -14,6 +14,7 @@ public class Player {
     private Deck activeDeck;
     private Deck sideDeck;
     private int roundsWon;
+    private int money;
 
     public Player(String username, String nickname, String password) {
         this.username = username;
@@ -22,6 +23,7 @@ public class Player {
         this.score = 0;
         this.health = 5000;
         this.roundsWon = 0;
+        this.money = 0;
         Database.allPlayers.add(this);
     }
 

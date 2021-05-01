@@ -14,9 +14,19 @@ public class Card {
     private Deck currentDeck;
     private ArrayList<PlayType> possiblePlays = new ArrayList<>();
     private Deck effectedCards;
+    private int price;
 
     public Card(String name) {
         this.name = name;
+        setPrice(this.price);
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public String getName() {

@@ -1,8 +1,7 @@
 package models;
 
 public enum DeckType {
-    maindeck,
-    sidedeck,
+    regulardeck,
     inactivedeck,
     graveyarddeck,
     selectedcarddeck

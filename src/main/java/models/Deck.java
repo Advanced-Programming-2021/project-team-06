@@ -13,6 +13,7 @@ public class Deck {
     }
 
     public ArrayList<Card> mainCards;
+    public ArrayList<Card> sideCards;
     Player owner;
     String name;
     DeckType type;
@@ -22,7 +23,6 @@ public class Deck {
     public Deck(String name) {
         setName(name);
         setActivation(false);
-        setMainCards(this.mainCards);
         setType(this.type);
         setValid(false);
     }
@@ -42,6 +42,14 @@ public class Deck {
 
     public void setMainCards(ArrayList<Card> mainCards) {
         this.mainCards = mainCards;
+    }
+
+    public ArrayList<Card> getSideCards() {
+        return sideCards;
+    }
+
+    public void setSideCards(ArrayList<Card> sideCards) {
+        this.sideCards = sideCards;
     }
 
     public void setOwner(Player owner) {
@@ -76,10 +84,10 @@ public class Deck {
         mainCards.remove(card);
     }
 
-   public int getSumOfAttackPowers() {
+    public int getSumOfAttackPowers() {
         int sum = 0;
         for (Card card : mainCards) {
-            Monster monster = (Monster)card;
+            Monster monster = (Monster) card;
             sum += monster.getAttackPower();
         }
         return sum;

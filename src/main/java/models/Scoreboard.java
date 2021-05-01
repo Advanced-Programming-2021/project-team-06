@@ -19,13 +19,13 @@ public class Scoreboard {
 
     public void showScoreboard(){
         int counter = 1;
-        String output = "";
+        StringBuilder output = new StringBuilder();
         ArrayList<Player> allUsers = Database.allPlayers;
         sortScoreboard(allUsers);
         for (Player player : allUsers)
-            output += counter + "-" + player.getNickname() + ": " + player.getScore()+"\n";
+            output.append(counter).append("-").append(player.getNickname()).append(": ").append(player.getScore()).append("\n");
 
-        Output.getInstance().showMessage(output);
+        Output.getInstance().showMessage(output.toString());
     }
 
     public void sortScoreboard(ArrayList<Player> allUsers){
