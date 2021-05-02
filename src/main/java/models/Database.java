@@ -17,12 +17,13 @@ public class Database {
     public static ArrayList<Monster> allMonsters = new ArrayList<>();
     public static ArrayList<Spell> allSpells = new ArrayList<>();
     public static ArrayList<Trap> allTraps = new ArrayList<>();
-
+    public static ArrayList<Deck> allDecks = new ArrayList<>();
 
     private final String usersDateBase = "./src/main/resources/Database/Users/";
-    private final String monsterDateBase = "./src/main/resources/Database/card-informations/monsters/";
-    private final String spellDateBase = "./src/main/resources/Database/card-informations/spells/";
-    private final String trapDateBase = "./src/main/resources/Database/card-informations/traps/";
+    private final String monsterDateBase = "./src/main/resources/Database/card-information/monsters/";
+    private final String spellDateBase = "./src/main/resources/Database/card-information/spells/";
+    private final String trapDateBase = "./src/main/resources/Database/card-information/traps/";
+    private final String deckDateBase = "./src/main/resources/Database/card-information/decks/";
 
 
     private Database() {
@@ -58,6 +59,15 @@ public class Database {
         for (Card card : allCards) {
             if (card.getName().equals(name))
                 return card;
+        }
+        return null;
+
+    }
+
+    public Deck getDeckByName(String name) {
+        for (Deck deck : allDecks) {
+            if (deck.getName().equals(name))
+                return deck;
         }
         return null;
 
@@ -121,6 +131,16 @@ public class Database {
 
     }
 
+    public void loadDecks() {
+        File file = new File(deckDateBase);
+        File[] files = file.listFiles();
+        for (File filePointer : files) {
+            Deck deck = FileWorker.getInstance().readDeckJSON(filePointer.toString());
+            allDecks.add(deck);
+        }
+
+    }
+
     public void loadTraps() {
         File file = new File(trapDateBase);
         File[] files = file.listFiles();
@@ -138,6 +158,11 @@ public class Database {
 
     }
 
+    public void setDecks() {
+        for (Deck deck : allDecks)
+            FileWorker.getInstance().writeDeckJSON(deck);
+    }
+
     public void loadingDatabase() {
         loadPlayers();
         loadMonsters();
@@ -148,6 +173,7 @@ public class Database {
 
     public void updatingDatabase() {
         setPlayers();
+        setDecks();
     }
 
 }

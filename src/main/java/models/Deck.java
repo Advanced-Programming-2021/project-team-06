@@ -21,10 +21,8 @@ public class Deck {
     Boolean IsValid;
 
     public Deck(String name) {
-        setName(name);
-        setActivation(false);
-        setType(this.type);
-        setValid(false);
+        this.name = name;
+
     }
 
     public static Deck getDeckByName(String name) {

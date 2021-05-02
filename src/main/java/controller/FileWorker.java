@@ -2,9 +2,8 @@ package controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import models.Database;
+import models.Deck;
 import models.Player;
-import models.cards.Card;
 import models.cards.Monster;
 import models.cards.Spell;
 import models.cards.Trap;
@@ -14,9 +13,9 @@ import java.io.*;
 public class FileWorker {
 
     private final String usersDateBase = "./src/main/resources/Database/Users/";
-    private final String monsterDateBase = "./src/main/resources/Database/card-informations/monsters";
-    private final String spellDateBase = "./src/main/resources/Database/card-informations/spells";
-    private final String trapDateBase = "./src/main/resources/Database/card-informations/traps";
+    private final String monsterDateBase = "./src/main/resources/Database/card-information/monsters";
+    private final String spellDateBase = "./src/main/resources/Database/card-information/spells";
+    private final String trapDateBase = "./src/main/resources/Database/card-information/traps";
 
 
     private FileWorker() {
@@ -39,8 +38,7 @@ public class FileWorker {
 
             BufferedReader bufferedReader = new BufferedReader(reader);
 
-            Player player = gson.fromJson(bufferedReader, Player.class);
-            return player;
+            return gson.fromJson(bufferedReader, Player.class);
 
         } catch (IOException e) {
             return null;
@@ -50,18 +48,28 @@ public class FileWorker {
 
     public void writeUserJSON(Player player) {
         String fileAddress = usersDateBase + player.getUsername() + ".json";
+        writeFileTo(fileAddress, player);
+
+    }
+
+    public void writeDeckJSON(Deck deck) {
+        String fileAddress = usersDateBase + deck.getName() + ".json";
+        writeFileTo(fileAddress, deck);
+
+    }
+
+    private void writeFileTo(String fileAddress, Object objectToWrite) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         FileWriter writer;
 
         try {
             writer = new FileWriter(fileAddress);
-            writer.write(gson.toJson(player));
+            writer.write(gson.toJson(objectToWrite));
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public Monster readMonsterJSON(String fileAddress) {
@@ -72,8 +80,7 @@ public class FileWorker {
 
             BufferedReader bufferedReader = new BufferedReader(reader);
 
-            Monster monster = gson.fromJson(bufferedReader, Monster.class);
-            return monster;
+            return gson.fromJson(bufferedReader, Monster.class);
 
         } catch (IOException e) {
             return null;
@@ -89,8 +96,7 @@ public class FileWorker {
 
             BufferedReader bufferedReader = new BufferedReader(reader);
 
-            Spell spell = gson.fromJson(bufferedReader, Spell.class);
-            return spell;
+            return gson.fromJson(bufferedReader, Spell.class);
 
         } catch (IOException e) {
             return null;
@@ -106,8 +112,23 @@ public class FileWorker {
 
             BufferedReader bufferedReader = new BufferedReader(reader);
 
-            Trap trap = gson.fromJson(bufferedReader, Trap.class);
-            return trap;
+            return gson.fromJson(bufferedReader, Trap.class);
+
+        } catch (IOException e) {
+            return null;
+        }
+
+    }
+
+    public Deck readDeckJSON(String fileAddress) {
+
+        try (FileReader reader = new FileReader(fileAddress)) {
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+
+            BufferedReader bufferedReader = new BufferedReader(reader);
+
+            return gson.fromJson(bufferedReader, Deck.class);
 
         } catch (IOException e) {
             return null;
