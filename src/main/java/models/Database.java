@@ -8,7 +8,6 @@ import models.cards.Trap;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class Database {
 
@@ -23,7 +22,7 @@ public class Database {
     private final String monsterDateBase = "./src/main/resources/Database/card-information/monsters/";
     private final String spellDateBase = "./src/main/resources/Database/card-information/spells/";
     private final String trapDateBase = "./src/main/resources/Database/card-information/traps/";
-    private final String deckDateBase = "./src/main/resources/Database/card-information/decks/";
+    private final String decksDateBase = "./src/main/resources/Database/Decks/";
 
 
     private Database() {
@@ -35,6 +34,10 @@ public class Database {
         if (instance == null)
             instance = new Database();
         return instance;
+    }
+
+    public static void removeDeck(String name) {
+        allDecks.removeIf(deck -> deck.getName().equals(name));
     }
 
     public Player getPlayerByUsername(String username) {
@@ -132,7 +135,7 @@ public class Database {
     }
 
     public void loadDecks() {
-        File file = new File(deckDateBase);
+        File file = new File(decksDateBase);
         File[] files = file.listFiles();
         for (File filePointer : files) {
             Deck deck = FileWorker.getInstance().readDeckJSON(filePointer.toString());
@@ -168,6 +171,7 @@ public class Database {
         loadMonsters();
         loadSpells();
         loadTraps();
+        loadDecks();
 
     }
 

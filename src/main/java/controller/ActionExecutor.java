@@ -26,13 +26,13 @@ public class ActionExecutor {
         neededInformation = matcher;
     }
 
-    private void collectCards() {
+   /* private void collectCards() {
         ArrayList<Deck> deckList = ActionJsonParser.getInstance().getDecksByTheirName(neededInformation.group("deckList").split(","));
         getCardsFromTheirDeck(deckList, neededInformation.group("class"));
         Card desiredCard = ActionJsonParser.getInstance().getDesiredCard(
                 neededInformation.group("attributeList").split(","),
                 neededInformation.group("class"));
-    }
+    }*/
 
     private void getCardsFromTheirDeck(ArrayList<Deck> decks, String ofClass) {
         ArrayList<Card> cards = collectedDeck.getMainCards();

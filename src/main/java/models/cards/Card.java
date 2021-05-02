@@ -1,10 +1,13 @@
 package models.cards;
 
 
+import com.google.gson.*;
 import com.google.gson.annotations.SerializedName;
+import models.Database;
 import models.Deck;
 import models.Player;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class Card {
@@ -25,6 +28,13 @@ public class Card {
     public Card(String name) {
         this.name = name;
         setPrice(this.price);
+    }
+
+    public static CardSerializerForDeckDatabase getCardSerializerForDeck() {
+        return new CardSerializerForDeckDatabase();
+    }
+    public static CardDeserializerForDeckDatabase getCardDeserializerForDeck() {
+        return new CardDeserializerForDeckDatabase();
     }
 
     public int getPrice() {
@@ -76,4 +86,30 @@ public class Card {
         return name + ':' + description + '\n';
     }
 
+}
+class CardSerializerForDeckDatabase implements JsonSerializer<Card> {
+
+    @Override
+    public JsonElement serialize(Card card, Type type, JsonSerializationContext jsonSerializationContext) {
+        return new JsonPrimitive(card.getName());
+    }
+}
+class CardDeserializerForDeckDatabase implements JsonDeserializer<Card> {
+
+    @Override
+    public Card deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+        Card card = null;
+        String cardName = jsonElement.getAsString();
+        card = Database.getInstance().getMonsterByName(cardName);
+        if (card != null)
+            return card;
+        card = Database.getInstance().getSpellByName(cardName);
+        if (card != null)
+            return card;
+        card = Database.getInstance().getTrapByName(cardName);
+        if (card != null)
+            return card;
+
+        return null;
+    }
 }

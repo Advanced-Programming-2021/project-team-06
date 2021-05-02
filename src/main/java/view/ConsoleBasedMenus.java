@@ -1,10 +1,8 @@
 package view;
 
 import controller.ErrorChecker;
-import controller.menus.MainMenu;
-import controller.menus.ProfileController;
-import controller.menus.RegisterMenuController;
-import controller.menus.ShoppingController;
+import controller.menus.*;
+import models.Deck;
 import models.Player;
 import models.Scoreboard;
 
@@ -33,9 +31,6 @@ public class ConsoleBasedMenus {
             "^menu show-current$",
             "^menu exit$"
     };
-    private final String[] SCORE_BOARD_REGEXES = {
-
-    };
 
     private final String[] profileMenusRegexes = {
             "^profile change (--nickname|-n) (?<nickname>\\w+)$",
@@ -48,7 +43,15 @@ public class ConsoleBasedMenus {
             "^deck create (?<name>\\w+)$",
             "^deck delete (?<name>\\w+)$",
             "^deck set-activate (?<name>\\w+)$",
-            "^$"
+            "^deck add-card (?:--card|-c) (?<cardName>.+) (?:--deck|-d) (?<deckName>.+) (?:--side|-s)$",
+            "^deck add-card (?:--card|-c) (?<cardName>.+) (?:--deck|-d) (?<deckName>.+)$",
+            "^deck rm-card (?:--card|-c) (?<cardName>.+) (?:--deck|-d) (?<deckName>.+) (?:--side|-s)$",
+            "^deck rm-card (?:--card|-c) (?<cardName>.+) (?:--deck|-d) (?<deckName>.+)$",
+            "^deck show (?:--all|-a)$",
+            "^deck show (?:--deck-name|-d) (?<deckName>.+) (?:--side|-s)$",
+            "^deck show (?:--deck-name|-d) (?<deckName>.+)$",
+            "^menu show-current$",
+            "^menu exit$"
     };
     private final String[] shoppingMenusRegexes = {
             "^shop buy (?<cardName>.+)$",
@@ -171,7 +174,73 @@ public class ConsoleBasedMenus {
     }
 
     public void runDeckMenu() {
+        Matcher commandMatcher;
+        String command;
+        while (runningMenu.equals("deck")) {
+            command = scanner.nextLine().replaceAll("\\s+", " ");
+            int whichCommand;
+            for (whichCommand = 0; whichCommand < 12; whichCommand++) {
+                commandMatcher = findMatcher(command, deckMenuRegexes[whichCommand]);
+                if (commandMatcher.find()) {
+                    executeDeckMenuCommands(commandMatcher, whichCommand);
+                    break;
+                } else if (whichCommand == 11)
+                    Output.getInstance().showMessage("invalid command");
+            }
 
+        }
+    }
+
+    private void executeDeckMenuCommands(Matcher commandMatcher, int whichCommand) {
+        DeckMenuController controller = DeckMenuController.getInstance();
+        Player loggedInPlayer = MainMenu.getInstance().getPlayerLoggedIn();
+        switch (whichCommand) {
+            case 0:
+                controller.createDeck(commandMatcher.group("name") , loggedInPlayer);
+                break;
+            case 1:
+                controller.deleteDeck(commandMatcher.group("name"));
+                break;
+            case 2:
+                controller.setActiveDeck(commandMatcher.group("name"), loggedInPlayer);
+                break;
+            case 3:
+                String cardName = commandMatcher.group("cardName"),
+                        deckName = commandMatcher.group("deckName");
+                controller.addCardToDeck(cardName, deckName, loggedInPlayer, false);
+                break;
+            case 4:
+                cardName = commandMatcher.group("cardName");
+                deckName = commandMatcher.group("deckName");
+                controller.addCardToDeck(cardName, deckName, loggedInPlayer, true);
+                break;
+            case 5:
+                cardName = commandMatcher.group("cardName");
+                deckName = commandMatcher.group("deckName");
+                controller.removeCardFromDeck(cardName , deckName , loggedInPlayer ,false);
+                break;
+            case 6:
+                cardName = commandMatcher.group("cardName");
+                deckName = commandMatcher.group("deckName");
+                controller.removeCardFromDeck(cardName , deckName , loggedInPlayer , true);
+                break;
+            case 7:
+                controller.showAllDecks(loggedInPlayer);
+                break;
+            case 8:
+                controller.showDeck(commandMatcher.group("deckName"), loggedInPlayer , false);
+                break;
+            case 9:
+                controller.showDeck(commandMatcher.group("deckName"), loggedInPlayer , true);
+                break;
+            case 10:
+                Output.getInstance().showMessage("Deck Menu");
+                break;
+            case 11:
+                runningMenu = "main";
+
+
+        }
     }
 
     public void runScoreboard() {

@@ -1,5 +1,6 @@
 package controller;
 
+import models.Database;
 import models.Deck;
 import models.cards.*;
 
@@ -49,12 +50,12 @@ public class ActionJsonParser {
 
     }
 
-    public ArrayList<Deck> getDecksByTheirName(String[] deckListStrings) {
+   /* public ArrayList<Deck> getDecksByTheirName(String[] deckListStrings) {
         ArrayList<Deck> deckList = new ArrayList<>();
         for (String deckName : deckListStrings)
-            deckList.add(Deck.getDeckByName(deckName));
+            deckList.add(Database.getDeckByName(deckName));
         return deckList;
-    }
+    }*/
 
     public Card getDesiredCard(String[] attributeListStrings, String ofClass) {
 

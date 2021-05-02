@@ -6,32 +6,18 @@ import models.cards.Monster;
 import java.util.ArrayList;
 
 public class Deck {
-    static ArrayList<Deck> allDecks;
-
-    static {
-        allDecks = new ArrayList<Deck>();
-    }
-
-    public ArrayList<Card> mainCards;
-    public ArrayList<Card> sideCards;
+    public ArrayList<Card> mainCards = new ArrayList<>();
+    public ArrayList<Card> sideCards = new ArrayList<>();
     Player owner;
     String name;
     DeckType type;
     Boolean isActive;
     Boolean IsValid;
 
-    public Deck(String name) {
+    public Deck(String name, Player owner) {
         this.name = name;
-
-    }
-
-    public static Deck getDeckByName(String name) {
-        for (Deck deck : allDecks) {
-            if (name.equals(deck.getName())) {
-                return deck;
-            }
-        }
-        return null;
+        Database.allDecks.add(this);
+        this.owner = owner;
     }
 
     public ArrayList<Card> getMainCards() {
@@ -54,6 +40,10 @@ public class Deck {
         this.owner = owner;
     }
 
+    public Player getOwner() {
+        return owner;
+    }
+
     public String getName() {
         return name;
     }
@@ -74,12 +64,18 @@ public class Deck {
         this.type = type;
     }
 
-    public void addCard(Card card) {
-        mainCards.add(card);
+    public void addCard(Card card, boolean shouldBeAddedToMain) {
+        if (shouldBeAddedToMain)
+            mainCards.add(card);
+        else
+            sideCards.add(card);
     }
 
-    public void removeCard(Card card) {
-        mainCards.remove(card);
+    public void removeCard(Card card, boolean shouldBeRemovedFromMain) {
+        if (shouldBeRemovedFromMain)
+            mainCards.remove(card);
+        else
+            sideCards.remove(card);
     }
 
     public int getSumOfAttackPowers() {
@@ -89,5 +85,29 @@ public class Deck {
             sum += monster.getAttackPower();
         }
         return sum;
+    }
+
+    public int getNumberOfCardsInDeck(Card card) {
+        int count = 0;
+        for (Card cardInDeck : mainCards) {
+            if (cardInDeck.getName().equals(card.getName()))
+                count++;
+        }
+        for (Card cardInDeck : sideCards) {
+            if (cardInDeck.getName().equals(card.getName()))
+                count++;
+        }
+        return count;
+    }
+
+    public String toString(boolean isMain) {
+        StringBuilder output = new StringBuilder();
+        if (isMain)
+            for (Card card : mainCards)
+                output.append(card.toString());
+        else
+            for (Card card : sideCards)
+                output.append(card.toString());
+        return output.toString();
     }
 }

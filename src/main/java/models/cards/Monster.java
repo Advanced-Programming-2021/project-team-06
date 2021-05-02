@@ -31,6 +31,8 @@ public class Monster extends Card {
         super(name);
     }
 
+
+
     public void setAdditionalAttackPower(int additionalAttackPower) {
         this.additionalAttackPower = additionalAttackPower;
     }

@@ -1,7 +1,9 @@
 package models;
 
+import com.google.gson.*;
 import models.cards.Card;
 
+import java.lang.reflect.Type;
 import java.util.*;
 
 public class Player {
@@ -37,6 +39,14 @@ public class Player {
             }
         }
         return null;
+    }
+
+    public static PlayerSerializerForDeckDatabase getPlayerSerializerForDeck() {
+    return new PlayerSerializerForDeckDatabase();
+    }
+
+    public static PlayerDeserializerForDeckDatabase getPlayerDeserializerForDeck() {
+        return new PlayerDeserializerForDeckDatabase();
     }
 
     public String getPassword() {
@@ -134,5 +144,18 @@ public class Player {
                 ", nickname='" + nickname + '\'' +
                 ", score=" + score +
                 '}';
+    }
+}
+
+class PlayerSerializerForDeckDatabase implements JsonSerializer<Player> {
+    @Override
+    public JsonElement serialize(Player player, Type type, JsonSerializationContext jsonSerializationContext) {
+        return new JsonPrimitive(player.getUsername());
+    }
+}
+class PlayerDeserializerForDeckDatabase implements JsonDeserializer<Player> {
+    @Override
+    public Player deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+        return Database.getInstance().getPlayerByUsername(jsonElement.getAsString());
     }
 }
