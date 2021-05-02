@@ -14,9 +14,10 @@ public class ActionJsonParser {
 
     private Matcher actionMatcher;
 
-    private final HashMap<String , String> actionsRegexes= new HashMap<>();
+    private final HashMap<String, String> actionsRegexes = new HashMap<>();
+
     {
-           actionsRegexes.put("collect <(?<deckList>.*)>\\[(?<attributeList>.*)]","collectCards");
+        actionsRegexes.put("collect <(?<deckList>.*)>\\[(?<attributeList>.*)]", "collectCards");
 
 
     }
@@ -33,7 +34,7 @@ public class ActionJsonParser {
         String[] actions = actionsString.split(";");
         for (String action : actions) {
             String actionMethodName = getActionMethodName(action);
-            ActionExecutor.getInstance().execute(actionMethodName , actionMatcher);
+            ActionExecutor.getInstance().execute(actionMethodName, actionMatcher);
         }
     }
 
@@ -55,22 +56,26 @@ public class ActionJsonParser {
         return deckList;
     }
 
-    public Card getDesiredCard(String[] attributeListStrings , String ofClass) {
+    public Card getDesiredCard(String[] attributeListStrings, String ofClass) {
 
         Card card;
         switch (ofClass) {
-            case "Monster" : card = new Monster("desired" + ofClass);
-            break;
-            case "Trap" : card = new Trap("desired" + ofClass);
-            break;
-            case "Spell" : card = new Spell("desired" + ofClass);
-            break;
-            case "Any" : card = new Card("desiredCard");
-            break;
+            case "Monster":
+                card = new Monster("desired" + ofClass);
+                break;
+            case "Trap":
+                card = new Trap("desired" + ofClass);
+                break;
+            case "Spell":
+                card = new Spell("desired" + ofClass);
+                break;
+            case "Any":
+                card = new Card("desiredCard");
+                break;
             default:
                 return null;
         }
-        
-      return card;
+
+        return card;
     }
 }

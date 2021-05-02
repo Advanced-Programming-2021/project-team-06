@@ -1,10 +1,9 @@
 package models.cards;
 
-public class Spell extends Card{
-    Boolean isActive ;
+public class Spell extends Card {
+    Boolean isActive;
 
-    public Spell(String name)
-    {
+    public Spell(String name) {
         super(name);
         isActive = false;
     }
@@ -15,8 +14,9 @@ public class Spell extends Card{
 
     @Override
     public String toString() {
-        return "Spell{" +
-                "Name='" + name + '\'' +
-                '}';
+        return "Name: " + name + "\n" +
+                "Spell" + "\n" +
+                "Type: " + type + "\n" +
+                "Description: " + description + "\n";
     }
 }

@@ -4,6 +4,7 @@ import controller.ErrorChecker;
 import controller.menus.MainMenu;
 import controller.menus.ProfileController;
 import controller.menus.RegisterMenuController;
+import controller.menus.ShoppingController;
 import models.Player;
 import models.Scoreboard;
 
@@ -49,6 +50,12 @@ public class ConsoleBasedMenus {
             "^deck set-activate (?<name>\\w+)$",
             "^$"
     };
+    private final String[] shoppingMenusRegexes = {
+            "^shop buy (?<cardName>.+)$",
+            "^shop show --all$",
+            "^menu show-current$",
+            "^menu exit$"
+    };
 
     private ConsoleBasedMenus() {
     }
@@ -83,7 +90,8 @@ public class ConsoleBasedMenus {
         switch (whichCommand) {
             case 0:
             case 1:
-                RegisterMenuController.getInstance().createUser(commandMatcher.group("username"), commandMatcher.group("nickname"), commandMatcher.group("password"));
+                RegisterMenuController.getInstance().createUser(commandMatcher.group("username"),
+                        commandMatcher.group("nickname"), commandMatcher.group("password"));
                 break;
             case 2:
             case 3:
@@ -145,7 +153,7 @@ public class ConsoleBasedMenus {
                     runProfileMenu();
                 }
                 if (menuName.equals("Shop")) {
-                    runningMenu = "shop";
+                    runningMenu = "shopping";
                     runShopping();
                 }
                 break;
@@ -227,7 +235,40 @@ public class ConsoleBasedMenus {
     }
 
     public void runShopping() {
+        Matcher commandMatcher;
+        String command;
+        while (runningMenu.equals("shopping")) {
+            command = scanner.nextLine().replaceAll("\\s+", " ");
+            int whichCommand;
+            for (whichCommand = 0; whichCommand < 4; whichCommand++) {
+                commandMatcher = findMatcher(command, shoppingMenusRegexes[whichCommand]);
+                if (commandMatcher.find()) {
+                    executeShoppingMenuCommands(commandMatcher, whichCommand);
+                    break;
+                } else if (whichCommand == 3)
+                    Output.getInstance().showMessage("invalid command");
+            }
 
+        }
+    }
+
+    private void executeShoppingMenuCommands(Matcher commandMatcher, int whichCommand) {
+        Player playerLoggedIn = MainMenu.getInstance().getPlayerLoggedIn();
+        switch (whichCommand) {
+            case 0:
+                String cardName = commandMatcher.group("cardName");
+                ShoppingController.getInstance().buyCard(playerLoggedIn, cardName);
+                break;
+            case 1:
+                ShoppingController.getInstance().showAllCard();
+                break;
+            case 2:
+                Output.getInstance().showMessage("shopping Menu");
+                break;
+
+            case 3:
+                runningMenu = "main";
+        }
     }
 
     private Matcher findMatcher(String input, String regex) {

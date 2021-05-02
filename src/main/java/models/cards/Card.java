@@ -1,20 +1,26 @@
 package models.cards;
 
 
+import com.google.gson.annotations.SerializedName;
 import models.Deck;
+import models.Player;
 
 import java.util.ArrayList;
 
 public class Card {
-    String name;
-    private String overriddenName;
-    private CardType type;
-    private String description;
-    private String overriddenDescription;
-    private Deck currentDeck;
-    private ArrayList<PlayType> possiblePlays = new ArrayList<>();
-    private Deck effectedCards;
-    private int price;
+    @SerializedName("Name")
+    protected String name;
+    protected String overriddenName;
+    @SerializedName("Card Type")
+    protected CardType type;
+    @SerializedName("Description")
+    protected String description;
+    protected String overriddenDescription;
+    protected Deck currentDeck;
+    protected ArrayList<PlayType> possiblePlays = new ArrayList<>();
+    protected Deck effectedCards;
+    @SerializedName("Price")
+    protected int price;
 
     public Card(String name) {
         this.name = name;
@@ -62,7 +68,12 @@ public class Card {
     }
 
     public Boolean isLike(Card card) {
-
         return true;
     }
+
+    @Override
+    public String toString() {
+        return name + ':' + description + '\n';
+    }
+
 }

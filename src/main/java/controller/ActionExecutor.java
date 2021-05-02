@@ -1,4 +1,5 @@
 package controller;
+
 import models.Deck;
 import models.cards.Card;
 import models.cards.Monster;
@@ -15,25 +16,28 @@ public class ActionExecutor {
     private static ActionExecutor instance;
     private Matcher neededInformation;
     private Deck collectedDeck;
+
     public static ActionExecutor getInstance() {
         return Objects.requireNonNullElseGet(instance, () -> (instance = new ActionExecutor()));
     }
-    public void execute(String methodName , Matcher matcher) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+
+    public void execute(String methodName, Matcher matcher) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         this.getClass().getDeclaredMethod(methodName).invoke(this);
-        neededInformation = matcher ;
-    }
-    private void collectCards() {
-        ArrayList<Deck> deckList = ActionJsonParser.getInstance().getDecksByTheirName(neededInformation.group("deckList").split(","));
-        getCardsFromTheirDeck(deckList ,  neededInformation.group("class"));
-        Card desiredCard = ActionJsonParser.getInstance().getDesiredCard(
-                        neededInformation.group("attributeList").split(","),
-                        neededInformation.group("class"));
+        neededInformation = matcher;
     }
 
-    private void getCardsFromTheirDeck(ArrayList<Deck> decks , String ofClass) {
+    private void collectCards() {
+        ArrayList<Deck> deckList = ActionJsonParser.getInstance().getDecksByTheirName(neededInformation.group("deckList").split(","));
+        getCardsFromTheirDeck(deckList, neededInformation.group("class"));
+        Card desiredCard = ActionJsonParser.getInstance().getDesiredCard(
+                neededInformation.group("attributeList").split(","),
+                neededInformation.group("class"));
+    }
+
+    private void getCardsFromTheirDeck(ArrayList<Deck> decks, String ofClass) {
         ArrayList<Card> cards = collectedDeck.getMainCards();
         for (Deck deck : decks)
-           cards.addAll(deck.getMainCards());
+            cards.addAll(deck.getMainCards());
         switch (ofClass) {
             case "Any":
                 return;

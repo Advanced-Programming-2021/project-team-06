@@ -34,7 +34,7 @@ public class Scoreboard {
                 Player user1 = allUsers.get(j);
                 Player user2 = allUsers.get(j + 1);
                 if (user1.getScore() > user2.getScore())
-                    swap(allUsers,j, j + 1);
+                    swap(allUsers, j, j + 1);
             }
         }
     }

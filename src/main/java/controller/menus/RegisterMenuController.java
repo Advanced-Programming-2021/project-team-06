@@ -25,12 +25,12 @@ public class RegisterMenuController {
             Output.getInstance().showMessage("user with username " + username + " already exists");
             return;
         }
-        if (ErrorChecker.doesNicknameExist(nickname)){
+        if (ErrorChecker.doesNicknameExist(nickname)) {
             Output.getInstance().showMessage("user with nickname " + nickname + " already exists");
             return;
         }
 
-        new Player(username,nickname,password);
+        new Player(username, nickname, password);
         Output.getInstance().showMessage("user created successfully!");
     }
 

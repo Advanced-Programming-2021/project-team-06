@@ -1,12 +1,19 @@
 package models.cards;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Monster extends Card {
+    @SerializedName("Atk")
     int attackPower;
     int additionalAttackPower;
+    @SerializedName("Def")
     int defencePower;
     int additionalDefencePower;
+    @SerializedName("Monster Type")
     MonsterType monsterType;
+    @SerializedName("Attribute")
     MonsterAttribute monsterAttribute;
+    @SerializedName("Level")
     int LEVEL;
     CardPlacement cardPlacement;
     String normalSummonTimeActions;
@@ -50,8 +57,11 @@ public class Monster extends Card {
 
     @Override
     public String toString() {
-        return "Monster{" +
-                "Name='" + super.name + '\'' +
-                '}';
+        return "Name: " + super.name + '\n' +
+                "Level: " + this.LEVEL + '\n' +
+                "Type: " + this.monsterType + '\n' +
+                "ATK: " + this.attackPower + '\n' +
+                "DEF: " + this.defencePower + '\n' +
+                "Description: " + super.description + '\n';
     }
 }

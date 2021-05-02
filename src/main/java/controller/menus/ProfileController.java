@@ -17,8 +17,8 @@ public class ProfileController {
         return instance;
     }
 
-    public void changeNickname(Player player, String nickName){
-        if(ErrorChecker.doesNicknameExist(nickName)){
+    public void changeNickname(Player player, String nickName) {
+        if (ErrorChecker.doesNicknameExist(nickName)) {
             Output.getInstance().showMessage("user with this nickname " + nickName + " is already exists");
             return;
         }
@@ -26,12 +26,12 @@ public class ProfileController {
         Output.getInstance().showMessage("nickname changed successfully!");
     }
 
-    public void changePassword(Player player, String oldPassword, String newPassword){
+    public void changePassword(Player player, String oldPassword, String newPassword) {
         if (!ErrorChecker.isPasswordCorrect(player, oldPassword)) {
             Output.getInstance().showMessage("current password is invalid");
             return;
         }
-        if(ErrorChecker.doesOldPassEqualsNewPass(oldPassword,newPassword)){
+        if (ErrorChecker.doesOldPassEqualsNewPass(oldPassword, newPassword)) {
             Output.getInstance().showMessage("please enter a new password");
             return;
         }

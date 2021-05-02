@@ -38,6 +38,12 @@ public class ErrorChecker {
         return true;
     }
 
+    public static boolean doseNotHaveEnoughMoney(Player player, int price) {
+        if (player.getMoney() < price)
+            return true;
+        return false;
+    }
+
     public static boolean isDeckNameUnique(String name) {
         Deck deck = Deck.getDeckByName(name);
         if (deck == null)

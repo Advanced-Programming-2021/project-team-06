@@ -8,6 +8,7 @@ import models.cards.Trap;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Database {
 
@@ -48,6 +49,15 @@ public class Database {
         for (Player player : allPlayers) {
             if (player.getNickname().equals(nickname))
                 return player;
+        }
+        return null;
+
+    }
+
+    public Card getCardByName(String name) {
+        for (Card card : allCards) {
+            if (card.getName().equals(name))
+                return card;
         }
         return null;
 
@@ -133,11 +143,11 @@ public class Database {
         loadMonsters();
         loadSpells();
         loadTraps();
+
     }
 
     public void updatingDatabase() {
         setPlayers();
     }
-
 
 }

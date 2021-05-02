@@ -1,5 +1,7 @@
 package models;
 
+import models.cards.Card;
+
 import java.util.*;
 
 public class Player {
@@ -9,6 +11,7 @@ public class Player {
     private int score;
     private int rank;
     private int health;
+    private ArrayList<Card> allPlayerCard = new ArrayList<>();
     private ArrayList<Deck> allDeck = new ArrayList<>();
     private ArrayList<Deck> gameDecks = new ArrayList<>();
     private Deck activeDeck;
@@ -56,7 +59,6 @@ public class Player {
         return score;
     }
 
-
     public void setUsername(String username) {
         this.username = username;
     }
@@ -103,6 +105,22 @@ public class Player {
 
     public void setAllDeck(ArrayList<Deck> allDeck) {
         this.allDeck = allDeck;
+    }
+
+    public ArrayList<Card> getAllPlayerCard() {
+        return allPlayerCard;
+    }
+
+    public void addCardToAllPlayerCard(Card card) {
+        this.allPlayerCard.add(card);
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
     }
 
     public void deleteDeck(Deck deck) {

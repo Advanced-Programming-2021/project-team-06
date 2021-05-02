@@ -12,10 +12,10 @@ public class Trap extends Card {
         isActive = true;
     }
 
-    @Override
     public String toString() {
-        return "Trap{" +
-                "Name='" + name + '\'' +
-                '}';
+        return "Name: " + name +"\n" +
+                "Trap" + "\n" +
+                "Type: " + type + "\n" +
+                "Description: " + description + "\n";
     }
 }

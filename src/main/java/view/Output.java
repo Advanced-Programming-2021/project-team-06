@@ -2,15 +2,18 @@ package view;
 
 public class Output {
 
-    private Output(){}
+    private Output() {
+    }
+
     private static Output instance;
-    public static Output getInstance(){
-        if(instance==null)
+
+    public static Output getInstance() {
+        if (instance == null)
             instance = new Output();
         return instance;
     }
 
-    public void showMessage(String message){
+    public void showMessage(String message) {
 
         System.out.println(message);
     }
