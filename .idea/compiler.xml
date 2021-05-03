@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="YoGiOh" />
         <module name="project-team-06" />
+        <module name="YuGiOh" />
       </profile>
     </annotationProcessing>
   </component>

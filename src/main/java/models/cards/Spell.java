@@ -12,6 +12,10 @@ public class Spell extends Card implements Cloneable{
         isActive = true;
     }
 
+    public Boolean getActive() {
+        return isActive;
+    }
+
     @Override
     public String toString() {
         return "Name: " + name + "\n" +

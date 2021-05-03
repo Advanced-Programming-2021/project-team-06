@@ -49,6 +49,14 @@ public class Player {
         return new PlayerDeserializerForDeckDatabase();
     }
 
+    public int getHealth() {
+        return health;
+    }
+
+    public ArrayList<Deck> getGameDecks() {
+        return gameDecks;
+    }
+
     public String getPassword() {
         return this.password;
     }
