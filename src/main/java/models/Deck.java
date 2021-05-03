@@ -100,6 +100,14 @@ public class Deck {
         return count;
     }
 
+    public int getNumberOfCardsInMainDeck() {
+        return mainCards.size();
+    }
+
+    public int getNumberOfCardsInSideDeck() {
+        return sideCards.size();
+    }
+
     public String toString(boolean isMain) {
         StringBuilder output = new StringBuilder();
         if (isMain)

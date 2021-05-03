@@ -9,15 +9,15 @@ import view.Output;
 import java.util.Arrays;
 import java.util.Comparator;
 
-public class ShoppingController {
-    private ShoppingController() {
+public class ShoppingMenuController {
+    private ShoppingMenuController() {
     }
 
-    private static ShoppingController instance;
+    private static ShoppingMenuController instance;
 
-    public static ShoppingController getInstance() {
+    public static ShoppingMenuController getInstance() {
         if (instance == null)
-            instance = new ShoppingController();
+            instance = new ShoppingMenuController();
         return instance;
     }
 

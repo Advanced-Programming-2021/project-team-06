@@ -11,38 +11,28 @@ public class ErrorChecker {
 
     public static boolean doesUsernameExist(String username) {
         Player player = Database.getInstance().getPlayerByUsername(username);
-        if (player == null) return false;
-        return true;
+        return player != null;
     }
 
     public static boolean doesNicknameExist(String nickname) {
         Player player = Database.getInstance().getPlayerByNickname(nickname);
-        if (player == null) return false;
-        return true;
+        return player != null;
     }
 
     public static boolean isPasswordCorrect(Player player, String password) {
-        if (player.getPassword().equals(password))
-            return true;
-        return false;
+        return player.getPassword().equals(password);
     }
 
     public static boolean doesOldPassEqualsNewPass(String oldPass, String newPass) {
-        if (oldPass.equals(newPass))
-            return true;
-        return false;
+        return oldPass.equals(newPass);
     }
 
     public static boolean isUserLoggedIn() {
-        if (MainMenu.getInstance().getPlayerLoggedIn() == null)
-            return false;
-        return true;
+        return MainMenu.getInstance().getPlayerLoggedIn() != null;
     }
 
     public static boolean doseNotHaveEnoughMoney(Player player, int price) {
-        if (player.getMoney() < price)
-            return true;
-        return false;
+        return player.getMoney() < price;
     }
 
     public static boolean isDeckNameUnique(String name) {
@@ -50,10 +40,11 @@ public class ErrorChecker {
         if (deck == null)
             return true;
 
-            Output.getInstance().showMessage("deck with name " + name + " already exists");
-            return false;
+        Output.getInstance().showMessage("deck with name " + name + " already exists");
+        return false;
 
     }
+
     public static boolean doesDeckExist(String name) {
         Deck deck = Database.getInstance().getDeckByName(name);
         if (deck != null)
@@ -62,7 +53,8 @@ public class ErrorChecker {
         return false;
 
     }
-    public static boolean doesDeckBelongToPlayer(Deck deck , Player player) {
+
+    public static boolean doesDeckBelongToPlayer(Deck deck, Player player) {
         if (deck.getOwner().getUsername().equals(player.getUsername()))
             return true;
         Output.getInstance().showMessage("this deck doesn't belong to you!");
@@ -78,14 +70,15 @@ public class ErrorChecker {
     }
 
     public static boolean doesDeckHaveSpace(Deck deck) {
-        if (deck == null) return  false;
+        if (deck == null) return false;
         if (deck.getMainCards().size() < 60)
             return true;
         Output.getInstance().showMessage("main deck is full!");
         return false;
     }
+
     public static boolean doesSideDeckHaveSpace(Deck deck) {
-        if (deck == null) return  false;
+        if (deck == null) return false;
         if (deck.getSideCards().size() < 15)
             return true;
         Output.getInstance().showMessage("side deck is full!");
@@ -98,5 +91,11 @@ public class ErrorChecker {
         Output.getInstance().showMessage("there are already three cards with name " + card.getName() +
                 " in deck " + deck.getName() + " !");
         return false;
+    }
+
+    public static boolean isDeckAllowed(Deck deck) {
+        int numberOfCardsInSideDeck = deck.getNumberOfCardsInSideDeck();
+        int numberOfCardsInMainDeck = deck.getNumberOfCardsInMainDeck();
+        return numberOfCardsInMainDeck <= 60 && numberOfCardsInMainDeck >= 40 && numberOfCardsInSideDeck <= 15;
     }
 }

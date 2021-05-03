@@ -4,16 +4,16 @@ import controller.ErrorChecker;
 import models.Player;
 import view.Output;
 
-public class ProfileController {
+public class ProfileMenuController {
 
-    private ProfileController() {
+    private ProfileMenuController() {
     }
 
-    private static ProfileController instance;
+    private static ProfileMenuController instance;
 
-    public static ProfileController getInstance() {
+    public static ProfileMenuController getInstance() {
         if (instance == null)
-            instance = new ProfileController();
+            instance = new ProfileMenuController();
         return instance;
     }
 

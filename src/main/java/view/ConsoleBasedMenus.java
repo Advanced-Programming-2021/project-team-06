@@ -2,7 +2,6 @@ package view;
 
 import controller.ErrorChecker;
 import controller.menus.*;
-import models.Deck;
 import models.Player;
 import models.Scoreboard;
 
@@ -56,6 +55,11 @@ public class ConsoleBasedMenus {
     private final String[] shoppingMenusRegexes = {
             "^shop buy (?<cardName>.+)$",
             "^shop show --all$",
+            "^menu show-current$",
+            "^menu exit$"
+    };
+    private final String[] duelMenusRegexes = {
+            "^duel new --second-player (?<username>\\w+) --rounds (?<round>\\d+)$",
             "^menu show-current$",
             "^menu exit$"
     };
@@ -169,10 +173,6 @@ public class ConsoleBasedMenus {
         }
     }
 
-    public void runDuelMenu() {
-
-    }
-
     public void runDeckMenu() {
         Matcher commandMatcher;
         String command;
@@ -196,7 +196,7 @@ public class ConsoleBasedMenus {
         Player loggedInPlayer = MainMenu.getInstance().getPlayerLoggedIn();
         switch (whichCommand) {
             case 0:
-                controller.createDeck(commandMatcher.group("name") , loggedInPlayer);
+                controller.createDeck(commandMatcher.group("name"), loggedInPlayer);
                 break;
             case 1:
                 controller.deleteDeck(commandMatcher.group("name"));
@@ -217,28 +217,27 @@ public class ConsoleBasedMenus {
             case 5:
                 cardName = commandMatcher.group("cardName");
                 deckName = commandMatcher.group("deckName");
-                controller.removeCardFromDeck(cardName , deckName , loggedInPlayer ,false);
+                controller.removeCardFromDeck(cardName, deckName, loggedInPlayer, false);
                 break;
             case 6:
                 cardName = commandMatcher.group("cardName");
                 deckName = commandMatcher.group("deckName");
-                controller.removeCardFromDeck(cardName , deckName , loggedInPlayer , true);
+                controller.removeCardFromDeck(cardName, deckName, loggedInPlayer, true);
                 break;
             case 7:
                 controller.showAllDecks(loggedInPlayer);
                 break;
             case 8:
-                controller.showDeck(commandMatcher.group("deckName"), loggedInPlayer , false);
+                controller.showDeck(commandMatcher.group("deckName"), loggedInPlayer, false);
                 break;
             case 9:
-                controller.showDeck(commandMatcher.group("deckName"), loggedInPlayer , true);
+                controller.showDeck(commandMatcher.group("deckName"), loggedInPlayer, true);
                 break;
             case 10:
                 Output.getInstance().showMessage("Deck Menu");
                 break;
             case 11:
                 runningMenu = "main";
-
 
         }
     }
@@ -285,13 +284,13 @@ public class ConsoleBasedMenus {
         Player playerLoggedIn = MainMenu.getInstance().getPlayerLoggedIn();
         switch (whichCommand) {
             case 0:
-                ProfileController.getInstance().changeNickname(playerLoggedIn, commandMatcher.group("nickname"));
+                ProfileMenuController.getInstance().changeNickname(playerLoggedIn, commandMatcher.group("nickname"));
                 break;
             case 1:
             case 2:
                 String oldPass = commandMatcher.group("oldPass");
                 String newPass = commandMatcher.group("newPass");
-                ProfileController.getInstance().changePassword(playerLoggedIn, oldPass, newPass);
+                ProfileMenuController.getInstance().changePassword(playerLoggedIn, oldPass, newPass);
                 break;
 
             case 3:
@@ -326,16 +325,50 @@ public class ConsoleBasedMenus {
         switch (whichCommand) {
             case 0:
                 String cardName = commandMatcher.group("cardName");
-                ShoppingController.getInstance().buyCard(playerLoggedIn, cardName);
+                ShoppingMenuController.getInstance().buyCard(playerLoggedIn, cardName);
                 break;
             case 1:
-                ShoppingController.getInstance().showAllCard();
+                ShoppingMenuController.getInstance().showAllCard();
                 break;
             case 2:
                 Output.getInstance().showMessage("shopping Menu");
                 break;
 
             case 3:
+                runningMenu = "main";
+        }
+    }
+
+    private void runDuelMenu() {
+        Matcher commandMatcher;
+        String command;
+        while (runningMenu.equals("duel")) {
+            command = scanner.nextLine().replaceAll("\\s+", " ");
+            int whichCommand;
+            for (whichCommand = 0; whichCommand < 3; whichCommand++) {
+                commandMatcher = findMatcher(command, duelMenusRegexes[whichCommand]);
+                if (commandMatcher.find()) {
+                    executeDuelMenuCommands(commandMatcher, whichCommand);
+                    break;
+                } else if (whichCommand == 2)
+                    Output.getInstance().showMessage("invalid command");
+            }
+
+        }
+    }
+
+    private void executeDuelMenuCommands(Matcher commandMatcher, int whichCommand) {
+        Player playerLoggedIn = MainMenu.getInstance().getPlayerLoggedIn();
+        switch (whichCommand) {
+            case 0:
+                String username = commandMatcher.group("username");
+                String round = commandMatcher.group("round");
+                DuelMenuController.getInstance().startGame(playerLoggedIn.getUsername(), username, round);
+                break;
+            case 1:
+                Output.getInstance().showMessage("duel Menu");
+                break;
+            case 2:
                 runningMenu = "main";
         }
     }

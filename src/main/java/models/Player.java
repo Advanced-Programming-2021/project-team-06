@@ -42,7 +42,7 @@ public class Player {
     }
 
     public static PlayerSerializerForDeckDatabase getPlayerSerializerForDeck() {
-    return new PlayerSerializerForDeckDatabase();
+        return new PlayerSerializerForDeckDatabase();
     }
 
     public static PlayerDeserializerForDeckDatabase getPlayerDeserializerForDeck() {
@@ -91,6 +91,10 @@ public class Player {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public Deck getActiveDeck() {
+        return activeDeck;
     }
 
     public void setActiveDeck(Deck activeDeck) {
@@ -153,6 +157,7 @@ class PlayerSerializerForDeckDatabase implements JsonSerializer<Player> {
         return new JsonPrimitive(player.getUsername());
     }
 }
+
 class PlayerDeserializerForDeckDatabase implements JsonDeserializer<Player> {
     @Override
     public Player deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {

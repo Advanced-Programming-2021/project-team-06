@@ -56,7 +56,7 @@ public class FileWorker {
 
     public void writeDeckJSON(Deck deck) {
         String fileAddress = decksDateBase + deck.getName() + ".json";
-        GsonBuilder builder = new GsonBuilder().registerTypeAdapter(Player.class , Player.getPlayerSerializerForDeck()).registerTypeAdapter(Card.class , Card.getCardSerializerForDeck());
+        GsonBuilder builder = new GsonBuilder().registerTypeAdapter(Player.class, Player.getPlayerSerializerForDeck()).registerTypeAdapter(Card.class, Card.getCardSerializerForDeck());
         Gson gson = builder.create();
         FileWriter writer;
 
@@ -135,7 +135,7 @@ public class FileWorker {
     public Deck readDeckJSON(String fileAddress) {
 
         try (FileReader reader = new FileReader(fileAddress)) {
-            GsonBuilder builder = new GsonBuilder().registerTypeAdapter(Player.class , Player.getPlayerDeserializerForDeck()).registerTypeAdapter(Card.class , Card.getCardDeserializerForDeck());
+            GsonBuilder builder = new GsonBuilder().registerTypeAdapter(Player.class, Player.getPlayerDeserializerForDeck()).registerTypeAdapter(Card.class, Card.getCardDeserializerForDeck());
             Gson gson = builder.create();
 
             BufferedReader bufferedReader = new BufferedReader(reader);

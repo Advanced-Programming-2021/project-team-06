@@ -14,62 +14,65 @@ public class DeckMenuController {
 
     private static DeckMenuController instance = null;
 
-    private DeckMenuController (){ }
-    public static DeckMenuController getInstance () {
+    private DeckMenuController() {
+    }
+
+    public static DeckMenuController getInstance() {
         return Objects.requireNonNullElseGet(instance, () -> (instance = new DeckMenuController()));
     }
 
-    public void createDeck(String name , Player owner) {
+    public void createDeck(String name, Player owner) {
         if (!ErrorChecker.isDeckNameUnique(name))
             return;
 
-            new Deck(name , owner);
+        new Deck(name, owner);
         Output.getInstance().showMessage("deck created successfully!");
     }
+
     public void deleteDeck(String name) {
         if (ErrorChecker.isDeckNameUnique(name))
             return;
 
-            Database.removeDeck(name);
-            Output.getInstance().showMessage("deck deleted successfully!");
+        Database.removeDeck(name);
+        Output.getInstance().showMessage("deck deleted successfully!");
 
     }
 
 
-    public void setActiveDeck(String name , Player player) {
+    public void setActiveDeck(String name, Player player) {
         Deck deck = null;
-       boolean isPermitted = ErrorChecker.doesDeckExist(name)
-               && ErrorChecker.doesDeckBelongToPlayer(deck = Database.getInstance().getDeckByName(name) , player);
-       if (isPermitted) {
-           player.setActiveDeck(deck);
-           Output.getInstance().showMessage("deck activated successfully!");
-       }
+        boolean isPermitted = ErrorChecker.doesDeckExist(name)
+                && ErrorChecker.doesDeckBelongToPlayer(deck = Database.getInstance().getDeckByName(name), player);
+        if (isPermitted) {
+            player.setActiveDeck(deck);
+            Output.getInstance().showMessage("deck activated successfully!");
+        }
 
     }
 
-    public void addCardToDeck(String cardName, String deckName , Player player , boolean isMain) {
+    public void addCardToDeck(String cardName, String deckName, Player player, boolean isMain) {
         Card card = null;
         Deck deck = null;
         boolean isPermitted = ErrorChecker.doesCardExist(cardName)
                 && ErrorChecker.doesDeckExist(deckName)
-                && ErrorChecker.doesDeckBelongToPlayer(deck = Database.getInstance().getDeckByName(deckName) , player)
-                && ((isMain) ?ErrorChecker.doesDeckHaveSpace(deck) :ErrorChecker.doesSideDeckHaveSpace(deck))
-                && ErrorChecker.isNumberOfCardsInDeckLessThanFour(deck , card = Database.getInstance().getCardByName(cardName));
+                && ErrorChecker.doesDeckBelongToPlayer(deck = Database.getInstance().getDeckByName(deckName), player)
+                && ((isMain) ? ErrorChecker.doesDeckHaveSpace(deck) : ErrorChecker.doesSideDeckHaveSpace(deck))
+                && ErrorChecker.isNumberOfCardsInDeckLessThanFour(deck, card = Database.getInstance().getCardByName(cardName));
         if (isPermitted) {
-            deck.addCard(card , isMain);
+            deck.addCard(card, isMain);
             Output.getInstance().showMessage("card added to deck successfully!");
         }
     }
 
-    public void removeCardFromDeck(String cardName, String deckName,Player player, boolean isMain) {
+    public void removeCardFromDeck(String cardName, String deckName, Player player, boolean isMain) {
         Card card;
         Deck deck = null;
         boolean isPermitted = ErrorChecker.doesCardExist(cardName)
                 && ErrorChecker.doesDeckExist(deckName)
-                && ErrorChecker.doesDeckBelongToPlayer(deck = Database.getInstance().getDeckByName(deckName) , player);
+                && ErrorChecker.doesDeckBelongToPlayer(deck = Database.getInstance().getDeckByName(deckName), player);
         if (isPermitted) {
             card = Database.getInstance().getCardByName(cardName);
-            deck.removeCard(card , isMain);
+            deck.removeCard(card, isMain);
             Output.getInstance().showMessage("card removed from deck successfully!");
         }
     }
@@ -80,11 +83,11 @@ public class DeckMenuController {
 
     }
 
-    public void showDeck(String name , Player player , boolean isMain) {
+    public void showDeck(String name, Player player, boolean isMain) {
         if (!ErrorChecker.doesDeckExist(name))
             return;
         Deck deck = Database.getInstance().getDeckByName(name);
-        if (!ErrorChecker.doesDeckBelongToPlayer(deck , player))
+        if (!ErrorChecker.doesDeckBelongToPlayer(deck, player))
             return;
         Output.getInstance().showMessage(deck.toString(isMain));
 
