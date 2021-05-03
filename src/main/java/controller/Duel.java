@@ -1,6 +1,8 @@
 package controller;
 
+import models.Deck;
 import models.Player;
+import models.cards.Card;
 
 public class Duel {
     private Player firstPlayer;
