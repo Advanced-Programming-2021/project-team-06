@@ -2,7 +2,7 @@ package models.cards;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Monster extends Card {
+public class Monster extends Card implements Cloneable{
     @SerializedName("Atk")
     int attackPower;
     int additionalAttackPower;
@@ -41,6 +41,18 @@ public class Monster extends Card {
         this.additionalDefencePower = additionalDefencePower;
     }
 
+    public void setAttackPower(int attackPower) {
+        this.attackPower = attackPower;
+    }
+
+    public void setDefencePower(int defencePower) {
+        this.defencePower = defencePower;
+    }
+
+    public void setLEVEL(int LEVEL) {
+        this.LEVEL = LEVEL;
+    }
+
     public int getAttackPower() {
         return attackPower;
     }
@@ -66,4 +78,15 @@ public class Monster extends Card {
                 "DEF: " + this.defencePower + '\n' +
                 "Description: " + super.description + '\n';
     }
+    @Override
+    protected Monster clone() throws CloneNotSupportedException
+    {
+        Monster monster = (Monster) super.clone();
+        monster.setType(this.type);
+        monster.setLEVEL(this.LEVEL);
+        monster.setAttackPower(this.attackPower);
+        monster.setDefencePower(this.defencePower);
+        return monster;
+    }
 }
+

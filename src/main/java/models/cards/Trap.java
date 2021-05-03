@@ -1,6 +1,6 @@
 package models.cards;
 
-public class Trap extends Card {
+public class Trap extends Card implements Cloneable{
     Boolean isActive;
 
     public Trap(String name) {
@@ -17,5 +17,10 @@ public class Trap extends Card {
                 "Trap" + "\n" +
                 "Type: " + type + "\n" +
                 "Description: " + description + "\n";
+    }
+    @Override
+    protected Trap clone() throws CloneNotSupportedException
+    {
+        return (Trap) super.clone();
     }
 }

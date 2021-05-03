@@ -1,6 +1,6 @@
 package models.cards;
 
-public class Spell extends Card {
+public class Spell extends Card implements Cloneable{
     Boolean isActive;
 
     public Spell(String name) {
@@ -18,5 +18,10 @@ public class Spell extends Card {
                 "Spell" + "\n" +
                 "Type: " + type + "\n" +
                 "Description: " + description + "\n";
+    }
+    @Override
+    protected Spell clone() throws CloneNotSupportedException
+    {
+        return (Spell) super.clone();
     }
 }
