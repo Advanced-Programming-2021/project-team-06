@@ -5,12 +5,11 @@ import com.google.gson.*;
 import com.google.gson.annotations.SerializedName;
 import models.Database;
 import models.Deck;
-import models.Player;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class Card {
+public class Card implements Cloneable{
     @SerializedName("Name")
     protected String name;
     protected String overriddenName;
@@ -33,6 +32,7 @@ public class Card {
     public static CardSerializerForDeckDatabase getCardSerializerForDeck() {
         return new CardSerializerForDeckDatabase();
     }
+
     public static CardDeserializerForDeckDatabase getCardDeserializerForDeck() {
         return new CardDeserializerForDeckDatabase();
     }
@@ -86,7 +86,18 @@ public class Card {
         return name + ':' + description + '\n';
     }
 
+    @Override
+    protected Card clone() throws CloneNotSupportedException
+    {
+        Card card = (Card) super.clone();
+        card.setName(this.name);
+        card.setType(this.type);
+        card.setDescription(this.description);
+        card.setPrice(this.price);
+        return card;
+    }
 }
+
 class CardSerializerForDeckDatabase implements JsonSerializer<Card> {
 
     @Override
@@ -94,6 +105,7 @@ class CardSerializerForDeckDatabase implements JsonSerializer<Card> {
         return new JsonPrimitive(card.getName());
     }
 }
+
 class CardDeserializerForDeckDatabase implements JsonDeserializer<Card> {
 
     @Override
