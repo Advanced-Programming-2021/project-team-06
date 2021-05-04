@@ -1,6 +1,7 @@
 package controller;
 
 import controller.menus.MainMenu;
+import models.Board;
 import models.Database;
 import models.Deck;
 import models.Player;
@@ -98,4 +99,42 @@ public class ErrorChecker {
         int numberOfCardsInMainDeck = deck.getNumberOfCardsInMainDeck();
         return numberOfCardsInMainDeck <= 60 && numberOfCardsInMainDeck >= 40 && numberOfCardsInSideDeck <= 15;
     }
+
+    public static boolean isValidAddress(String address, String state) {
+        if (!state.equals("h") && !(address.equals("1") || address.equals("2") || address.equals("3")
+                || address.equals("4") || address.equals("5"))) {
+            Output.getInstance().showMessage("invalid selection");
+            return false;
+        }
+        if (state.equals("h") && !(address.equals("1") || address.equals("2") || address.equals("3")
+                || address.equals("4") || address.equals("5") || address.equals("6"))) {
+            Output.getInstance().showMessage("invalid selection");
+            return false;
+        }
+        return true;
+    }
+
+
+    public static Card istTheSeatVacant(Board board, int address, String state) {
+        Card card = null;
+        if (state.equals("h")) card = board.getHandZoneCards().get(address);
+        if (state.equals("m")) card = board.getMonsterZoneCards().get(address);
+        if (state.equals("s")) card = board.getSpellZoneCards().get(address);
+        if (state.equals("f")) card = board.getFieldZone();
+        if (card == null) {
+            Output.getInstance().showMessage("no card found in the given position");
+            return null;
+        }
+        return card;
+    }
+
+    public static boolean isCardSelected(Player player) {
+        if (player.getBoard().getSelectedCard() == null) {
+            Output.getInstance().showMessage("no card is selected yet");
+            return false;
+        }
+
+        return true;
+    }
+
 }

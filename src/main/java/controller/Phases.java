@@ -1,6 +1,6 @@
-package controller.menus;
+package controller;
 
-public enum Phase {
+public enum Phases {
     DRAW,
 
     STANDBY,

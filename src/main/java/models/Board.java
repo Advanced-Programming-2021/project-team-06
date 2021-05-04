@@ -1,8 +1,7 @@
 package models;
 
-import models.Deck;
-import models.Player;
 import models.cards.*;
+import java.util.ArrayList;
 
 public class Board {
     Player player;
@@ -13,7 +12,8 @@ public class Board {
     private Deck banishedZone;
     private Deck monsterZone;
     private Deck spellZone;
-    private Card fieldZone;
+    private Card fieldZone = null;
+    private Card selectedCard = null;
 
 
     public Board(Player player, Player opponent) {
@@ -27,6 +27,7 @@ public class Board {
         spellZone = new Deck("SZ", player);
         for (int i = 0; i < 5; i++)
             spellZone.addCard((Card) null, true);
+
         setPlayer(player);
         setOpponent(opponent);
     }
@@ -101,6 +102,26 @@ public class Board {
 
     public void setSpellZone(Deck spellZone) {
         this.spellZone = spellZone;
+    }
+
+    public Card getSelectedCard() {
+        return selectedCard;
+    }
+
+    public void setSelectedCard(Card selectedCard) {
+        this.selectedCard = selectedCard;
+    }
+
+    public ArrayList<Card> getMonsterZoneCards() {
+        return monsterZone.getMainCards();
+    }
+
+    public ArrayList<Card> getSpellZoneCards() {
+        return spellZone.getMainCards();
+    }
+
+    public ArrayList<Card> getHandZoneCards() {
+        return hand.getMainCards();
     }
 
     public void putCardInMonsterZone(Card card) {
@@ -249,23 +270,23 @@ public class Board {
 
 
         for (Card card : spellZone.getMainCards()) {
-            if (card == null) spellZoneString.insert(0,"\tE");
-            else if (card.getCardPlacement() == CardPlacement.faceUp) spellZoneString.insert(0 ,"\tO");
-            else spellZoneString.insert(0 ,"\tH");
+            if (card == null) spellZoneString.insert(0, "\tE");
+            else if (card.getCardPlacement() == CardPlacement.faceUp) spellZoneString.insert(0, "\tO");
+            else spellZoneString.insert(0, "\tH");
         }
         for (Card card : monsterZone.getMainCards()) {
             if (card == null) {
-                spellZoneString.insert(0 ,"\tE");
+                spellZoneString.insert(0, "\tE");
                 break;
             } else if (((Monster) card).getMonsterMode() == MonsterMode.attack)
-                monsterZoneString.insert(0 ,"\tO");
+                monsterZoneString.insert(0, "\tO");
             else if (((Monster) card).getMonsterMode() == MonsterMode.defence)
-                monsterZoneString.insert(0 , "\tD");
+                monsterZoneString.insert(0, "\tD");
 
             if (card.getCardPlacement() == CardPlacement.faceUp)
-                monsterZoneString.insert(0 , "O");
+                monsterZoneString.insert(0, "O");
             else
-                monsterZoneString.insert(0 , "H");
+                monsterZoneString.insert(0, "H");
         }
 
         return ((fieldZone == null) ? "FZ" : "O") +

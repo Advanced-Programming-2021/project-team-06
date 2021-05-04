@@ -4,6 +4,7 @@ import controller.Duel;
 import controller.ErrorChecker;
 import models.Database;
 import models.Player;
+import view.GameInputs;
 import view.Output;
 
 public class DuelMenuController {
@@ -47,7 +48,8 @@ public class DuelMenuController {
         }
 
         int numberOfRound = Integer.parseInt(round);
-        new Duel(firstPlayer, secondPlayer, numberOfRound);
+        GameInputs.getInstance().setOnlineDuel(new Duel(firstPlayer, secondPlayer, numberOfRound));
+        GameInputs.getInstance().runGamePlay();
     }
 
 }

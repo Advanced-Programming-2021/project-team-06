@@ -20,6 +20,8 @@ public class Player {
     private Deck sideDeck;
     private int roundsWon;
     private int money;
+    private Board board = null;
+
 
     public Player(String username, String nickname, String password) {
         this.username = username;
@@ -147,6 +149,14 @@ public class Player {
 
     public void deleteDeck(Deck deck) {
         allDeck.remove(deck);
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
     }
 
     @Override
