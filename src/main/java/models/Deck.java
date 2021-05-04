@@ -19,7 +19,9 @@ public class Deck {
         Database.allDecks.add(this);
         this.owner = owner;
     }
-
+    public void updateOwnerDecks() {
+        owner.getAllDeck().add(this);
+    }
     public ArrayList<Card> getMainCards() {
         return mainCards;
     }

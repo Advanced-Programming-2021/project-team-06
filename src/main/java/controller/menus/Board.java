@@ -191,7 +191,7 @@ public class Board {
     }
 
     public boolean isInDeck(Card card) {
-        return deckZone.mainCards.contains((Object) card);
+        return deckZone.mainCards.contains(card);
     }
 
     public boolean isInField(Card card) {

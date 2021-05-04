@@ -140,6 +140,7 @@ public class Database {
         for (File filePointer : files) {
             Deck deck = FileWorker.getInstance().readDeckJSON(filePointer.toString());
             allDecks.add(deck);
+            deck.updateOwnerDecks();
         }
 
     }
