@@ -26,12 +26,16 @@ public class Monster extends Card implements Cloneable{
     private String condition;
     private String action;
     private String cancellation;
+    private MonsterMode monsterMode;
 
     public Monster(String name) {
         super(name);
     }
 
 
+    public MonsterMode getMonsterMode() {
+        return monsterMode;
+    }
 
     public void setAdditionalAttackPower(int additionalAttackPower) {
         this.additionalAttackPower = additionalAttackPower;

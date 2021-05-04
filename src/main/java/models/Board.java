@@ -1,8 +1,8 @@
-package controller.menus;
+package models;
 
 import models.Deck;
 import models.Player;
-import models.cards.Card;
+import models.cards.*;
 
 public class Board {
     Player player;
@@ -22,7 +22,11 @@ public class Board {
         graveyardZone = new Deck("GZ", player);
         banishedZone = new Deck("BZ", player);
         monsterZone = new Deck("MZ", player);
+        for (int i = 0; i < 5; i++)
+            monsterZone.addCard((Card) null, true);
         spellZone = new Deck("SZ", player);
+        for (int i = 0; i < 5; i++)
+            spellZone.addCard((Card) null, true);
         setPlayer(player);
         setOpponent(opponent);
     }
@@ -209,4 +213,68 @@ public class Board {
         return spellZone.mainCards.size() >= 5;
     }
 
+    public String toString(Player turn) {
+        StringBuilder handString = new StringBuilder(),
+                spellZoneString = new StringBuilder(), monsterZoneString = new StringBuilder();
+        handString.append(("\t" + "c").repeat(Math.max(0, hand.getNumberOfCardsInMainDeck())));
+        if (turn != player) {
+            for (Card card : spellZone.getMainCards()) {
+                if (card == null) spellZoneString.append("\tE");
+                else if (card.getCardPlacement() == CardPlacement.faceUp) spellZoneString.append("\tO");
+                else spellZoneString.append("\tH");
+            }
+            for (Card card : monsterZone.getMainCards()) {
+                if (card == null) {
+                    spellZoneString.append("\tE");
+                    break;
+                } else if (((Monster) card).getMonsterMode() == MonsterMode.attack)
+                    monsterZoneString.append("\tO");
+                else if (((Monster) card).getMonsterMode() == MonsterMode.defence)
+                    monsterZoneString.append("\tD");
+
+                if (card.getCardPlacement() == CardPlacement.faceUp)
+                    monsterZoneString.append("O");
+                else
+                    monsterZoneString.append("H");
+            }
+
+            return player.getUsername() + ":" + player.getHealth() + "\n"
+                    + handString + "\n"
+                    + deckZone.getNumberOfCardsInMainDeck() + "\n"
+                    + spellZoneString + "\n"
+                    + monsterZoneString + "\n" +
+                    graveyardZone.getNumberOfCardsInMainDeck() +
+                    "\t\t\t\t\t\t" + ((fieldZone == null) ? "FZ" : "O");
+        }
+
+
+        for (Card card : spellZone.getMainCards()) {
+            if (card == null) spellZoneString.insert(0,"\tE");
+            else if (card.getCardPlacement() == CardPlacement.faceUp) spellZoneString.insert(0 ,"\tO");
+            else spellZoneString.insert(0 ,"\tH");
+        }
+        for (Card card : monsterZone.getMainCards()) {
+            if (card == null) {
+                spellZoneString.insert(0 ,"\tE");
+                break;
+            } else if (((Monster) card).getMonsterMode() == MonsterMode.attack)
+                monsterZoneString.insert(0 ,"\tO");
+            else if (((Monster) card).getMonsterMode() == MonsterMode.defence)
+                monsterZoneString.insert(0 , "\tD");
+
+            if (card.getCardPlacement() == CardPlacement.faceUp)
+                monsterZoneString.insert(0 , "O");
+            else
+                monsterZoneString.insert(0 , "H");
+        }
+
+        return ((fieldZone == null) ? "FZ" : "O") +
+                "\t\t\t\t\t\t" + graveyardZone.getNumberOfCardsInMainDeck() +
+                monsterZoneString + "\n" +
+                spellZoneString + "\n" +
+                "\t\t\t\t\t\t" + deckZone.getNumberOfCardsInMainDeck() + "\n"
+                + handString + "\n" +
+                player.getUsername() + ":" + player.getHealth();
+
+    }
 }

@@ -21,12 +21,17 @@ public class Card implements Cloneable{
     protected Deck currentDeck;
     protected ArrayList<PlayType> possiblePlays = new ArrayList<>();
     protected Deck effectedCards;
+    protected CardPlacement cardPlacement;
     @SerializedName("Price")
     protected int price;
 
     public Card(String name) {
         this.name = name;
         setPrice(this.price);
+    }
+
+    public CardPlacement getCardPlacement() {
+        return cardPlacement;
     }
 
     public static CardSerializerForDeckDatabase getCardSerializerForDeck() {
