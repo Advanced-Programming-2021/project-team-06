@@ -3,10 +3,10 @@ package controller.menus;
 import models.Deck;
 import models.Player;
 import models.cards.Card;
-import models.cards.Spell;
-import models.cards.Trap;
 
 public class Board {
+    Player player;
+    Player opponent;
     private Deck deckZone;
     private Deck hand;
     private Deck graveyardZone;
@@ -14,35 +14,33 @@ public class Board {
     private Deck monsterZone;
     private Deck spellZone;
     private Card fieldZone;
-    Player player;
-    Player opponent;
 
 
-    public Board(Player player , Player opponent) {
-        deckZone = new Deck("deckZone" + player.getUsername(), player);
-        hand = new Deck("hand" + player.getUsername(), player);
-        graveyardZone = new Deck("graveyardZone" + player.getUsername(), player);
-        banishedZone = new Deck("banishedZone" + player.getUsername(), player);
-        monsterZone = new Deck("monsterZone" + player.getUsername(), player);
-        spellZone = new Deck("spellZone" + player.getUsername(), player);
+    public Board(Player player, Player opponent) {
+        deckZone = new Deck("DZ", player);
+        hand = new Deck("HZ", player);
+        graveyardZone = new Deck("GZ", player);
+        banishedZone = new Deck("BZ", player);
+        monsterZone = new Deck("MZ", player);
+        spellZone = new Deck("SZ", player);
         setPlayer(player);
         setOpponent(opponent);
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    public void setOpponent(Player opponent) {
-        this.opponent = opponent;
     }
 
     public Player getPlayer() {
         return player;
     }
 
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
     public Player getOpponent() {
         return opponent;
+    }
+
+    public void setOpponent(Player opponent) {
+        this.opponent = opponent;
     }
 
     public Card getFieldZone() {
