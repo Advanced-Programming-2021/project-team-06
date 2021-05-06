@@ -162,7 +162,7 @@ public class ErrorChecker {
 
     public static boolean isMonsterCardZoneFull(ArrayList<Card> monsterZone) {
         for (Card card : monsterZone) {
-            if (card.equals(null)) return false;
+            if (card == null) return false;
         }
         Output.getInstance().showMessage("monster card zone is full");
         return true;
@@ -170,7 +170,7 @@ public class ErrorChecker {
 
     public static boolean isThereOneMonsterForTribute(ArrayList<Card> monsterZone) {
         for (Card card : monsterZone) {
-            if (card.equals(null)) return true;
+            if (card == null) return true;
         }
         Output.getInstance().showMessage("there are not enough card for tribute");
         return false;
@@ -179,7 +179,7 @@ public class ErrorChecker {
     public static boolean isThereTwoMonsterForTribute(ArrayList<Card> monsterZone) {
         int counter = 0;
         for (Card card : monsterZone) {
-            if (card.equals(null)) counter++;
+            if (card == null) counter++;
         }
         if (counter < 2) {
             Output.getInstance().showMessage("there are not enough card for tribute");
