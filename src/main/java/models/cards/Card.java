@@ -104,9 +104,6 @@ public class Card implements Cloneable{
         card.setType(this.type);
         card.setDescription(this.description);
         card.setPrice(this.price);
-        if(card instanceof Monster) ((Monster) card).clone();
-        if(card instanceof Spell) ((Spell) card).clone();
-        if(card instanceof Trap) ((Trap) card).clone();
         return card;
     }
 }
@@ -126,14 +123,29 @@ class CardDeserializerForDeckDatabase implements JsonDeserializer<Card> {
         Card card = null;
         String cardName = jsonElement.getAsString();
         card = Database.getInstance().getMonsterByName(cardName);
-        if (card != null)
-            return card;
+        if (card != null) {
+            try {
+                return card.clone();
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+        }
         card = Database.getInstance().getSpellByName(cardName);
-        if (card != null)
-            return card;
+        if (card != null) {
+            try {
+                return card.clone();
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+        }
         card = Database.getInstance().getTrapByName(cardName);
-        if (card != null)
-            return card;
+        if (card != null) {
+            try {
+                return card.clone();
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+        }
 
         return null;
     }
