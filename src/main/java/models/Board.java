@@ -17,7 +17,7 @@ public class Board {
     private Deck spellZone;
     private Card fieldZone = null;
     private Card selectedCard = null;
-    private boolean isSummonedCardInTurn = false;
+    private boolean isSummonedOrSetCardInTurn = false;
 
 
     public Board(Player player, Player opponent) {
@@ -108,12 +108,12 @@ public class Board {
         this.spellZone = spellZone;
     }
 
-    public boolean isSummonedCardInTurn() {
-        return isSummonedCardInTurn;
+    public boolean isSummonedOrSetCardInTurn() {
+        return isSummonedOrSetCardInTurn;
     }
 
-    public void setSummonedCardInTurn(boolean summonedCardInTurn) {
-        isSummonedCardInTurn = summonedCardInTurn;
+    public void setSummonedOrSetCardInTurn(boolean summonedOrSetCardInTurn) {
+        isSummonedOrSetCardInTurn = summonedOrSetCardInTurn;
     }
 
     public Card getSelectedCard() {

@@ -22,7 +22,6 @@ public class Player {
     private int money;
     private Board board = null;
 
-
     public Player(String username, String nickname, String password) {
         this.username = username;
         this.password = password;

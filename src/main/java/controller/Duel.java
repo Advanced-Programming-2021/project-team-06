@@ -107,7 +107,7 @@ public class Duel {
         }
         if (!ErrorChecker.isMainPhase(phase)) return;
         if (ErrorChecker.isMonsterCardZoneFull(monsterZone)) return;
-        if (onlinePlayer.getBoard().isSummonedCardInTurn()) {
+        if (onlinePlayer.getBoard().isSummonedOrSetCardInTurn()) {
             Output.getInstance().showMessage("you already summoned/set on this turn");
             return;
         }
@@ -133,9 +133,32 @@ public class Duel {
         selectedCard.setCardPlacement(CardPlacement.faceUp);
         ((Monster) selectedCard).setMonsterMode(MonsterMode.attack);
         onlinePlayer.getBoard().putCardInMonsterZone(selectedCard);
-
+        onlinePlayer.getBoard().setSummonedOrSetCardInTurn(true);
         Output.getInstance().showMessage("summoned successfully");
 
+    }
+
+    public void set(){
+        Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
+        ArrayList<Card> monsterZone = onlinePlayer.getBoard().getMonsterZoneCards();
+        if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
+        if (!ErrorChecker.isCardInPlayerHand(selectedCard, onlinePlayer) ||
+                !ErrorChecker.isMonsterCard(selectedCard)) {
+            Output.getInstance().showMessage("you can't summon this card");
+            return;
+        }
+        if (!ErrorChecker.isMainPhase(phase)) return;
+        if (ErrorChecker.isMonsterCardZoneFull(monsterZone)) return;
+        if (onlinePlayer.getBoard().isSummonedOrSetCardInTurn()) {
+            Output.getInstance().showMessage("you already summoned/set on this turn");
+            return;
+        }
+
+        selectedCard.setCardPlacement(CardPlacement.faceDown);
+        ((Monster) selectedCard).setMonsterMode(MonsterMode.defence);
+        onlinePlayer.getBoard().putCardInMonsterZone(selectedCard);
+        onlinePlayer.getBoard().setSummonedOrSetCardInTurn(true);
+        Output.getInstance().showMessage("set successfully");
     }
 
 
