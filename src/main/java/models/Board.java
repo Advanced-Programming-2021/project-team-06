@@ -1,8 +1,10 @@
 package models;
 
+import models.cards.MonsterMode;
 import models.cards.*;
-
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
 public class Board {
     Player player;
@@ -194,7 +196,7 @@ public class Board {
     }
 
     public void removeFromHand(Card card) {
-        hand.mainCards.set(spellZone.mainCards.indexOf(card), null);
+        hand.mainCards.set(hand.mainCards.indexOf(card), null);
     }
 
     public void removeFromDeck(Card card) {
@@ -232,6 +234,48 @@ public class Board {
     public boolean isInField(Card card) {
         return isInMonsterZone(card) || isInSpellZone(card) || isInFieldZone(card) || isInGraveyard(card) ||
                 isInBanished(card) || isInHand(card) || isInDeck(card);
+    }
+
+    public boolean isHandFull() {
+        return hand.mainCards.size() >= 6;
+    }
+
+    public boolean isMonsterZoneFull() {
+        return monsterZone.mainCards.size() >= 5;
+    }
+
+    public boolean isSpellZoneFull() {
+        return spellZone.mainCards.size() >= 5;
+    }
+
+    public Card drawCard() {
+        if (deckZone.mainCards.size() > 0) {
+            if (isHandFull()) {
+                removeFromHand(hand.mainCards.get(new Random().nextInt(hand.mainCards.size())));
+            }
+            putInHand(deckZone.mainCards.get(deckZone.mainCards.size() - 1));
+            removeFromDeck(deckZone.mainCards.get(deckZone.mainCards.size() - 1));
+            return hand.mainCards.get(hand.mainCards.size() - 1);
+        }
+        return null;
+    }
+
+    public void shuffleDeck() {
+        Collections.shuffle(deckZone.mainCards);
+    }
+
+    public int getFirstFreeMonsterZoneIndex() {
+        for (int i = 0; i < 5; i++) {
+            if (monsterZone.mainCards.get(i) == null) return i;
+        }
+        return -1;
+    }
+
+    public int getFirstFreeSpellZoneIndex() {
+        for (int i = 0; i < 5; i++) {
+            if (spellZone.mainCards.get(i) == null) return i;
+        }
+        return -1;
     }
 
     public String toString(Player turn) {
