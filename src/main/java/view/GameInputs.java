@@ -20,7 +20,12 @@ public class GameInputs {
             "^select -d$",
             "^next phase$",
             "^summon$",
-            "^set$"
+            "^summon$",
+            "^set$",
+            "^set (--position|-p) (?<mode>attack|defence)$",
+            "^flip-summon",
+            "^attack (?<address>\\d+)$",
+            "^attack direct$"
     };
     private Duel onlineDuel;
 
@@ -47,12 +52,12 @@ public class GameInputs {
         while (true) {
             command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", " ");
             int whichCommand;
-            for (whichCommand = 0; whichCommand < 10; whichCommand++) {
+            for (whichCommand = 0; whichCommand < 15; whichCommand++) {
                 commandMatcher = findMatcher(command, gamePlayRegexes[whichCommand]);
                 if (commandMatcher.find()) {
                     executeGamePlayCommands(commandMatcher, whichCommand);
                     break;
-                } else if (whichCommand == 7)
+                } else if (whichCommand == 14)
                     Output.getInstance().showMessage("invalid command");
             }
         }
@@ -89,8 +94,22 @@ public class GameInputs {
                 break;
             case 9:
                 onlineDuel.summon();
+                break;
             case 10:
                 onlineDuel.set();
+                break;
+            case 11:
+                onlineDuel.setPosition(commandMatcher.group("mode"));
+                break;
+            case 12:
+                onlineDuel.flipSummon();
+                break;
+            case 13:
+                onlineDuel.attack(commandMatcher.group("address"));
+                break;
+            case 14:
+                onlineDuel.attackDirect();
+                break;
         }
     }
 
@@ -100,7 +119,6 @@ public class GameInputs {
         address = ConsoleBasedMenus.scanner.nextLine();
         return address;
     }
-
 
     private Matcher findMatcher(String input, String regex) {
 

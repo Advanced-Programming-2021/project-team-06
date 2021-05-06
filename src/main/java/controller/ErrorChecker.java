@@ -6,7 +6,9 @@ import models.Database;
 import models.Deck;
 import models.Player;
 import models.cards.Card;
+import models.cards.CardPlacement;
 import models.cards.Monster;
+import models.cards.MonsterMode;
 import view.Output;
 
 import java.util.ArrayList;
@@ -191,5 +193,15 @@ public class ErrorChecker {
         Output.getInstance().showMessage("there are no monster one this address");
         return true;
     }
+
+    public static boolean isNewMonsterMode(Card card, MonsterMode newMonsterMode) {
+        if (((Monster) card).getMonsterMode().equals(newMonsterMode) ||
+                card.getCardPlacement().equals(CardPlacement.faceDown)) {
+            System.out.println("this card is already in the wanted position");
+            return false;
+        }
+        return true;
+    }
+
 
 }
