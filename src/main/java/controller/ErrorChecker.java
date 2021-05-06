@@ -148,6 +148,13 @@ public class ErrorChecker {
         return false;
     }
 
+    public static boolean isBattlePhase(Phases phase) {
+        if (phase.equals(Phases.BATTLE)) return true;
+        Output.getInstance().showMessage("action not allowed in this phase");
+        return false;
+    }
+
+
     public static boolean isCardInPlayerHand(Card card, Player player) {
         ArrayList<Card> hand = player.getBoard().getHandZoneCards();
         for (Card c : hand) {
@@ -199,6 +206,13 @@ public class ErrorChecker {
                 card.getCardPlacement().equals(CardPlacement.faceDown)) {
             System.out.println("this card is already in the wanted position");
             return false;
+        }
+        return true;
+    }
+
+    public static boolean isMonsterZoneEmpty(ArrayList<Card> monsterZone) {
+        for (Card card : monsterZone) {
+            if (card != null) return false;
         }
         return true;
     }

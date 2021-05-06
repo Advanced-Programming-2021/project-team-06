@@ -42,6 +42,7 @@ public class Card implements Cloneable{
         return new CardDeserializerForDeckDatabase();
     }
 
+
     public int getPrice() {
         return price;
     }

@@ -20,6 +20,7 @@ public class Monster extends Card implements Cloneable{
     String deathTimeActions;
     String flipTimeActions;
     String gettingRaidTimeActions;
+    private boolean haveBeenAttackedWithMonsterInTurn = false;
 
 
     private String condition;
@@ -70,6 +71,14 @@ public class Monster extends Card implements Cloneable{
 
     public int getLEVEL() {
         return LEVEL;
+    }
+
+    public boolean isHaveBeenAttackedWithMonsterInTurn() {
+        return haveBeenAttackedWithMonsterInTurn;
+    }
+
+    public void setHaveBeenAttackedWithMonsterInTurn(boolean haveBeenAttackedWithMonsterInTurn) {
+        this.haveBeenAttackedWithMonsterInTurn = haveBeenAttackedWithMonsterInTurn;
     }
 
     public MonsterAttribute getMonsterAttribute() {

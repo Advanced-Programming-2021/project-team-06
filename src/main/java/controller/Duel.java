@@ -172,8 +172,7 @@ public class Duel {
 
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
         if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
-        if (!ErrorChecker.isCardInPlayerHand(selectedCard, onlinePlayer) ||
-                !ErrorChecker.isMonsterCard(selectedCard)) {
+        if (!onlinePlayer.getBoard().isInMonsterZone(selectedCard)) {
             Output.getInstance().showMessage("you can't summon this card");
             return;
         }
@@ -194,8 +193,7 @@ public class Duel {
     public void flipSummon() {
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
         if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
-        if (!ErrorChecker.isCardInPlayerHand(selectedCard, onlinePlayer) ||
-                !ErrorChecker.isMonsterCard(selectedCard)) {
+        if (!onlinePlayer.getBoard().isInMonsterZone(selectedCard)) {
             Output.getInstance().showMessage("you can't summon this card");
             return;
         }
@@ -215,6 +213,29 @@ public class Duel {
     }
 
     public void attackDirect() {
+        Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
+        if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
+        if (!onlinePlayer.getBoard().isInMonsterZone(selectedCard)) {
+            Output.getInstance().showMessage("you can't attack with this card");
+            return;
+        }
+        if (((Monster) selectedCard).getMonsterMode().equals(MonsterMode.defence)) {
+            Output.getInstance().showMessage("This model is a defense card");
+            return;
+        }
+        if (!ErrorChecker.isBattlePhase(phase)) return;
+        if (!ErrorChecker.isMonsterZoneEmpty(offlinePlayer.getBoard().getMonsterZoneCards())) {
+            Output.getInstance().showMessage("opponent monster zone is not empty");
+            return;
+        }
+        if (((Monster) selectedCard).isHaveBeenAttackedWithMonsterInTurn()) {
+            Output.getInstance().showMessage("this card already attacked");
+            return;
+        }
+
+        offlinePlayer.setHealth(offlinePlayer.getHealth() - ((Monster) selectedCard).getAttackPower());
+        Output.getInstance().showMessage("you opponent receives " + ((Monster) selectedCard).getAttackPower()
+                + " battle damage");
     }
 
 
