@@ -134,11 +134,13 @@ public class Duel {
         ((Monster) selectedCard).setMonsterMode(MonsterMode.attack);
         onlinePlayer.getBoard().putCardInMonsterZone(selectedCard);
         onlinePlayer.getBoard().setSummonedOrSetCardInTurn(true);
+        onlinePlayer.getBoard().setSelectedCard(null);
+        Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
         Output.getInstance().showMessage("summoned successfully");
 
     }
 
-    public void set(){
+    public void set() {
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
         ArrayList<Card> monsterZone = onlinePlayer.getBoard().getMonsterZoneCards();
         if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
@@ -158,7 +160,61 @@ public class Duel {
         ((Monster) selectedCard).setMonsterMode(MonsterMode.defence);
         onlinePlayer.getBoard().putCardInMonsterZone(selectedCard);
         onlinePlayer.getBoard().setSummonedOrSetCardInTurn(true);
+        onlinePlayer.getBoard().setSelectedCard(null);
+        Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
         Output.getInstance().showMessage("set successfully");
+    }
+
+    public void setPosition(String mode) {
+        MonsterMode newMonsterMode = null;
+        if (mode.equals("attack")) newMonsterMode = MonsterMode.attack;
+        if (mode.equals("defence")) newMonsterMode = MonsterMode.defence;
+
+        Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
+        if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
+        if (!ErrorChecker.isCardInPlayerHand(selectedCard, onlinePlayer) ||
+                !ErrorChecker.isMonsterCard(selectedCard)) {
+            Output.getInstance().showMessage("you can't summon this card");
+            return;
+        }
+        if (!ErrorChecker.isMainPhase(phase)) return;
+        if (!ErrorChecker.isNewMonsterMode(selectedCard, newMonsterMode)) return;
+        if (onlinePlayer.getBoard().isChangePositionInTurn()) {
+            Output.getInstance().showMessage("you already changed this card position in this turn");
+            return;
+        }
+        ((Monster) selectedCard).setMonsterMode(newMonsterMode);
+        onlinePlayer.getBoard().setChangePositionInTurn(true);
+        onlinePlayer.getBoard().setSelectedCard(null);
+        Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
+        Output.getInstance().showMessage("monster card position changed successfully");
+
+    }
+
+    public void flipSummon() {
+        Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
+        if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
+        if (!ErrorChecker.isCardInPlayerHand(selectedCard, onlinePlayer) ||
+                !ErrorChecker.isMonsterCard(selectedCard)) {
+            Output.getInstance().showMessage("you can't summon this card");
+            return;
+        }
+        if (!ErrorChecker.isMainPhase(phase)) return;
+        if (((Monster) selectedCard).getMonsterMode().equals(MonsterMode.attack) ||
+                selectedCard.getCardPlacement().equals(CardPlacement.faceUp)) {
+            Output.getInstance().showMessage("you can't flip summon this card");
+            return;
+        }
+        ((Monster) selectedCard).setMonsterMode(MonsterMode.attack);
+        onlinePlayer.getBoard().setSelectedCard(null);
+        Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
+        Output.getInstance().showMessage("flip Summoned successfully");
+    }
+
+    public void attack(String address) {
+    }
+
+    public void attackDirect() {
     }
 
 

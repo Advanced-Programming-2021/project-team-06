@@ -2,6 +2,7 @@ package models;
 
 import models.cards.MonsterMode;
 import models.cards.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -18,6 +19,7 @@ public class Board {
     private Card fieldZone = null;
     private Card selectedCard = null;
     private boolean isSummonedOrSetCardInTurn = false;
+    private boolean isChangePositionInTurn = false;
 
 
     public Board(Player player, Player opponent) {
@@ -134,6 +136,14 @@ public class Board {
 
     public ArrayList<Card> getHandZoneCards() {
         return hand.getMainCards();
+    }
+
+    public boolean isChangePositionInTurn() {
+        return isChangePositionInTurn;
+    }
+
+    public void setChangePositionInTurn(boolean changePositionInTurn) {
+        isChangePositionInTurn = changePositionInTurn;
     }
 
     public void putCardInMonsterZone(Card card) {
