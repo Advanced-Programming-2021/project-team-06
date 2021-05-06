@@ -8,20 +8,7 @@ import java.util.regex.Pattern;
 
 public class GameInputs {
 
-    private Duel onlineDuel;
-
-    private GameInputs() {
-    }
-
     private static GameInputs instance;
-
-    public static GameInputs getInstance() {
-        if (instance == null)
-            instance = new GameInputs();
-        return instance;
-    }
-
-
     private final String[] gamePlayRegexes = {
             "^select (--monster|-m) (?<address>\\d+)$",
             "^select (--monster|-m) (?<address>\\d+) (--opponent|-o)$",
@@ -32,8 +19,19 @@ public class GameInputs {
             "^select (--hand|-h) (?<address>\\d+)$",
             "^select -d$",
             "^next phase$",
-            "^summon$"
+            "^summon$",
+            "^set$"
     };
+    private Duel onlineDuel;
+
+    private GameInputs() {
+    }
+
+    public static GameInputs getInstance() {
+        if (instance == null)
+            instance = new GameInputs();
+        return instance;
+    }
 
     public Duel getOnlineDuel() {
         return onlineDuel;
@@ -91,6 +89,8 @@ public class GameInputs {
                 break;
             case 9:
                 onlineDuel.summon();
+            case 10:
+                onlineDuel.set();
         }
     }
 
@@ -100,6 +100,7 @@ public class GameInputs {
         address = ConsoleBasedMenus.scanner.nextLine();
         return address;
     }
+
 
     private Matcher findMatcher(String input, String regex) {
 

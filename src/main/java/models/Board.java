@@ -1,7 +1,10 @@
 package models;
 
+import models.cards.Card;
+import models.cards.CardPlacement;
+import models.cards.Monster;
 import models.cards.MonsterMode;
-import models.cards.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -137,15 +140,11 @@ public class Board {
     }
 
     public void putCardInMonsterZone(Card card) {
-        for (int i = 0; i < 5; i++)
-            if (monsterZone.getMainCards().get(i).equals(null))
-                monsterZone.getMainCards().add(i, card);
+        monsterZone.mainCards.set(getFirstFreeMonsterZoneIndex(), card);
     }
 
     public void putInSpellZone(Card card) {
-        for (int i = 0; i < 5; i++)
-            if (spellZone.getMainCards().get(i).equals(null))
-                spellZone.getMainCards().add(i, card);
+        spellZone.mainCards.set(getFirstFreeSpellZoneIndex(), card);
     }
 
     public void putInFieldZone(Card card) {
@@ -165,7 +164,7 @@ public class Board {
 
     public void putInHand(Card card) {
         for (int i = 0; i < 6; i++)
-            if (hand.getMainCards().get(i).equals(null))
+            if (hand.getMainCards().get(i) == null)
                 hand.getMainCards().add(i, card);
     }
 

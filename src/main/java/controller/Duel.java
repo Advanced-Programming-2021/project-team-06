@@ -144,7 +144,7 @@ public class Duel {
         if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
         if (!ErrorChecker.isCardInPlayerHand(selectedCard, onlinePlayer) ||
                 !ErrorChecker.isMonsterCard(selectedCard)) {
-            Output.getInstance().showMessage("you can't summon this card");
+            Output.getInstance().showMessage("you can't set this card");
             return;
         }
         if (!ErrorChecker.isMainPhase(phase)) return;
