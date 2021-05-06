@@ -1,7 +1,13 @@
 package models;
 
-import models.cards.*;
+import models.cards.Card;
+import models.cards.CardPlacement;
+import models.cards.Monster;
+import models.cards.MonsterMode;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
 public class Board {
     Player player;
@@ -160,11 +166,11 @@ public class Board {
     }
 
     public void removeFromMonsterZone(Card card) {
-        monsterZone.mainCards.remove((Object) card);
+        monsterZone.mainCards.set(monsterZone.mainCards.indexOf((Object) card), null);
     }
 
     public void removeFromSpellZone(Card card) {
-        spellZone.mainCards.remove((Object) card);
+        spellZone.mainCards.set(spellZone.mainCards.indexOf((Object) card), null);
     }
 
     public void removeFromFieldZone(Card card) {
@@ -174,19 +180,19 @@ public class Board {
     }
 
     public void removeFromGraveyard(Card card) {
-        graveyardZone.removeCard(card, true);
+        graveyardZone.mainCards.set(graveyardZone.mainCards.indexOf((Object) card), null);
     }
 
     public void removeFromBanished(Card card) {
-        banishedZone.removeCard(card, true);
+        banishedZone.mainCards.set(banishedZone.mainCards.indexOf((Object) card), null);
     }
 
     public void removeFromHand(Card card) {
-        hand.removeCard(card, true);
+        hand.mainCards.set(hand.mainCards.indexOf((Object) card), null);
     }
 
     public void removeFromDeck(Card card) {
-        deckZone.removeCard(card, true);
+        deckZone.mainCards.set(deckZone.mainCards.indexOf((Object) card), null);
     }
 
     public boolean isInMonsterZone(Card card) {
@@ -232,6 +238,36 @@ public class Board {
 
     public boolean isSpellZoneFull() {
         return spellZone.mainCards.size() >= 5;
+    }
+
+    public Card drawCard() {
+        if (deckZone.mainCards.size() > 0) {
+            if (isHandFull()) {
+                removeFromHand(hand.mainCards.get(new Random().nextInt(hand.mainCards.size())));
+            }
+            putInHand(deckZone.mainCards.get(deckZone.mainCards.size() - 1));
+            removeFromDeck(deckZone.mainCards.get(deckZone.mainCards.size() - 1));
+            return hand.mainCards.get(hand.mainCards.size() - 1);
+        }
+        return null;
+    }
+
+    public void shuffleDeck() {
+        Collections.shuffle(deckZone.mainCards);
+    }
+
+    public int getFirstFreeMonsterZoneIndex() {
+        for (int i = 0; i < 5; i++) {
+            if (monsterZone.mainCards.get(i) == null) return i;
+        }
+        return -1;
+    }
+
+    public int getFirstFreeSpellZoneIndex() {
+        for (int i = 0; i < 5; i++) {
+            if (spellZone.mainCards.get(i) == null) return i;
+        }
+        return -1;
     }
 
     public String toString(Player turn) {
