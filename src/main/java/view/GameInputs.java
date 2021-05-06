@@ -49,7 +49,7 @@ public class GameInputs {
         while (true) {
             command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", " ");
             int whichCommand;
-            for (whichCommand = 0; whichCommand < 8; whichCommand++) {
+            for (whichCommand = 0; whichCommand < 10; whichCommand++) {
                 commandMatcher = findMatcher(command, gamePlayRegexes[whichCommand]);
                 if (commandMatcher.find()) {
                     executeGamePlayCommands(commandMatcher, whichCommand);
@@ -90,9 +90,15 @@ public class GameInputs {
                 onlineDuel.changePhase();
                 break;
             case 9:
-
-
+                onlineDuel.summon();
         }
+    }
+
+    public String getAddressForTribute() {
+        String address;
+        Output.getInstance().showMessage("enter Address For tribute: ");
+        address = ConsoleBasedMenus.scanner.nextLine();
+        return address;
     }
 
     private Matcher findMatcher(String input, String regex) {

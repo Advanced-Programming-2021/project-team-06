@@ -6,7 +6,10 @@ import models.Database;
 import models.Deck;
 import models.Player;
 import models.cards.Card;
+import models.cards.Monster;
 import view.Output;
+
+import java.util.ArrayList;
 
 public class ErrorChecker {
 
@@ -87,7 +90,7 @@ public class ErrorChecker {
     }
 
     public static boolean isNumberOfCardsInDeckLessThanFour(Deck deck, Card card) {
-        if (deck.getNumberOfCardsInDeck(card) < 4)
+        if (deck.getNumberOfCardsInDeck(card) < 3)
             return true;
         Output.getInstance().showMessage("there are already three cards with name " + card.getName() +
                 " in deck " + deck.getName() + " !");
@@ -134,6 +137,58 @@ public class ErrorChecker {
             return false;
         }
 
+        return true;
+    }
+
+    public static boolean isMainPhase(Phases phase) {
+        if (phase.equals(Phases.MAIN1) || phase.equals(Phases.MAIN2)) return true;
+        Output.getInstance().showMessage("action not allowed in this phase");
+        return false;
+    }
+
+    public static boolean isCardInPlayerHand(Card card, Player player) {
+        ArrayList<Card> hand = player.getBoard().getHandZoneCards();
+        for (Card c : hand) {
+            if (c.getName().equals(card.getName())) return true;
+        }
+        return false;
+    }
+
+    public static boolean isMonsterCard(Card card) {
+        return card instanceof Monster;
+    }
+
+    public static boolean isMonsterCardZoneFull(ArrayList<Card> monsterZone) {
+        for (Card card : monsterZone) {
+            if (card.equals(null)) return false;
+        }
+        Output.getInstance().showMessage("monster card zone is full");
+        return true;
+    }
+
+    public static boolean isThereOneMonsterForTribute(ArrayList<Card> monsterZone) {
+        for (Card card : monsterZone) {
+            if (card.equals(null)) return true;
+        }
+        Output.getInstance().showMessage("there are not enough card for tribute");
+        return false;
+    }
+
+    public static boolean isThereTwoMonsterForTribute(ArrayList<Card> monsterZone) {
+        int counter = 0;
+        for (Card card : monsterZone) {
+            if (card.equals(null)) counter++;
+        }
+        if (counter < 2) {
+            Output.getInstance().showMessage("there are not enough card for tribute");
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean isThereCardInAddress(ArrayList<Card> monsterZone, int address) {
+        if (monsterZone.get(address) == null) return false;
+        Output.getInstance().showMessage("there are no monster one this address");
         return true;
     }
 

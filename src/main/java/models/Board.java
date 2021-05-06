@@ -1,6 +1,7 @@
 package models;
 
 import models.cards.*;
+
 import java.util.ArrayList;
 
 public class Board {
@@ -14,6 +15,7 @@ public class Board {
     private Deck spellZone;
     private Card fieldZone = null;
     private Card selectedCard = null;
+    private boolean isSummonedCardInTurn = false;
 
 
     public Board(Player player, Player opponent) {
@@ -23,10 +25,10 @@ public class Board {
         banishedZone = new Deck("BZ", player);
         monsterZone = new Deck("MZ", player);
         for (int i = 0; i < 5; i++)
-            monsterZone.addCard((Card) null, true);
+            monsterZone.addCard(null, true);
         spellZone = new Deck("SZ", player);
         for (int i = 0; i < 5; i++)
-            spellZone.addCard((Card) null, true);
+            spellZone.addCard(null, true);
 
         setPlayer(player);
         setOpponent(opponent);
@@ -104,6 +106,14 @@ public class Board {
         this.spellZone = spellZone;
     }
 
+    public boolean isSummonedCardInTurn() {
+        return isSummonedCardInTurn;
+    }
+
+    public void setSummonedCardInTurn(boolean summonedCardInTurn) {
+        isSummonedCardInTurn = summonedCardInTurn;
+    }
+
     public Card getSelectedCard() {
         return selectedCard;
     }
@@ -125,15 +135,15 @@ public class Board {
     }
 
     public void putCardInMonsterZone(Card card) {
-        if (!isMonsterZoneFull()) {
-            monsterZone.mainCards.add(card);
-        }
+        for (int i = 0; i < 5; i++)
+            if (monsterZone.getMainCards().get(i).equals(null))
+                monsterZone.getMainCards().add(i, card);
     }
 
     public void putInSpellZone(Card card) {
-        if (!isSpellZoneFull()) {
-            spellZone.mainCards.add(card);
-        }
+        for (int i = 0; i < 5; i++)
+            if (spellZone.getMainCards().get(i).equals(null))
+                spellZone.getMainCards().add(i, card);
     }
 
     public void putInFieldZone(Card card) {
@@ -152,7 +162,9 @@ public class Board {
     }
 
     public void putInHand(Card card) {
-        hand.mainCards.add(card);
+        for (int i = 0; i < 6; i++)
+            if (hand.getMainCards().get(i).equals(null))
+                hand.getMainCards().add(i, card);
     }
 
     public void putInDeck(Card card) {
@@ -160,11 +172,11 @@ public class Board {
     }
 
     public void removeFromMonsterZone(Card card) {
-        monsterZone.mainCards.remove((Object) card);
+        monsterZone.mainCards.set(monsterZone.mainCards.indexOf(card), null);
     }
 
     public void removeFromSpellZone(Card card) {
-        spellZone.mainCards.remove((Object) card);
+        spellZone.mainCards.set(spellZone.mainCards.indexOf(card), null);
     }
 
     public void removeFromFieldZone(Card card) {
@@ -182,7 +194,7 @@ public class Board {
     }
 
     public void removeFromHand(Card card) {
-        hand.removeCard(card, true);
+        hand.mainCards.set(spellZone.mainCards.indexOf(card), null);
     }
 
     public void removeFromDeck(Card card) {
@@ -190,11 +202,11 @@ public class Board {
     }
 
     public boolean isInMonsterZone(Card card) {
-        return monsterZone.mainCards.contains((Object) card);
+        return monsterZone.mainCards.contains(card);
     }
 
     public boolean isInSpellZone(Card card) {
-        return spellZone.mainCards.contains((Object) card);
+        return spellZone.mainCards.contains(card);
     }
 
     public boolean isInFieldZone(Card card) {
@@ -202,15 +214,15 @@ public class Board {
     }
 
     public boolean isInGraveyard(Card card) {
-        return graveyardZone.mainCards.contains((Object) card);
+        return graveyardZone.mainCards.contains(card);
     }
 
     public boolean isInBanished(Card card) {
-        return banishedZone.mainCards.contains((Object) card);
+        return banishedZone.mainCards.contains(card);
     }
 
     public boolean isInHand(Card card) {
-        return hand.mainCards.contains((Object) card);
+        return hand.mainCards.contains(card);
     }
 
     public boolean isInDeck(Card card) {
@@ -220,18 +232,6 @@ public class Board {
     public boolean isInField(Card card) {
         return isInMonsterZone(card) || isInSpellZone(card) || isInFieldZone(card) || isInGraveyard(card) ||
                 isInBanished(card) || isInHand(card) || isInDeck(card);
-    }
-
-    public boolean isHandFull() {
-        return hand.mainCards.size() >= 6;
-    }
-
-    public boolean isMonsterZoneFull() {
-        return monsterZone.mainCards.size() >= 5;
-    }
-
-    public boolean isSpellZoneFull() {
-        return spellZone.mainCards.size() >= 5;
     }
 
     public String toString(Player turn) {

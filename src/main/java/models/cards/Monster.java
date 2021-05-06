@@ -15,7 +15,6 @@ public class Monster extends Card implements Cloneable{
     MonsterAttribute monsterAttribute;
     @SerializedName("Level")
     int LEVEL;
-    CardPlacement cardPlacement;
     String normalSummonTimeActions;
     String specialSummonTimeActions;
     String deathTimeActions;
@@ -35,6 +34,10 @@ public class Monster extends Card implements Cloneable{
 
     public MonsterMode getMonsterMode() {
         return monsterMode;
+    }
+
+    public void setMonsterMode(MonsterMode monsterMode) {
+        this.monsterMode = monsterMode;
     }
 
     public void setAdditionalAttackPower(int additionalAttackPower) {
@@ -73,6 +76,10 @@ public class Monster extends Card implements Cloneable{
         return monsterAttribute;
     }
 
+    public void setMonsterAttribute(MonsterAttribute monsterAttribute) {
+        this.monsterAttribute = monsterAttribute;
+    }
+
     @Override
     public String toString() {
         return "Name: " + super.name + '\n' +
@@ -83,7 +90,7 @@ public class Monster extends Card implements Cloneable{
                 "Description: " + super.description + '\n';
     }
     @Override
-    protected Monster clone() throws CloneNotSupportedException
+    public Monster clone() throws CloneNotSupportedException
     {
         Monster monster = (Monster) super.clone();
         monster.setType(this.type);

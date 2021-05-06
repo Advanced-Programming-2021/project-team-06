@@ -78,6 +78,11 @@ public class Card implements Cloneable{
         this.description = description;
     }
 
+    public void setCardPlacement(CardPlacement cardPlacement) {
+        this.cardPlacement = cardPlacement;
+    }
+
+
     public void goTo(Deck deck) {
         setCurrentDeck(deck);
     }
@@ -92,13 +97,16 @@ public class Card implements Cloneable{
     }
 
     @Override
-    protected Card clone() throws CloneNotSupportedException
+    public Card clone() throws CloneNotSupportedException
     {
         Card card = (Card) super.clone();
         card.setName(this.name);
         card.setType(this.type);
         card.setDescription(this.description);
         card.setPrice(this.price);
+        if(card instanceof Monster) ((Monster) card).clone();
+        if(card instanceof Spell) ((Spell) card).clone();
+        if(card instanceof Trap) ((Trap) card).clone();
         return card;
     }
 }

@@ -2,8 +2,11 @@ package controller;
 
 import models.Board;
 import models.Player;
-import models.cards.Card;
+import models.cards.*;
+import view.GameInputs;
 import view.Output;
+
+import java.util.ArrayList;
 
 
 public class Duel {
@@ -92,6 +95,49 @@ public class Duel {
             changeTurn();
         }
     }
+
+    public void summon() {
+        Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
+        ArrayList<Card> monsterZone = onlinePlayer.getBoard().getMonsterZoneCards();
+        if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
+        if (!ErrorChecker.isCardInPlayerHand(selectedCard, onlinePlayer) ||
+                !ErrorChecker.isMonsterCard(selectedCard)) {
+            Output.getInstance().showMessage("you can't summon this card");
+            return;
+        }
+        if (!ErrorChecker.isMainPhase(phase)) return;
+        if (ErrorChecker.isMonsterCardZoneFull(monsterZone)) return;
+        if (onlinePlayer.getBoard().isSummonedCardInTurn()) {
+            Output.getInstance().showMessage("you already summoned/set on this turn");
+            return;
+        }
+        if (((Monster) selectedCard).getLEVEL() == 5 || ((Monster) selectedCard).getLEVEL() == 6) {
+            if (!ErrorChecker.isThereOneMonsterForTribute(monsterZone)) return;
+            int address = Integer.parseInt(GameInputs.getInstance().getAddressForTribute());
+            if (ErrorChecker.isThereCardInAddress(monsterZone, address)) return;
+            onlinePlayer.getBoard().removeFromMonsterZone(monsterZone.get(address));
+            onlinePlayer.getBoard().removeFromHand(selectedCard);
+
+        }
+
+        if (((Monster) selectedCard).getLEVEL() == 7 || ((Monster) selectedCard).getLEVEL() == 8) {
+            if (!ErrorChecker.isThereTwoMonsterForTribute(onlinePlayer.getBoard().getMonsterZoneCards())) return;
+            int address1 = Integer.parseInt(GameInputs.getInstance().getAddressForTribute());
+            int address2 = Integer.parseInt(GameInputs.getInstance().getAddressForTribute());
+            if (ErrorChecker.isThereCardInAddress(onlinePlayer.getBoard().getMonsterZoneCards(), address1)) return;
+            if (ErrorChecker.isThereCardInAddress(onlinePlayer.getBoard().getMonsterZoneCards(), address2)) return;
+            onlinePlayer.getBoard().removeFromMonsterZone(monsterZone.get(address1));
+            onlinePlayer.getBoard().removeFromMonsterZone(monsterZone.get(address2));
+        }
+
+        selectedCard.setCardPlacement(CardPlacement.faceUp);
+        ((Monster) selectedCard).setMonsterMode(MonsterMode.attack);
+        onlinePlayer.getBoard().putCardInMonsterZone(selectedCard);
+
+        Output.getInstance().showMessage("summoned successfully");
+
+    }
+
 
     private int setCardAddressInMyBoard(int address) {
         if (address == 5) return 0;

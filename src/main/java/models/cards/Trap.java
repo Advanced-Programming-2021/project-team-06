@@ -25,7 +25,7 @@ public class Trap extends Card implements Cloneable {
     }
 
     @Override
-    protected Trap clone() throws CloneNotSupportedException {
+    public Trap clone() throws CloneNotSupportedException {
         return (Trap) super.clone();
     }
 }

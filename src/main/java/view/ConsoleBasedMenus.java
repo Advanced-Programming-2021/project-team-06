@@ -76,7 +76,7 @@ public class ConsoleBasedMenus {
     }
 
 
-    public void runRegisterMenu() {
+    public void runRegisterMenu() throws CloneNotSupportedException {
         Matcher commandMatcher;
         String command;
         while (runningMenu.equals("register")) {
@@ -93,7 +93,7 @@ public class ConsoleBasedMenus {
         }
     }
 
-    private void executeRegisterMenuCommands(Matcher commandMatcher, int whichCommand) {
+    private void executeRegisterMenuCommands(Matcher commandMatcher, int whichCommand) throws CloneNotSupportedException {
         switch (whichCommand) {
             case 0:
             case 1:
@@ -122,7 +122,7 @@ public class ConsoleBasedMenus {
         }
     }
 
-    public void runMainMenu() {
+    public void runMainMenu() throws CloneNotSupportedException {
         Matcher commandMatcher;
         String command;
         while (runningMenu.equals("main")) {
@@ -139,7 +139,7 @@ public class ConsoleBasedMenus {
         }
     }
 
-    private void executeMainMenuCommands(Matcher commandMatcher, int whichCommand) {
+    private void executeMainMenuCommands(Matcher commandMatcher, int whichCommand) throws CloneNotSupportedException {
         switch (whichCommand) {
             case 0:
                 String menuName = commandMatcher.group("name");
@@ -173,7 +173,7 @@ public class ConsoleBasedMenus {
         }
     }
 
-    public void runDeckMenu() {
+    public void runDeckMenu() throws CloneNotSupportedException {
         Matcher commandMatcher;
         String command;
         while (runningMenu.equals("deck")) {
@@ -191,7 +191,7 @@ public class ConsoleBasedMenus {
         }
     }
 
-    private void executeDeckMenuCommands(Matcher commandMatcher, int whichCommand) {
+    private void executeDeckMenuCommands(Matcher commandMatcher, int whichCommand) throws CloneNotSupportedException {
         DeckMenuController controller = DeckMenuController.getInstance();
         Player loggedInPlayer = MainMenu.getInstance().getPlayerLoggedIn();
         switch (whichCommand) {
