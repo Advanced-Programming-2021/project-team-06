@@ -78,6 +78,10 @@ public class Card implements Cloneable{
         this.description = description;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public void setCardPlacement(CardPlacement cardPlacement) {
         this.cardPlacement = cardPlacement;
     }

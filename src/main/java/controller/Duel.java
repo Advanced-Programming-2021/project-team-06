@@ -2,7 +2,11 @@ package controller;
 
 import models.Board;
 import models.Player;
-import models.cards.*;
+import models.cards.Card;
+import models.cards.CardPlacement;
+import models.cards.Monster;
+import models.cards.MonsterMode;
+import view.ConsoleBasedMenus;
 import view.GameInputs;
 import view.Output;
 
@@ -10,8 +14,8 @@ import java.util.ArrayList;
 
 
 public class Duel {
-    private Player firstPlayer;
-    private Player secondPlayer;
+    private final Player firstPlayer;
+    private final Player secondPlayer;
     private Player onlinePlayer;
     private Player offlinePlayer;
     private int turn = 1;
@@ -117,7 +121,6 @@ public class Duel {
             if (ErrorChecker.isThereCardInAddress(monsterZone, address)) return;
             onlinePlayer.getBoard().removeFromMonsterZone(monsterZone.get(address));
             onlinePlayer.getBoard().removeFromHand(selectedCard);
-
         }
 
         if (((Monster) selectedCard).getLEVEL() == 7 || ((Monster) selectedCard).getLEVEL() == 8) {
@@ -163,6 +166,67 @@ public class Duel {
         onlinePlayer.getBoard().setSelectedCard(null);
         Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
         Output.getInstance().showMessage("set successfully");
+    }
+
+    public void activateSpellCard() {
+        Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
+        if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
+        if (ErrorChecker.isAbleToBeActive(selectedCard, phase, onlinePlayer.getBoard())) {
+            int index = onlinePlayer.getBoard().getFirstFreeSpellZoneIndex();
+            selectedCard.setCardPlacement(CardPlacement.faceUp);
+            onlinePlayer.getBoard().getSpellZone().mainCards.set(index, selectedCard);
+            onlinePlayer.getBoard().setSelectedCard(null);
+            Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
+            Output.getInstance().showMessage("spell activated");
+        }
+    }
+
+    public void setSpellAndTrap() {
+        Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
+        if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
+        if (!ErrorChecker.isCardInPlayerHand(selectedCard, onlinePlayer) ||
+                !ErrorChecker.isMonsterCard(selectedCard)) {
+            Output.getInstance().showMessage("you can't set this card");
+            return;
+        }
+        if (!ErrorChecker.isMainPhase(phase)) return;
+        if (onlinePlayer.getBoard().isSpellZoneFull()) {
+            Output.getInstance().showMessage("spell card zone is full");
+            return;
+        }
+        selectedCard.setCardPlacement(CardPlacement.faceDown);
+        onlinePlayer.getBoard().putCardInMonsterZone(selectedCard);
+        onlinePlayer.getBoard().setSummonedOrSetCardInTurn(true);
+        onlinePlayer.getBoard().setSelectedCard(null);
+        Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
+        Output.getInstance().showMessage("set successfully");
+    }
+
+    public void activationOfSpellInOpponentTurn() {
+        turn = (2 - turn) + 1;
+        if (turn == 1)
+            Output.getInstance().showMessage("now it will be " + firstPlayer.getUsername() + "'s turn");
+        else
+            Output.getInstance().showMessage("now it will be " + secondPlayer.getUsername() + "'s turn");
+        Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
+        Output.getInstance().showMessage("do you want to activate your trap and spell?");
+        String command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", " ");
+        if (command.equals("no")) {
+            turn = (2 - turn) + 1;
+            if (turn == 1)
+                Output.getInstance().showMessage("now it will be " + firstPlayer.getUsername() + "'s turn");
+            else
+                Output.getInstance().showMessage("now it will be " + secondPlayer.getUsername() + "'s turn");
+            Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
+        } else if (command.equals("yes")) {
+            Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
+            if (ErrorChecker.isAbleToBeActive(selectedCard, phase, onlinePlayer.getBoard())) {
+                activateSpellCard();
+                Output.getInstance().showMessage("spell/trap activated");
+            } else {
+                Output.getInstance().showMessage("it's not your turn to play this kind of moves");
+            }
+        }
     }
 
     public void setPosition(String mode) {
@@ -211,10 +275,49 @@ public class Duel {
         Output.getInstance().showMessage("flip Summoned successfully");
     }
 
+    public void ritualSummon() {
+
+    }
+
+
     public void attack(String address) {
     }
 
     public void attackDirect() {
+    }
+
+    public void showGraveyard() {
+        ArrayList<Card> graveyard = onlinePlayer.getBoard().getGraveyardZone().mainCards;
+        StringBuilder show = new StringBuilder();
+        if (graveyard.size() != 0) {
+            for (Card card : graveyard) {
+                show.append(card.getName()).append(":").append(card.getDescription()).append("\n");
+            }
+            Output.getInstance().showMessage(show.toString());
+        } else Output.getInstance().showMessage("graveyard empty");
+        while (true) {
+            String command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", " ");
+            if (command.equals("back")) {
+                Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
+                GameInputs.getInstance().runGamePlay();
+                break;
+            }
+        }
+    }
+
+    public void showCard() {
+        Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
+        if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
+        boolean status = false;
+        for (Card card : offlinePlayer.getAllPlayerCard()) {
+            if (card.equals(selectedCard)) {
+                status = true;
+                break;
+            }
+        }
+        if (ErrorChecker.isCardVisible(selectedCard, status)) {
+            Output.getInstance().showMessage(selectedCard.toString());
+        }
     }
 
 
@@ -234,5 +337,14 @@ public class Duel {
         if (address == 3) return 3;
         if (address == 5) return 4;
         return -1;
+    }
+
+
+    public int getNumberOfPhase() {
+        return numberOfPhase;
+    }
+
+    public void setNumberOfPhase(int numberOfPhase) {
+        this.numberOfPhase = numberOfPhase;
     }
 }

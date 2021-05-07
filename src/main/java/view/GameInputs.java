@@ -25,7 +25,11 @@ public class GameInputs {
             "^set (--position|-p) (?<mode>attack|defence)$",
             "^flip-summon",
             "^attack (?<address>\\d+)$",
-            "^attack direct$"
+            "^attack direct$",
+            "^activate effect$",
+            "^set$",
+            "^show graveyard$",
+            "^card show --selected$"
     };
     private Duel onlineDuel;
 
@@ -110,6 +114,12 @@ public class GameInputs {
             case 14:
                 onlineDuel.attackDirect();
                 break;
+            case 15:
+                onlineDuel.activateSpellCard();
+            case 16:
+                onlineDuel.setSpellAndTrap();
+            case 17:
+                onlineDuel.showGraveyard();
         }
     }
 

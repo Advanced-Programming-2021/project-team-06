@@ -5,10 +5,7 @@ import models.Board;
 import models.Database;
 import models.Deck;
 import models.Player;
-import models.cards.Card;
-import models.cards.CardPlacement;
-import models.cards.Monster;
-import models.cards.MonsterMode;
+import models.cards.*;
 import view.Output;
 
 import java.util.ArrayList;
@@ -203,5 +200,35 @@ public class ErrorChecker {
         return true;
     }
 
+    public static boolean isAbleToBeActive(Card card, Phases phase, Board board) {
+        if (!(card instanceof Spell || card instanceof Trap)) {
+            Output.getInstance().showMessage("activate effect is only for spell cards.");
+            return false;
+        }
+        if (!(phase.equals(Phases.MAIN1) || phase.equals(Phases.MAIN2))) {
+            Output.getInstance().showMessage("you can't activate an effect on this turn");
+            return false;
+        }
+        assert card instanceof Spell;
+        if (((Spell) card).getActive()) {
+            Output.getInstance().showMessage("you have already activated this card");
+            return false;
+        }
+        if (board.isSpellZoneFull()) {
+            Output.getInstance().showMessage("spell card zone is full");
+            return false;
+        }
+        if (!(((Spell) card).getActionable())) {
+            Output.getInstance().showMessage("preparations of this spell are not done yet");
+        }
+        return true;
+    }
 
+    public static boolean isCardVisible(Card card, boolean status) {
+        if (card.getCardPlacement().equals(CardPlacement.faceDown) && status) {
+            Output.getInstance().showMessage("card is not visible");
+            return false;
+        }
+        return true;
+    }
 }
