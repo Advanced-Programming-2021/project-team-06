@@ -55,6 +55,7 @@ public class ConsoleBasedMenus {
     private final String[] shoppingMenusRegexes = {
             "^shop buy (?<cardName>.+)$",
             "^shop show --all$",
+            "shop show money$",
             "^menu show-current$",
             "^menu exit$"
     };
@@ -308,12 +309,12 @@ public class ConsoleBasedMenus {
         while (runningMenu.equals("shopping")) {
             command = scanner.nextLine().replaceAll("\\s+", " ");
             int whichCommand;
-            for (whichCommand = 0; whichCommand < 4; whichCommand++) {
+            for (whichCommand = 0; whichCommand < 5; whichCommand++) {
                 commandMatcher = findMatcher(command, shoppingMenusRegexes[whichCommand]);
                 if (commandMatcher.find()) {
                     executeShoppingMenuCommands(commandMatcher, whichCommand);
                     break;
-                } else if (whichCommand == 3)
+                } else if (whichCommand == 4)
                     Output.getInstance().showMessage("invalid command");
             }
 
@@ -331,10 +332,12 @@ public class ConsoleBasedMenus {
                 ShoppingMenuController.getInstance().showAllCard();
                 break;
             case 2:
+                ShoppingMenuController.getInstance().showMoney(playerLoggedIn);
+                break;
+            case 3:
                 Output.getInstance().showMessage("shopping Menu");
                 break;
-
-            case 3:
+            case 4:
                 runningMenu = "main";
         }
     }

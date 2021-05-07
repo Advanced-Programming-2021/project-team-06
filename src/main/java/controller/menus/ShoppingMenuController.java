@@ -6,6 +6,7 @@ import models.Player;
 import models.cards.Card;
 import view.Output;
 
+import java.net.PortUnreachableException;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -43,6 +44,10 @@ public class ShoppingMenuController {
         for (Card card : sortedCards) {
             System.out.println(card);
         }
+    }
+
+    public void showMoney(Player player) {
+        Output.getInstance().showMessage("money: " + player.getMoney());
     }
 
 
