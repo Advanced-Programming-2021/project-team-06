@@ -427,7 +427,7 @@ public class Duel {
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
         if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
         boolean status = false;
-        for (Card card : offlinePlayer.getAllPlayerCard()) {
+        for (Card card : offlinePlayer.getAllPlayerCard().getMainCards()) {
             if (card.equals(selectedCard)) {
                 status = true;
                 break;

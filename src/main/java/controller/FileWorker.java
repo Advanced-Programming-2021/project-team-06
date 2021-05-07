@@ -55,12 +55,14 @@ public class FileWorker {
     }
 
     public void writeDeckJSON(Deck deck) {
-        String fileAddress = decksDateBase + deck.getName() + ".json";
+        String deckName = deck.getName();
+        String fileAddress =  decksDateBase + deckName + ".json";
         GsonBuilder builder = new GsonBuilder().registerTypeAdapter(Player.class, Player.getPlayerSerializerForDeck()).registerTypeAdapter(Card.class, Card.getCardSerializerForDeck());
         Gson gson = builder.create();
         FileWriter writer;
 
         try {
+
             writer = new FileWriter(fileAddress);
             writer.write(gson.toJson(deck));
             writer.close();

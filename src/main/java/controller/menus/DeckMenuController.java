@@ -6,8 +6,6 @@ import models.Deck;
 import models.Player;
 import models.cards.Card;
 import view.Output;
-
-import javax.net.ssl.SSLContext;
 import java.util.Objects;
 
 public class DeckMenuController {
@@ -25,7 +23,7 @@ public class DeckMenuController {
         if (!ErrorChecker.isDeckNameUnique(name))
             return;
 
-        new Deck(name, owner);
+        new Deck(name, owner , true , true);
         Output.getInstance().showMessage("deck created successfully!");
     }
 
@@ -45,6 +43,7 @@ public class DeckMenuController {
                 && ErrorChecker.doesDeckBelongToPlayer(deck = Database.getInstance().getDeckByName(name), player);
         if (isPermitted) {
             player.setActiveDeck(deck);
+
             Output.getInstance().showMessage("deck activated successfully!");
         }
 
@@ -57,9 +56,10 @@ public class DeckMenuController {
                 && ErrorChecker.doesDeckExist(deckName)
                 && ErrorChecker.doesDeckBelongToPlayer(deck = Database.getInstance().getDeckByName(deckName), player)
                 && ((isMain) ? ErrorChecker.doesDeckHaveSpace(deck) : ErrorChecker.doesSideDeckHaveSpace(deck))
-                && ErrorChecker.isNumberOfCardsInDeckLessThanFour(deck, card = Database.getInstance().getCardByName(cardName));
+                && ErrorChecker.isNumberOfCardsInDeckLessThanFour(deck, card = Database.getInstance().getCardByName(cardName))
+                && ErrorChecker.doesPlayerHaveEnoughCards(card , player);
         if (isPermitted) {
-            deck.addCard(card, isMain);
+            player.getAllPlayerCard().moveCardTo(deck , card , isMain);
             Output.getInstance().showMessage("card added to deck successfully!");
         }
     }
@@ -72,7 +72,7 @@ public class DeckMenuController {
                 && ErrorChecker.doesDeckBelongToPlayer(deck = Database.getInstance().getDeckByName(deckName), player);
         if (isPermitted) {
             card = Database.getInstance().getCardByName(cardName);
-            deck.removeCard(card, isMain);
+            deck.moveCardTo(player.getAllPlayerCard(),card, isMain);
             Output.getInstance().showMessage("card removed from deck successfully!");
         }
     }

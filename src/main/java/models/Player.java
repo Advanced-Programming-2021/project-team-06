@@ -1,6 +1,7 @@
 package models;
 
 import com.google.gson.*;
+import com.google.gson.annotations.Expose;
 import models.cards.Card;
 
 import java.lang.reflect.Type;
@@ -13,14 +14,13 @@ public class Player {
     private int score;
     private int rank;
     private int health;
-    private ArrayList<Card> allPlayerCard = new ArrayList<>();
-    private ArrayList<Deck> allDeck = new ArrayList<>();
-    private ArrayList<Deck> gameDecks = new ArrayList<>();
-    private Deck activeDeck;
-    private Deck sideDeck;
+    private transient Deck allPlayerCard;
+    private transient ArrayList<Deck> allDeck = new ArrayList<>();
+    private transient ArrayList<Deck> gameDecks = new ArrayList<>();
+    private transient Deck activeDeck;
     private int roundsWon;
     private int money;
-    private Board board = null;
+    private transient Board board = null;
 
     public Player(String username, String nickname, String password) {
         this.username = username;
@@ -29,7 +29,8 @@ public class Player {
         this.score = 0;
         this.health = 5000;
         this.roundsWon = 0;
-        this.money = 0;
+        this.money = 32000;
+        allPlayerCard = new Deck(username + ".purchased-cards" , this , false , true);
         Database.allPlayers.add(this);
     }
 
@@ -107,11 +108,9 @@ public class Player {
     }
 
     public void setActiveDeck(Deck activeDeck) {
+        this.activeDeck.setActive(false);
         this.activeDeck = activeDeck;
-    }
-
-    public void setSideDeck(Deck sideDeck) {
-        this.sideDeck = sideDeck;
+        activeDeck.setActive(true);
     }
 
     public void increaseScore(int score) {
@@ -123,6 +122,8 @@ public class Player {
     }
 
     public ArrayList<Deck> getAllDeck() {
+        if (allDeck == null)
+            return (allDeck = new ArrayList<>());
         return allDeck;
     }
 
@@ -130,16 +131,20 @@ public class Player {
         this.allDeck = allDeck;
     }
 
-    public ArrayList<Card> getAllPlayerCard() {
+    public Deck getAllPlayerCard() {
         return allPlayerCard;
     }
 
     public void addCardToAllPlayerCard(Card card) {
-        this.allPlayerCard.add(card);
+        this.allPlayerCard.getMainCards().add(card);
     }
 
     public int getMoney() {
         return money;
+    }
+
+    public void setAllPlayerCard(Deck allPlayerCard) {
+        this.allPlayerCard = allPlayerCard;
     }
 
     public void setMoney(int money) {
