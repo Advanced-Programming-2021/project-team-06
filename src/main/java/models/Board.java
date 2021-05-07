@@ -250,6 +250,12 @@ public class Board {
         return hand.mainCards.size() >= 6;
     }
 
+    public boolean isSpellZoneFull() {
+        for (Card card : spellZone.getMainCards()) {
+            if (card == null) return false;
+        }
+        return true;
+    }
 
     public Card drawCard() {
         if (deckZone.mainCards.size() > 0) {
