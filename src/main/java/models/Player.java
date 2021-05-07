@@ -164,6 +164,7 @@ public class Player {
         this.board = board;
     }
 
+
     @Override
     public String toString() {
         return "Player{" +
@@ -187,3 +188,4 @@ class PlayerDeserializerForDeckDatabase implements JsonDeserializer<Player> {
         return Database.getInstance().getPlayerByUsername(jsonElement.getAsString());
     }
 }
+

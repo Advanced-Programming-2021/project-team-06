@@ -26,8 +26,8 @@ public class Board {
     private boolean isChangePositionInTurn = false;
 
 
-    public Board(Player player, Player opponent) {
-        deckZone = new Deck("DZ", player);
+    public Board(Player player, Player opponent) throws CloneNotSupportedException {
+        deckZone = player.getActiveDeck().clone();
         hand = new Deck("HZ", player);
         graveyardZone = new Deck("GZ", player);
         banishedZone = new Deck("BZ", player);

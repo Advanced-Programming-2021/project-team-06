@@ -2,6 +2,8 @@ package models;
 
 import models.cards.Card;
 import models.cards.Monster;
+import models.cards.Spell;
+import models.cards.Trap;
 
 import java.util.ArrayList;
 
@@ -163,6 +165,31 @@ public class Deck {
 
     public int getNumberOfCardsInSideDeck() {
         return sideCards.size();
+    }
+    @Override
+    protected Deck clone() throws CloneNotSupportedException {
+        Deck deck = new Deck("DZ" , this.owner , true , false);
+        ArrayList<Card> main = new ArrayList<>()
+                , side = new ArrayList<>();
+        for (Card card : mainCards) {
+            if (card instanceof Monster)
+                main.add(((Monster)card).clone());
+            else if (card instanceof Spell)
+                main.add(((Spell)card).clone());
+            else if (card instanceof Trap)
+                main.add(((Trap)card).clone());
+        }
+        for (Card card : sideCards) {
+            if (card instanceof Monster)
+                side.add(((Monster)card).clone());
+            else if (card instanceof Spell)
+                side.add(((Spell)card).clone());
+            else if (card instanceof Trap)
+                side.add(((Trap)card).clone());
+        }
+        deck.setMainCards(main);
+        deck.setSideCards(side);
+        return deck;
     }
 
     public String toString(boolean isMain) {

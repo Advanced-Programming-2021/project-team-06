@@ -342,7 +342,7 @@ public class ConsoleBasedMenus {
         }
     }
 
-    private void runDuelMenu() {
+    private void runDuelMenu() throws CloneNotSupportedException {
         Matcher commandMatcher;
         String command;
         while (runningMenu.equals("duel")) {
@@ -360,7 +360,7 @@ public class ConsoleBasedMenus {
         }
     }
 
-    private void executeDuelMenuCommands(Matcher commandMatcher, int whichCommand) {
+    private void executeDuelMenuCommands(Matcher commandMatcher, int whichCommand) throws CloneNotSupportedException {
         Player playerLoggedIn = MainMenu.getInstance().getPlayerLoggedIn();
         switch (whichCommand) {
             case 0:

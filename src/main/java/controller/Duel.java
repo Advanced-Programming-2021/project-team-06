@@ -22,7 +22,7 @@ public class Duel {
     private Phases phase = Phases.DRAW;
     private int numberOfPhase;
 
-    public Duel(Player firstPlayer, Player secondPlayer, int numberOfPhase) {
+    public Duel(Player firstPlayer, Player secondPlayer, int numberOfPhase) throws CloneNotSupportedException {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
         this.firstPlayer.setBoard(new Board(firstPlayer, secondPlayer));

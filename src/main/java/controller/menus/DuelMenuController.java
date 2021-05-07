@@ -19,7 +19,7 @@ public class DuelMenuController {
         return instance;
     }
 
-    public void startGame(String firstUsername, String secondUsername, String round) {
+    public void startGame(String firstUsername, String secondUsername, String round) throws CloneNotSupportedException {
         Player firstPlayer = Database.getInstance().getPlayerByUsername(firstUsername);
         Player secondPlayer = Database.getInstance().getPlayerByUsername(secondUsername);
         if (!ErrorChecker.doesUsernameExist(secondUsername)) {
