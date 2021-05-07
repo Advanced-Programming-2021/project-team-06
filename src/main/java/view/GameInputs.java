@@ -65,6 +65,21 @@ public class GameInputs {
         }
     }
 
+    public boolean yesOrNoQ() {
+        while (true) {
+            String command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", " ");
+            if (command.equals("yes")) return true;
+            else if (command.equals("no")) return false;
+        }
+    }
+
+    public boolean backQ(){
+        while (true) {
+            String command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", " ");
+            if (command.equals("back")) return true;
+        }
+    }
+
     private void executeGamePlayCommands(Matcher commandMatcher, int whichCommand) {
         switch (whichCommand) {
             case 0:

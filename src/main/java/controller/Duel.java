@@ -219,22 +219,21 @@ public class Duel {
     }
 
     public void activationOfSpellInOpponentTurn() {
-        turn = (2 - turn) + 1;
+        turn *= -1;
         if (turn == 1)
             Output.getInstance().showMessage("now it will be " + firstPlayer.getUsername() + "'s turn");
         else
             Output.getInstance().showMessage("now it will be " + secondPlayer.getUsername() + "'s turn");
         Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
         Output.getInstance().showMessage("do you want to activate your trap and spell?");
-        String command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", " ");
-        if (command.equals("no")) {
-            turn = (2 - turn) + 1;
+        if (!GameInputs.getInstance().yesOrNoQ()) {
+            turn *= -1;
             if (turn == 1)
                 Output.getInstance().showMessage("now it will be " + firstPlayer.getUsername() + "'s turn");
             else
                 Output.getInstance().showMessage("now it will be " + secondPlayer.getUsername() + "'s turn");
             Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
-        } else if (command.equals("yes")) {
+        } else {
             Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
             if (ErrorChecker.isAbleToBeActive(selectedCard, phase, onlinePlayer.getBoard())) {
                 activateSpellCard();
@@ -253,7 +252,7 @@ public class Duel {
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
         if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
         if (!onlinePlayer.getBoard().isInMonsterZone(selectedCard)) {
-            Output.getInstance().showMessage("you can't summon this card");
+            Output.getInstance().showMessage("you can't set this card");
             return;
         }
         if (!ErrorChecker.isMainPhase(phase)) return;
@@ -267,7 +266,6 @@ public class Duel {
         onlinePlayer.getBoard().setSelectedCard(null);
         Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
         Output.getInstance().showMessage("monster card position changed successfully");
-
     }
 
     public void flipSummon() {
@@ -297,7 +295,6 @@ public class Duel {
     public void attack(String address) {
         if (!ErrorChecker.isValidAddress(address, "m")) return;
         int cardPosition = setCardAddressInOpponentBoard(Integer.parseInt(address));
-
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
         if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
         if (!onlinePlayer.getBoard().isInMonsterZone(selectedCard)) {
@@ -430,8 +427,7 @@ public class Duel {
             Output.getInstance().showMessage(show.toString());
         } else Output.getInstance().showMessage("graveyard empty");
         while (true) {
-            String command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", " ");
-            if (command.equals("back")) {
+            if (GameInputs.getInstance().backQ()) {
                 Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
                 return;
             }

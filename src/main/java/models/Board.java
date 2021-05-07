@@ -206,7 +206,7 @@ public class Board {
     }
 
     public void removeFromHand(Card card) {
-        hand.mainCards.set(hand.mainCards.indexOf(card), null);
+        hand.mainCards.remove(card);
     }
 
     public void removeFromDeck(Card card) {
@@ -257,16 +257,13 @@ public class Board {
         return true;
     }
 
-    public Card drawCard() {
+    public void drawCard() {
         if (deckZone.mainCards.size() > 0) {
             if (isHandFull()) {
                 removeFromHand(hand.mainCards.get(new Random().nextInt(hand.mainCards.size())));
             }
-            putInHand(deckZone.mainCards.get(deckZone.mainCards.size() - 1));
-            removeFromDeck(deckZone.mainCards.get(deckZone.mainCards.size() - 1));
-            return hand.mainCards.get(hand.mainCards.size() - 1);
+            deckZone.moveCardTo(hand,deckZone.mainCards.get(deckZone.mainCards.size() - 1),true);
         }
-        return null;
     }
 
     public void shuffleDeck() {
