@@ -11,18 +11,38 @@ public class Deck {
     Player owner;
     String name;
     DeckType type;
-    Boolean isActive;
+    Boolean isActive = false;
     Boolean IsValid;
+
+    public Deck(String name, Player owner, boolean hasSideDeck, boolean shouldBeSaved) {
+        this.name = name;
+        if (shouldBeSaved)
+            Database.allDecks.add(this);
+        if (!hasSideDeck)
+            sideCards = null;
+        this.owner = owner;
+    }
 
     public Deck(String name, Player owner) {
         this.name = name;
-        Database.allDecks.add(this);
+        sideCards = null;
         this.owner = owner;
     }
+
     public void updateOwnerDecks() {
-        owner.getAllDeck().add(this);
+        String deckType = (name.length() > 16) ? name.substring(name.length() - 16) : "";
+        if (deckType.equals(".purchased-cards"))
+            owner.setAllPlayerCard(this);
+        else {
+            owner.getAllDeck().add(this);
+            if (this.isActive)
+                owner.setActiveDeck(this);
+        }
     }
+
     public ArrayList<Card> getMainCards() {
+        if (mainCards == null)
+            return (mainCards = new ArrayList<>());
         return mainCards;
     }
 
@@ -44,6 +64,10 @@ public class Deck {
 
     public Player getOwner() {
         return owner;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 
     public String getName() {
@@ -73,11 +97,42 @@ public class Deck {
             sideCards.add(card);
     }
 
+    public void addCard(Card card) {
+        mainCards.add(card);
+    }
+
+    public void moveCardTo(Deck destination, Card card, boolean isMain) {
+        removeCard(card, true);
+        destination.addCard(card, isMain);
+    }
+
+    public boolean hasCard(Card card, boolean isMain) {
+        if (isMain) {
+            for (Card cardInMain : mainCards)
+                if (cardInMain.getName().equals(card.getName()))
+                    return true;
+
+        } else
+            for (Card cardInSide : mainCards)
+                if (cardInSide.getName().equals(card.getName())) {
+                    return true;
+                }
+        return false;
+    }
+
     public void removeCard(Card card, boolean shouldBeRemovedFromMain) {
-        if (shouldBeRemovedFromMain)
-            mainCards.remove(card);
-        else
-            sideCards.remove(card);
+        if (shouldBeRemovedFromMain) {
+            for (Card cardInMain : mainCards)
+                if (cardInMain.getName().equals(card.getName())) {
+                    mainCards.remove(cardInMain);
+                    return;
+                }
+        } else
+            for (Card cardInSide : mainCards)
+                if (cardInSide.getName().equals(card.getName())) {
+                    mainCards.remove(cardInSide);
+                    return;
+                }
     }
 
     public int getSumOfAttackPowers() {

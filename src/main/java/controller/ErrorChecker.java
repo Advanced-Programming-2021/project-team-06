@@ -245,4 +245,11 @@ public class ErrorChecker {
         }
         return true;
     }
+
+    public static boolean doesPlayerHaveEnoughCards(Card card, Player player) {
+        if (player.getAllPlayerCard().hasCard(card , true))
+            return true;
+        Output.getInstance().showMessage("you dont have this type of card anymore!");
+        return false;
+    }
 }

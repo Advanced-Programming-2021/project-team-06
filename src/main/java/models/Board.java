@@ -33,10 +33,10 @@ public class Board {
         banishedZone = new Deck("BZ", player);
         monsterZone = new Deck("MZ", player);
         for (int i = 0; i < 5; i++)
-            monsterZone.addCard(null, true);
+            monsterZone.addCard(null);
         spellZone = new Deck("SZ", player);
         for (int i = 0; i < 5; i++)
-            spellZone.addCard(null, true);
+            spellZone.addCard(null);
 
         setPlayer(player);
         setOpponent(opponent);
