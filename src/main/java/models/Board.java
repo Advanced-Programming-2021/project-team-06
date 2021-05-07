@@ -299,8 +299,8 @@ public class Board {
             }
             for (Card card : monsterZone.getMainCards()) {
                 if (card == null) {
-                    spellZoneString.append("\tE");
-                    break;
+                    monsterZoneString.append("\tE");
+                    continue;
                 } else if (((Monster) card).getMonsterMode() == MonsterMode.attack)
                     monsterZoneString.append("\tO");
                 else if (((Monster) card).getMonsterMode() == MonsterMode.defence)
@@ -329,8 +329,8 @@ public class Board {
         }
         for (Card card : monsterZone.getMainCards()) {
             if (card == null) {
-                spellZoneString.insert(0, "\tE");
-                break;
+                monsterZoneString.insert(0, "\tE");
+                continue;
             } else if (((Monster) card).getMonsterMode() == MonsterMode.attack)
                 monsterZoneString.insert(0, "\tO");
             else if (((Monster) card).getMonsterMode() == MonsterMode.defence)
@@ -343,7 +343,7 @@ public class Board {
         }
 
         return ((fieldZone == null) ? "FZ" : "O") +
-                "\t\t\t\t\t\t" + graveyardZone.getNumberOfCardsInMainDeck() +
+                "\t\t\t\t\t\t" + graveyardZone.getNumberOfCardsInMainDeck() + "\n" +
                 monsterZoneString + "\n" +
                 spellZoneString + "\n" +
                 "\t\t\t\t\t\t" + deckZone.getNumberOfCardsInMainDeck() + "\n"

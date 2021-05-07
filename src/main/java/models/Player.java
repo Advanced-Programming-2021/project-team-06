@@ -29,8 +29,8 @@ public class Player {
         this.score = 0;
         this.health = 5000;
         this.roundsWon = 0;
-        this.money = 32000;
-        allPlayerCard = new Deck(username + ".purchased-cards" , this , false , true);
+        this.money = 32000000;
+        allPlayerCard = new Deck(username + ".purchased-cards", this, false, true);
         Database.allPlayers.add(this);
     }
 
@@ -108,7 +108,8 @@ public class Player {
     }
 
     public void setActiveDeck(Deck activeDeck) {
-        this.activeDeck.setActive(false);
+        if (this.activeDeck != null)
+            this.activeDeck.setActive(false);
         this.activeDeck = activeDeck;
         activeDeck.setActive(true);
     }

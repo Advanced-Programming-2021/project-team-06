@@ -27,11 +27,11 @@ public class DuelMenuController {
             return;
         }
         if (firstPlayer.getActiveDeck() == null) {
-            Output.getInstance().showMessage(firstUsername + "has no active deck");
+            Output.getInstance().showMessage(firstUsername + " has no active deck");
             return;
         }
         if (secondPlayer.getActiveDeck() == null) {
-            Output.getInstance().showMessage(secondUsername + "has no active deck");
+            Output.getInstance().showMessage(secondUsername + " has no active deck");
             return;
         }
         if (!ErrorChecker.isDeckAllowed(firstPlayer.getActiveDeck())) {
