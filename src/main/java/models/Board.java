@@ -250,13 +250,6 @@ public class Board {
         return hand.mainCards.size() >= 6;
     }
 
-    public boolean isMonsterZoneFull() {
-        return monsterZone.mainCards.size() >= 5;
-    }
-
-    public boolean isSpellZoneFull() {
-        return spellZone.mainCards.size() >= 5;
-    }
 
     public Card drawCard() {
         if (deckZone.mainCards.size() > 0) {
