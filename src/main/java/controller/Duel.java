@@ -210,6 +210,103 @@ public class Duel {
     }
 
     public void attack(String address) {
+        if (!ErrorChecker.isValidAddress(address, "m")) return;
+        int cardPosition = setCardAddressInOpponentBoard(Integer.parseInt(address));
+
+        Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
+        if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
+        if (!onlinePlayer.getBoard().isInMonsterZone(selectedCard)) {
+            Output.getInstance().showMessage("you can't attack with this card");
+            return;
+        }
+        if (((Monster) selectedCard).getMonsterMode().equals(MonsterMode.defence)) {
+            Output.getInstance().showMessage("This model is a defense card");
+            return;
+        }
+        if (!ErrorChecker.isBattlePhase(phase)) return;
+        if (((Monster) selectedCard).isHaveBeenAttackedWithMonsterInTurn()) {
+            Output.getInstance().showMessage("this card already attacked");
+            return;
+        }
+        if (ErrorChecker.istTheSeatVacant(offlinePlayer.getBoard(), cardPosition, "m") == null) return;
+        runAttack(cardPosition, (Monster) selectedCard);
+
+    }
+
+    private void runAttack(int address, Monster selectedCard) {
+        Monster targetMonster = (Monster) offlinePlayer.getBoard().getMonsterZoneCards().get(address);
+        MonsterMode monsterMode = targetMonster.getMonsterMode();
+        CardPlacement monsterPlacement = targetMonster.getCardPlacement();
+        if (monsterPlacement.equals(CardPlacement.faceUp) && monsterMode.equals(MonsterMode.attack))
+            monsterAttackToAttack(targetMonster, selectedCard);
+
+        if (monsterPlacement.equals(CardPlacement.faceUp) && monsterMode.equals(MonsterMode.defence))
+            monsterAttackToDefenseFaceUp(targetMonster, selectedCard);
+
+        if (monsterPlacement.equals(CardPlacement.faceDown) && monsterMode.equals(MonsterMode.defence))
+            monsterAttackToDefenseFaceDown(targetMonster, selectedCard);
+    }
+
+    private void monsterAttackToAttack(Monster targetMonster, Monster selectedCard) {
+        if (selectedCard.getAttackPower() > targetMonster.getAttackPower()) {
+            offlinePlayer.getBoard().putInGraveyard(targetMonster);
+            offlinePlayer.getBoard().removeFromMonsterZone(targetMonster);
+            int damage = selectedCard.getAttackPower() - targetMonster.getAttackPower();
+            offlinePlayer.setHealth(offlinePlayer.getHealth() - damage);
+            Output.getInstance().showMessage("your opponent's monster is destroyed and your opponent receviees" +
+                    damage + " battle damage");
+        }
+        if (selectedCard.getAttackPower() == targetMonster.getAttackPower()) {
+            offlinePlayer.getBoard().putInGraveyard(targetMonster);
+            offlinePlayer.getBoard().removeFromMonsterZone(targetMonster);
+            onlinePlayer.getBoard().putInGraveyard(selectedCard);
+            onlinePlayer.getBoard().removeFromMonsterZone(selectedCard);
+            Output.getInstance().showMessage("both you and your opponent monster cards are destroyed and no one receives damage");
+        }
+        if (selectedCard.getAttackPower() < targetMonster.getAttackPower()) {
+            onlinePlayer.getBoard().putInGraveyard(selectedCard);
+            onlinePlayer.getBoard().removeFromMonsterZone(selectedCard);
+            int damage = targetMonster.getAttackPower() - selectedCard.getAttackPower();
+            onlinePlayer.setHealth(offlinePlayer.getHealth() - damage);
+            Output.getInstance().showMessage("your monster card is destroyed and you received " + damage + " battle damage");
+        }
+    }
+
+    private void monsterAttackToDefenseFaceUp(Monster targetMonster, Monster selectedCard) {
+        if (selectedCard.getAttackPower() > targetMonster.getDefencePower()) {
+            offlinePlayer.getBoard().putInGraveyard(targetMonster);
+            offlinePlayer.getBoard().removeFromMonsterZone(targetMonster);
+            Output.getInstance().showMessage("the defense position monster is destroyed");
+        }
+        if (selectedCard.getAttackPower() == targetMonster.getDefencePower())
+            Output.getInstance().showMessage("no card destroyed");
+
+        if (selectedCard.getAttackPower() < targetMonster.getDefencePower()) {
+            int damage = targetMonster.getDefencePower() - selectedCard.getAttackPower();
+            onlinePlayer.setHealth(offlinePlayer.getHealth() - damage);
+            Output.getInstance().showMessage("no card is destroyed and you received " + damage + " battle damage");
+        }
+        targetMonster.setCardPlacement(CardPlacement.faceUp);
+    }
+
+    private void monsterAttackToDefenseFaceDown(Monster targetMonster, Monster selectedCard) {
+        if (selectedCard.getAttackPower() > targetMonster.getDefencePower()) {
+            offlinePlayer.getBoard().putInGraveyard(targetMonster);
+            offlinePlayer.getBoard().removeFromMonsterZone(targetMonster);
+            Output.getInstance().showMessage("opponent's monster card was " + targetMonster.getName() +
+                    "and the defense position monster is destroyed");
+        }
+        if (selectedCard.getAttackPower() == targetMonster.getDefencePower())
+            Output.getInstance().showMessage("opponent's monster card was " + targetMonster.getName() +
+                    "and no card destroyed");
+
+        if (selectedCard.getAttackPower() < targetMonster.getDefencePower()) {
+            int damage = targetMonster.getDefencePower() - selectedCard.getAttackPower();
+            onlinePlayer.setHealth(offlinePlayer.getHealth() - damage);
+            Output.getInstance().showMessage("opponent's monster card was " + targetMonster.getName() +
+                    "and no card is destroyed and you received " + damage + " battle damage");
+        }
+        targetMonster.setCardPlacement(CardPlacement.faceUp);
     }
 
     public void attackDirect() {
@@ -225,7 +322,7 @@ public class Duel {
         }
         if (!ErrorChecker.isBattlePhase(phase)) return;
         if (!ErrorChecker.isMonsterZoneEmpty(offlinePlayer.getBoard().getMonsterZoneCards())) {
-            Output.getInstance().showMessage("opponent monster zone is not empty");
+            Output.getInstance().showMessage("you can't attack the opponent directly");
             return;
         }
         if (((Monster) selectedCard).isHaveBeenAttackedWithMonsterInTurn()) {
