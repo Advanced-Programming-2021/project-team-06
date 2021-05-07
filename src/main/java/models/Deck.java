@@ -168,7 +168,7 @@ public class Deck {
     }
     @Override
     protected Deck clone() throws CloneNotSupportedException {
-        Deck deck = new Deck("DZ" , this.owner , true , false);
+        Deck deck = new Deck(this.name , this.owner , true , false);
         ArrayList<Card> main = new ArrayList<>()
                 , side = new ArrayList<>();
         for (Card card : mainCards) {
