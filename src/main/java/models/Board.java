@@ -29,7 +29,6 @@ public class Board {
     public Board(Player player, Player opponent) throws CloneNotSupportedException {
         deckZone = player.getActiveDeck().clone();
         deckZone.setName("DZ");
-        hand = new Deck("HZ", player);
         graveyardZone = new Deck("GZ", player);
         banishedZone = new Deck("BZ", player);
         monsterZone = new Deck("MZ", player);
@@ -38,7 +37,8 @@ public class Board {
         spellZone = new Deck("SZ", player);
         for (int i = 0; i < 5; i++)
             spellZone.addCard(null);
-
+        hand = new Deck("HZ", player);
+        for (int i = 1; i <= 6; i++) drawCard();
         setPlayer(player);
         setOpponent(opponent);
     }
@@ -260,9 +260,6 @@ public class Board {
 
     public void drawCard() {
         if (deckZone.mainCards.size() > 0) {
-            if (isHandFull()) {
-                removeFromHand(hand.mainCards.get(new Random().nextInt(hand.mainCards.size())));
-            }
             deckZone.moveCardTo(hand,deckZone.mainCards.get(deckZone.mainCards.size() - 1),true);
         }
     }

@@ -144,6 +144,14 @@ public class GameInputs {
         return address;
     }
 
+    public String getAddressForDeleteCard() {
+        String address;
+        Output.getInstance().showMessage("enter Address For delete card: ");
+        address = ConsoleBasedMenus.scanner.nextLine();
+        return address;
+    }
+
+
     private Matcher findMatcher(String input, String regex) {
 
         Pattern pattern = Pattern.compile(regex);

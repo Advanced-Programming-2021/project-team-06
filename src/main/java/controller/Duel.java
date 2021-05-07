@@ -64,6 +64,7 @@ public class Duel {
         if (phase.equals(Phases.DRAW)) {
             phase = Phases.STANDBY;
             Output.getInstance().showMessage("phase: " + phase);
+            actionsInDrawPhase();
             return;
         }
         if (phase.equals(Phases.STANDBY)) {
@@ -73,38 +74,61 @@ public class Duel {
         }
         if (phase.equals(Phases.MAIN1)) {
             phase = Phases.BATTLE;
+            actionsInBattlePhase();
             Output.getInstance().showMessage("phase: " + phase);
             return;
         }
         if (phase.equals(Phases.BATTLE)) {
             phase = Phases.MAIN2;
+            actionsInMainPhase();
             Output.getInstance().showMessage("phase: " + phase);
             return;
         }
         if (phase.equals(Phases.MAIN2)) {
             phase = Phases.END;
             Output.getInstance().showMessage("phase: " + phase);
-
+            actionsInMainPhase();
             return;
         }
         if (phase.equals(Phases.END)) {
             phase = Phases.DRAW;
+            actionsInEndPhase();
             Output.getInstance().showMessage("phase: " + phase);
         }
     }
 
+    public void actionsInDrawPhase() {
+        onlinePlayer.getBoard().drawCard();
+    }
+
     public void actionsInMainPhase() {
+        onlinePlayer.getBoard().setSelectedCard(null);
+        onlinePlayer.getBoard().setChangePositionInTurn(false);
+        onlinePlayer.getBoard().setSummonedOrSetCardInTurn(false);
 
     }
 
     public void actionsInBattlePhase() {
-
+        onlinePlayer.getBoard().setSelectedCard(null);
+        for (Card card : onlinePlayer.getBoard().getMonsterZoneCards()) {
+            ((Monster) card).setHaveBeenAttackedWithMonsterInTurn(false);
+        }
     }
 
     public void actionsInEndPhase() {
         Output.getInstance().showMessage("phase: " + phase + "\n "
                 + "its" + offlinePlayer.getNickname() + "'s turn");
+        setNumberOfCardInHand();
     }
+
+    private void setNumberOfCardInHand() {
+        while (onlinePlayer.getBoard().getHandZoneCards().size() > 6) {
+            int address = Integer.parseInt(GameInputs.getInstance().getAddressForDeleteCard());
+            onlinePlayer.getBoard().getHand().moveCardTo(onlinePlayer.getBoard().getGraveyardZone(),
+                    onlinePlayer.getBoard().getHandZoneCards().get(address), true);
+        }
+    }
+
 
     public void changeTurn() {
         turn *= -1;
