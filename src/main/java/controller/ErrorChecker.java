@@ -164,6 +164,14 @@ public class ErrorChecker {
         return card instanceof Monster;
     }
 
+    public static boolean isSpellCard(Card card) {
+        return card instanceof Spell;
+    }
+
+    public static boolean isTrapCard(Card card) {
+        return card instanceof Trap;
+    }
+
     public static boolean isMonsterCardZoneFull(ArrayList<Card> monsterZone) {
         for (Card card : monsterZone) {
             if (card == null) return false;

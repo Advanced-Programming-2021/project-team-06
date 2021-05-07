@@ -33,6 +33,7 @@ public class ShoppingMenuController {
         }
 
         player.addCardToAllPlayerCard(card);
+        player.setMoney(player.getMoney() - card.getPrice());
         Output.getInstance().showMessage("Card purchased");
     }
 

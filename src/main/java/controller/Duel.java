@@ -32,17 +32,6 @@ public class Duel {
         this.numberOfPhase = numberOfPhase;
     }
 
-    public void changeTurn() {
-        turn *= -1;
-        if (turn == 1) {
-            this.onlinePlayer = firstPlayer;
-            this.offlinePlayer = secondPlayer;
-        } else {
-            this.onlinePlayer = secondPlayer;
-            this.offlinePlayer = firstPlayer;
-        }
-    }
-
     public void select(String address, boolean isMyBoard, String state) {
         if (!ErrorChecker.isValidAddress(address, state)) return;
         int cardPosition = Integer.parseInt(address);
@@ -94,9 +83,37 @@ public class Duel {
         }
         if (phase.equals(Phases.MAIN2)) {
             phase = Phases.END;
-            Output.getInstance().showMessage("phase: " + phase + "\n "
-                    + "its" + offlinePlayer.getNickname() + "'s turn");
-            changeTurn();
+            Output.getInstance().showMessage("phase: " + phase);
+
+            return;
+        }
+        if (phase.equals(Phases.END)) {
+            phase = Phases.DRAW;
+            Output.getInstance().showMessage("phase: " + phase);
+        }
+    }
+
+    public void actionsInMainPhase() {
+
+    }
+
+    public void actionsInBattlePhase() {
+
+    }
+
+    public void actionsInEndPhase() {
+        Output.getInstance().showMessage("phase: " + phase + "\n "
+                + "its" + offlinePlayer.getNickname() + "'s turn");
+    }
+
+    public void changeTurn() {
+        turn *= -1;
+        if (turn == 1) {
+            this.onlinePlayer = firstPlayer;
+            this.offlinePlayer = secondPlayer;
+        } else {
+            this.onlinePlayer = secondPlayer;
+            this.offlinePlayer = firstPlayer;
         }
     }
 
@@ -143,16 +160,15 @@ public class Duel {
 
     }
 
-    public void set() {
+    public void setMonster() {
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
         ArrayList<Card> monsterZone = onlinePlayer.getBoard().getMonsterZoneCards();
         if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
-        if (!ErrorChecker.isCardInPlayerHand(selectedCard, onlinePlayer) ||
-                !ErrorChecker.isMonsterCard(selectedCard)) {
+        if (!ErrorChecker.isCardInPlayerHand(selectedCard, onlinePlayer)) {
             Output.getInstance().showMessage("you can't set this card");
             return;
         }
-        if (!ErrorChecker.isMainPhase(phase)) return;
+        if (ErrorChecker.isMonsterCard(selectedCard) && !ErrorChecker.isMainPhase(phase)) return;
         if (ErrorChecker.isMonsterCardZoneFull(monsterZone)) return;
         if (onlinePlayer.getBoard().isSummonedOrSetCardInTurn()) {
             Output.getInstance().showMessage("you already summoned/set on this turn");
@@ -184,18 +200,18 @@ public class Duel {
     public void setSpellAndTrap() {
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
         if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
-        if (!ErrorChecker.isCardInPlayerHand(selectedCard, onlinePlayer) ||
-                !ErrorChecker.isMonsterCard(selectedCard)) {
+        if (!ErrorChecker.isCardInPlayerHand(selectedCard, onlinePlayer)) {
             Output.getInstance().showMessage("you can't set this card");
             return;
         }
-        if (!ErrorChecker.isMainPhase(phase)) return;
+        if ((ErrorChecker.isTrapCard(selectedCard) || ErrorChecker.isSpellCard(selectedCard)) &&
+                !ErrorChecker.isMainPhase(phase)) return;
         if (onlinePlayer.getBoard().isSpellZoneFull()) {
             Output.getInstance().showMessage("spell card zone is full");
             return;
         }
         selectedCard.setCardPlacement(CardPlacement.faceDown);
-        onlinePlayer.getBoard().putCardInMonsterZone(selectedCard);
+        onlinePlayer.getBoard().putInSpellZone(selectedCard);
         onlinePlayer.getBoard().setSummonedOrSetCardInTurn(true);
         onlinePlayer.getBoard().setSelectedCard(null);
         Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
@@ -417,8 +433,7 @@ public class Duel {
             String command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", " ");
             if (command.equals("back")) {
                 Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
-                GameInputs.getInstance().runGamePlay();
-                break;
+                return;
             }
         }
     }

@@ -20,16 +20,14 @@ public class GameInputs {
             "^select -d$",
             "^next phase$",
             "^summon$",
-            "^summon$",
             "^set$",
             "^set (--position|-p) (?<mode>attack|defence)$",
             "^flip-summon",
             "^attack (?<address>\\d+)$",
             "^attack direct$",
             "^activate effect$",
-            "^set$",
             "^show graveyard$",
-            "^card show --selected$"
+            "^card show (--selected|-s)$"
     };
     private Duel onlineDuel;
 
@@ -100,7 +98,8 @@ public class GameInputs {
                 onlineDuel.summon();
                 break;
             case 10:
-                onlineDuel.set();
+                onlineDuel.setMonster();
+                onlineDuel.setSpellAndTrap();
                 break;
             case 11:
                 onlineDuel.setPosition(commandMatcher.group("mode"));
@@ -117,9 +116,9 @@ public class GameInputs {
             case 15:
                 onlineDuel.activateSpellCard();
             case 16:
-                onlineDuel.setSpellAndTrap();
-            case 17:
                 onlineDuel.showGraveyard();
+            case 17:
+                onlineDuel.showCard();
         }
     }
 
