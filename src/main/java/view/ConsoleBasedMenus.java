@@ -57,7 +57,8 @@ public class ConsoleBasedMenus {
             "^shop show --all$",
             "shop show money$",
             "^menu show-current$",
-            "^menu exit$"
+            "^menu exit$",
+            "^increase (--money|-m) (?<amount>\\d+)"
     };
     private final String[] duelMenusRegexes = {
             "^duel new --second-player (?<username>\\w+) --rounds (?<round>\\d+)$",
@@ -83,12 +84,12 @@ public class ConsoleBasedMenus {
         while (runningMenu.equals("register")) {
             command = scanner.nextLine().replaceAll("\\s+", " ");
             int whichCommand;
-            for (whichCommand = 0; whichCommand < 7; whichCommand++) {
+            for (whichCommand = 0; whichCommand < registerMenusRegexes.length; whichCommand++) {
                 commandMatcher = findMatcher(command, registerMenusRegexes[whichCommand]);
                 if (commandMatcher.find()) {
                     executeRegisterMenuCommands(commandMatcher, whichCommand);
                     break;
-                } else if (whichCommand == 6)
+                } else if (whichCommand == registerMenusRegexes.length - 1)
                     Output.getInstance().showMessage("invalid command");
             }
         }
@@ -129,12 +130,12 @@ public class ConsoleBasedMenus {
         while (runningMenu.equals("main")) {
             command = scanner.nextLine().replaceAll("\\s+", " ");
             int whichCommand;
-            for (whichCommand = 0; whichCommand < 4; whichCommand++) {
+            for (whichCommand = 0; whichCommand < mainMenusRegexes.length; whichCommand++) {
                 commandMatcher = findMatcher(command, mainMenusRegexes[whichCommand]);
                 if (commandMatcher.find()) {
                     executeMainMenuCommands(commandMatcher, whichCommand);
                     break;
-                } else if (whichCommand == 3)
+                } else if (whichCommand == mainMenusRegexes.length - 1)
                     Output.getInstance().showMessage("invalid command");
             }
         }
@@ -180,19 +181,19 @@ public class ConsoleBasedMenus {
         while (runningMenu.equals("deck")) {
             command = scanner.nextLine().replaceAll("\\s+", " ");
             int whichCommand;
-            for (whichCommand = 0; whichCommand < 12; whichCommand++) {
+            for (whichCommand = 0; whichCommand < deckMenuRegexes.length; whichCommand++) {
                 commandMatcher = findMatcher(command, deckMenuRegexes[whichCommand]);
                 if (commandMatcher.find()) {
                     executeDeckMenuCommands(commandMatcher, whichCommand);
                     break;
-                } else if (whichCommand == 11)
+                } else if (whichCommand == deckMenuRegexes.length - 1)
                     Output.getInstance().showMessage("invalid command");
             }
 
         }
     }
 
-    private void executeDeckMenuCommands(Matcher commandMatcher, int whichCommand) throws CloneNotSupportedException {
+    private void executeDeckMenuCommands(Matcher commandMatcher, int whichCommand) {
         DeckMenuController controller = DeckMenuController.getInstance();
         Player loggedInPlayer = MainMenu.getInstance().getPlayerLoggedIn();
         switch (whichCommand) {
@@ -269,12 +270,12 @@ public class ConsoleBasedMenus {
         while (runningMenu.equals("profile")) {
             command = scanner.nextLine().replaceAll("\\s+", " ");
             int whichCommand;
-            for (whichCommand = 0; whichCommand < 5; whichCommand++) {
+            for (whichCommand = 0; whichCommand < profileMenusRegexes.length; whichCommand++) {
                 commandMatcher = findMatcher(command, profileMenusRegexes[whichCommand]);
                 if (commandMatcher.find()) {
                     executeProfileMenuCommands(commandMatcher, whichCommand);
                     break;
-                } else if (whichCommand == 4)
+                } else if (whichCommand == profileMenusRegexes.length - 1)
                     Output.getInstance().showMessage("invalid command");
             }
 
@@ -309,12 +310,12 @@ public class ConsoleBasedMenus {
         while (runningMenu.equals("shopping")) {
             command = scanner.nextLine().replaceAll("\\s+", " ");
             int whichCommand;
-            for (whichCommand = 0; whichCommand < 5; whichCommand++) {
+            for (whichCommand = 0; whichCommand < shoppingMenusRegexes.length; whichCommand++) {
                 commandMatcher = findMatcher(command, shoppingMenusRegexes[whichCommand]);
                 if (commandMatcher.find()) {
                     executeShoppingMenuCommands(commandMatcher, whichCommand);
                     break;
-                } else if (whichCommand == 4)
+                } else if (whichCommand == shoppingMenusRegexes.length - 1)
                     Output.getInstance().showMessage("invalid command");
             }
 
@@ -339,6 +340,10 @@ public class ConsoleBasedMenus {
                 break;
             case 4:
                 runningMenu = "main";
+                return;
+            case 5:
+                ShoppingMenuController.getInstance().increaseMoney(playerLoggedIn,
+                        Integer.parseInt(commandMatcher.group("amount")));
         }
     }
 
@@ -348,12 +353,12 @@ public class ConsoleBasedMenus {
         while (runningMenu.equals("duel")) {
             command = scanner.nextLine().replaceAll("\\s+", " ");
             int whichCommand;
-            for (whichCommand = 0; whichCommand < 3; whichCommand++) {
+            for (whichCommand = 0; whichCommand < duelMenusRegexes.length; whichCommand++) {
                 commandMatcher = findMatcher(command, duelMenusRegexes[whichCommand]);
                 if (commandMatcher.find()) {
                     executeDuelMenuCommands(commandMatcher, whichCommand);
                     break;
-                } else if (whichCommand == 2)
+                } else if (whichCommand == duelMenusRegexes.length - 1)
                     Output.getInstance().showMessage("invalid command");
             }
 

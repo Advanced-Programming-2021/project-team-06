@@ -27,8 +27,13 @@ public class GameInputs {
             "^attack direct$",
             "^activate effect$",
             "^show graveyard$",
-            "^card show (--selected|-s)$"
+            "^card show (--selected|-s)$",
+            "^increase --LP (?<amount>\\d+)$",
+            "^duel set-winner (?<nickname>\\w+)$"
+
     };
+
+
     private Duel onlineDuel;
 
     private GameInputs() {
@@ -44,22 +49,24 @@ public class GameInputs {
         return onlineDuel;
     }
 
+
     public void setOnlineDuel(Duel onlineDuel) {
         this.onlineDuel = onlineDuel;
     }
 
+    
     public void runGamePlay() {
         Matcher commandMatcher;
         String command;
-        while (true) {
+        while (!onlineDuel.isGameOver()) {
             command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", " ");
             int whichCommand;
-            for (whichCommand = 0; whichCommand < 15; whichCommand++) {
+            for (whichCommand = 0; whichCommand < gamePlayRegexes.length; whichCommand++) {
                 commandMatcher = findMatcher(command, gamePlayRegexes[whichCommand]);
                 if (commandMatcher.find()) {
                     executeGamePlayCommands(commandMatcher, whichCommand);
                     break;
-                } else if (whichCommand == 14)
+                } else if (whichCommand == gamePlayRegexes.length - 1)
                     Output.getInstance().showMessage("invalid command");
             }
         }
@@ -73,7 +80,7 @@ public class GameInputs {
         }
     }
 
-    public boolean backQ(){
+    public boolean backQ() {
         while (true) {
             String command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", " ");
             if (command.equals("back")) return true;
@@ -130,10 +137,18 @@ public class GameInputs {
                 break;
             case 15:
                 onlineDuel.activateSpellCard();
+                break;
             case 16:
                 onlineDuel.showGraveyard();
+                break;
             case 17:
                 onlineDuel.showCard();
+                break;
+            case 18:
+                onlineDuel.increaseLP(Integer.parseInt(commandMatcher.group("amount")));
+                break;
+            case 19:
+                onlineDuel.cheatForWinGame(commandMatcher.group("nickname"));
         }
     }
 

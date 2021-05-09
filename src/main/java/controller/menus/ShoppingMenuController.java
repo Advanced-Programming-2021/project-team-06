@@ -50,5 +50,9 @@ public class ShoppingMenuController {
         Output.getInstance().showMessage("money: " + player.getMoney());
     }
 
+    public void increaseMoney(Player player, int amount) {
+        player.setMoney(player.getMoney() + amount);
+    }
+
 
 }

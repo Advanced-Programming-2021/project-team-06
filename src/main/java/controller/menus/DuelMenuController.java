@@ -48,8 +48,23 @@ public class DuelMenuController {
         }
 
         int numberOfRound = Integer.parseInt(round);
-        GameInputs.getInstance().setOnlineDuel(new Duel(firstPlayer, secondPlayer, numberOfRound));
-        GameInputs.getInstance().runGamePlay();
+        Duel duel;
+        int numberOfWinPlayer1 = 0;
+        int numberOfWinPlayer2 = 0;
+        for (int i = 1; i <= numberOfRound; i++) {
+            GameInputs.getInstance().setOnlineDuel(duel = new Duel(firstPlayer, secondPlayer));
+            GameInputs.getInstance().runGamePlay();
+            if (duel.getWinner().getUsername().equals(firstUsername)) numberOfWinPlayer1++;
+            else numberOfWinPlayer2++;
+            if (numberOfWinPlayer1 == 2 || numberOfWinPlayer2 == 1) break;
+        }
+        if (numberOfWinPlayer1 > numberOfWinPlayer2)
+            Output.getInstance().showMessage(firstUsername + "won the whole match with score: " +
+                    firstPlayer.getScore() + "-" + secondPlayer.getScore());
+        else
+            Output.getInstance().showMessage(secondUsername + "won the whole match with score: " +
+                    secondPlayer.getScore() + "-" + firstPlayer.getScore());
+
     }
 
 }
