@@ -1,6 +1,9 @@
 package models.cards;
 
 import com.google.gson.annotations.SerializedName;
+import controller.ActionJsonParser;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class Monster extends Card implements Cloneable{
     @SerializedName("Atk")
@@ -15,17 +18,18 @@ public class Monster extends Card implements Cloneable{
     MonsterAttribute monsterAttribute;
     @SerializedName("Level")
     int LEVEL;
-    String normalSummonTimeActions;
-    String specialSummonTimeActions;
-    String deathTimeActions;
-    String flipTimeActions;
-    String gettingRaidTimeActions;
+    @SerializedName("Action")
+    private String action;
+    private String isAttackable;
+    private transient String normalSummonTimeActions;
+    private transient String specialSummonTimeActions;
+    private transient String deathTimeActions;
+    private transient String flipTimeActions;
+    private transient String gettingRaidTimeActions;
     private boolean haveBeenAttackedWithMonsterInTurn = false;
 
 
     private String condition;
-    private String action;
-    private String cancellation;
     private MonsterMode monsterMode;
 
     public Monster(String name) {
@@ -33,6 +37,21 @@ public class Monster extends Card implements Cloneable{
     }
 
 
+    public void initializeMonstersEffects() {
+        if (action == null)
+            return;
+        String[] actions = action.split("->");
+        for (String action : actions) {
+            String[] actionInformation = action.split(":");
+            switch (actionInformation[0]){
+                case "summon-time" : normalSummonTimeActions = actionInformation[1]; break;
+                case "flip-time" : flipTimeActions = actionInformation[1]; break;
+                case "death-time" : deathTimeActions = actionInformation[1]; break;
+                case "getting-raid" : gettingRaidTimeActions = actionInformation[1]; break;
+                case "special-summon-time" : specialSummonTimeActions = actionInformation[1]; break;
+            }
+        }
+    }
     public MonsterMode getMonsterMode() {
         return monsterMode;
     }
@@ -64,7 +83,6 @@ public class Monster extends Card implements Cloneable{
     public int getAttackPower() {
         return attackPower;
     }
-
     public int getDefencePower() {
         return defencePower;
     }
@@ -107,6 +125,29 @@ public class Monster extends Card implements Cloneable{
         monster.setAttackPower(this.attackPower);
         monster.setDefencePower(this.defencePower);
         return monster;
+    }
+
+    public void die() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        if (deathTimeActions == null)
+            return;
+        ActionJsonParser.getInstance().doActionList(deathTimeActions , this  , "death-time");
+    }
+    public void summon() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        if (normalSummonTimeActions == null)
+            return;
+        ActionJsonParser.getInstance().doActionList(normalSummonTimeActions , this  , "summon-time");
+    }
+
+    public boolean isAttackable() {
+        if (isAttackable == null)
+            return true;
+        return false;
+    }
+    public void resetAllFields() {
+        additionalAttackPower = 0;
+        additionalDefencePower = 0;
+        overriddenDescription = "";
+        overriddenName = "";
     }
 }
 

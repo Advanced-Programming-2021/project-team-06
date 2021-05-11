@@ -2,6 +2,7 @@ package view;
 
 import controller.Duel;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,7 +56,7 @@ public class GameInputs {
     }
 
     
-    public void runGamePlay() {
+    public void runGamePlay() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Matcher commandMatcher;
         String command;
         while (!onlineDuel.isGameOver()) {
@@ -87,7 +88,7 @@ public class GameInputs {
         }
     }
 
-    private void executeGamePlayCommands(Matcher commandMatcher, int whichCommand) {
+    private void executeGamePlayCommands(Matcher commandMatcher, int whichCommand) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         switch (whichCommand) {
             case 0:
                 onlineDuel.select(commandMatcher.group("address"), true, "m");

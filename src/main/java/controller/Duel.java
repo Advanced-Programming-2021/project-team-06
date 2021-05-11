@@ -21,6 +21,7 @@ public class Duel {
     private int turn = 1;
     private Phases phase = Phases.DRAW;
     private Player winner;
+    private Monster attackingMonster , targetMonster;
 
     public Duel(Player firstPlayer, Player secondPlayer) throws CloneNotSupportedException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         this.firstPlayer = firstPlayer;
@@ -32,13 +33,19 @@ public class Duel {
         this.onlinePlayer = firstPlayer;
         this.offlinePlayer = secondPlayer;
         ActionJsonParser.getInstance().setDuel(this);
-        ActionJsonParser.getInstance().doActionList("collect<MZ>[-Any-]");
     }
 
     public Player getWinner() {
         return winner;
     }
 
+    public Monster getAttackingMonster() {
+        return attackingMonster;
+    }
+
+    public Monster getTargetMonster() {
+        return targetMonster;
+    }
 
     public Player getOfflinePlayer() {
         return offlinePlayer;
@@ -181,7 +188,7 @@ public class Duel {
 
     }
 
-    public void summon() {
+    public void summon() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
         ArrayList<Card> monsterZone = onlinePlayer.getBoard().getMonsterZoneCards();
         if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
@@ -225,6 +232,7 @@ public class Duel {
         onlinePlayer.getBoard().putCardInMonsterZone(selectedCard);
         onlinePlayer.getBoard().setSummonedOrSetCardInTurn(true);
         onlinePlayer.getBoard().setSelectedCard(null);
+        ((Monster) selectedCard).summon();
         Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
         Output.getInstance().showMessage("summoned successfully");
 
@@ -362,7 +370,7 @@ public class Duel {
     }
 
 
-    public void attack(String address) {
+    public void attack(String address) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (!ErrorChecker.isValidAddress(address, "m")) return;
         int cardPosition = setCardAddressInOpponentBoard(Integer.parseInt(address));
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
@@ -385,8 +393,9 @@ public class Duel {
 
     }
 
-    private void runAttack(int address, Monster selectedCard) {
-        Monster targetMonster = (Monster) offlinePlayer.getBoard().getMonsterZoneCards().get(address);
+    private void runAttack(int address, Monster selectedCard) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        attackingMonster = selectedCard;
+        targetMonster = (Monster) offlinePlayer.getBoard().getMonsterZoneCards().get(address);
         MonsterMode monsterMode = targetMonster.getMonsterMode();
         CardPlacement monsterPlacement = targetMonster.getCardPlacement();
         if (monsterPlacement.equals(CardPlacement.faceUp) && monsterMode.equals(MonsterMode.attack))
@@ -397,15 +406,18 @@ public class Duel {
 
         if (monsterPlacement.equals(CardPlacement.faceDown) && monsterMode.equals(MonsterMode.defence))
             monsterAttackToDefenseFaceDown(targetMonster, selectedCard);
+        attackingMonster = null;
+        targetMonster = null;
     }
 
-    private void monsterAttackToAttack(Monster targetMonster, Monster selectedCard) {
+    private void monsterAttackToAttack(Monster targetMonster, Monster selectedCard) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (selectedCard.getAttackPower() > targetMonster.getAttackPower()) {
             offlinePlayer.getBoard().putInGraveyard(targetMonster);
             offlinePlayer.getBoard().removeFromMonsterZone(targetMonster);
+            targetMonster.die();
             int damage = selectedCard.getAttackPower() - targetMonster.getAttackPower();
             offlinePlayer.setHealth(offlinePlayer.getHealth() - damage);
-            Output.getInstance().showMessage("your opponent's monster is destroyed and your opponent receviees" +
+            Output.getInstance().showMessage("your opponent's monster is destroyed and your opponent receives" +
                     damage + " battle damage");
         }
         if (selectedCard.getAttackPower() == targetMonster.getAttackPower()) {
@@ -413,6 +425,8 @@ public class Duel {
             offlinePlayer.getBoard().removeFromMonsterZone(targetMonster);
             onlinePlayer.getBoard().putInGraveyard(selectedCard);
             onlinePlayer.getBoard().removeFromMonsterZone(selectedCard);
+            targetMonster.die();
+            attackingMonster.die();
             Output.getInstance().showMessage("both you and your opponent monster cards are destroyed and no one receives damage");
         }
         if (selectedCard.getAttackPower() < targetMonster.getAttackPower()) {
@@ -420,6 +434,7 @@ public class Duel {
             onlinePlayer.getBoard().removeFromMonsterZone(selectedCard);
             int damage = targetMonster.getAttackPower() - selectedCard.getAttackPower();
             onlinePlayer.setHealth(offlinePlayer.getHealth() - damage);
+            attackingMonster.die();
             Output.getInstance().showMessage("your monster card is destroyed and you received " + damage + " battle damage");
         }
     }

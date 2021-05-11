@@ -3,6 +3,7 @@ package models.cards;
 
 import com.google.gson.*;
 import com.google.gson.annotations.SerializedName;
+import controller.ActionExecutor;
 import models.Database;
 import models.Deck;
 
@@ -20,8 +21,8 @@ public class Card implements Cloneable{
     protected String overriddenDescription;
     protected Deck currentDeck;
     protected ArrayList<PlayType> possiblePlays = new ArrayList<>();
-    protected Deck effectedCards;
     protected CardPlacement cardPlacement;
+    protected ArrayList<ActionExecutor> effectedCards;
     @SerializedName("Price")
     protected int price;
 
@@ -65,10 +66,6 @@ public class Card implements Cloneable{
 
     public void setCurrentDeck(Deck currentDeck) {
         this.currentDeck = currentDeck;
-    }
-
-    public void setEffectedCards(Deck effectedCards) {
-        this.effectedCards = effectedCards;
     }
 
     public void setPossiblePlays(ArrayList<PlayType> possiblePlays) {

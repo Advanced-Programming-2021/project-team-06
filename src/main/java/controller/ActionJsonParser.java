@@ -3,6 +3,7 @@ package controller;
 import models.Board;
 import models.Database;
 import models.Deck;
+import models.Player;
 import models.cards.*;
 
 
@@ -21,7 +22,8 @@ public class ActionJsonParser {
 
     {
         actionsRegexes.put("collect<(?<deckList>.*)>\\[-(?<class>\\w*)-(?<attributeList>.*)]", "collectCards");
-
+        actionsRegexes.put("increase-attack-power{(?<amount>\\d+)}", "increaseAttackPower");
+        actionsRegexes.put("cancel{(?<eventName>.+)}", "cancel");
 
     }
 
@@ -33,11 +35,12 @@ public class ActionJsonParser {
         return actionJsonParserInstance;
     }
 
-    public void doActionList(String actionsString) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    public void doActionList(String actionsString, Card clientCard , String event) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        ActionExecutor actionExecutor = new ActionExecutor(event + ((Object)clientCard).toString());
         String[] actions = actionsString.split(";");
         for (String action : actions) {
             String actionMethodName = getActionMethodName(action);
-            (new ActionExecutor()).execute(actionMethodName, actionMatcher);
+            actionExecutor.execute(actionMethodName, actionMatcher, clientCard);
         }
     }
 

@@ -119,6 +119,7 @@ public class Database {
             Monster monster = FileWorker.getInstance().readMonsterJSON(filePointer.toString());
             allMonsters.add(monster);
             allCards.add(monster);
+            monster.initializeMonstersEffects();
         }
 
     }
