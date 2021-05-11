@@ -9,6 +9,7 @@ import models.cards.MonsterMode;
 import view.GameInputs;
 import view.Output;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 
@@ -21,7 +22,7 @@ public class Duel {
     private Phases phase = Phases.DRAW;
     private Player winner;
 
-    public Duel(Player firstPlayer, Player secondPlayer) throws CloneNotSupportedException {
+    public Duel(Player firstPlayer, Player secondPlayer) throws CloneNotSupportedException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
         firstPlayer.setHealth(8000);
@@ -30,12 +31,22 @@ public class Duel {
         this.secondPlayer.setBoard(new Board(secondPlayer, firstPlayer));
         this.onlinePlayer = firstPlayer;
         this.offlinePlayer = secondPlayer;
+        ActionJsonParser.getInstance().setDuel(this);
+        ActionJsonParser.getInstance().doActionList("collect<MZ>[-Any-]");
     }
 
     public Player getWinner() {
         return winner;
     }
 
+
+    public Player getOfflinePlayer() {
+        return offlinePlayer;
+    }
+
+    public Player getOnlinePlayer() {
+        return onlinePlayer;
+    }
 
     public void changePhase() {
         if (phase.equals(Phases.DRAW)) {

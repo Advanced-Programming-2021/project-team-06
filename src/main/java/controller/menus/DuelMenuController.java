@@ -7,6 +7,8 @@ import models.Player;
 import view.GameInputs;
 import view.Output;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class DuelMenuController {
     private DuelMenuController() {
     }
@@ -19,7 +21,7 @@ public class DuelMenuController {
         return instance;
     }
 
-    public void startGame(String firstUsername, String secondUsername, String round) throws CloneNotSupportedException {
+    public void startGame(String firstUsername, String secondUsername, String round) throws CloneNotSupportedException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Player firstPlayer = Database.getInstance().getPlayerByUsername(firstUsername);
         Player secondPlayer = Database.getInstance().getPlayerByUsername(secondUsername);
         if (!ErrorChecker.doesUsernameExist(secondUsername)) {

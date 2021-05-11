@@ -5,6 +5,7 @@ import controller.menus.*;
 import models.Player;
 import models.Scoreboard;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Scanner;
 import java.util.regex.*;
 
@@ -78,7 +79,7 @@ public class ConsoleBasedMenus {
     }
 
 
-    public void runRegisterMenu() throws CloneNotSupportedException {
+    public void runRegisterMenu() throws CloneNotSupportedException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Matcher commandMatcher;
         String command;
         while (runningMenu.equals("register")) {
@@ -95,7 +96,7 @@ public class ConsoleBasedMenus {
         }
     }
 
-    private void executeRegisterMenuCommands(Matcher commandMatcher, int whichCommand) throws CloneNotSupportedException {
+    private void executeRegisterMenuCommands(Matcher commandMatcher, int whichCommand) throws CloneNotSupportedException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         switch (whichCommand) {
             case 0:
             case 1:
@@ -124,7 +125,7 @@ public class ConsoleBasedMenus {
         }
     }
 
-    public void runMainMenu() throws CloneNotSupportedException {
+    public void runMainMenu() throws CloneNotSupportedException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Matcher commandMatcher;
         String command;
         while (runningMenu.equals("main")) {
@@ -141,7 +142,7 @@ public class ConsoleBasedMenus {
         }
     }
 
-    private void executeMainMenuCommands(Matcher commandMatcher, int whichCommand) throws CloneNotSupportedException {
+    private void executeMainMenuCommands(Matcher commandMatcher, int whichCommand) throws CloneNotSupportedException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         switch (whichCommand) {
             case 0:
                 String menuName = commandMatcher.group("name");
@@ -347,7 +348,7 @@ public class ConsoleBasedMenus {
         }
     }
 
-    private void runDuelMenu() throws CloneNotSupportedException {
+    private void runDuelMenu() throws CloneNotSupportedException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Matcher commandMatcher;
         String command;
         while (runningMenu.equals("duel")) {
@@ -365,7 +366,7 @@ public class ConsoleBasedMenus {
         }
     }
 
-    private void executeDuelMenuCommands(Matcher commandMatcher, int whichCommand) throws CloneNotSupportedException {
+    private void executeDuelMenuCommands(Matcher commandMatcher, int whichCommand) throws CloneNotSupportedException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Player playerLoggedIn = MainMenu.getInstance().getPlayerLoggedIn();
         switch (whichCommand) {
             case 0:

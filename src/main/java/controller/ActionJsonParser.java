@@ -1,5 +1,6 @@
 package controller;
 
+import models.Board;
 import models.Database;
 import models.Deck;
 import models.cards.*;
@@ -14,11 +15,12 @@ import java.util.regex.Pattern;
 public class ActionJsonParser {
 
     private Matcher actionMatcher;
+    private Duel currentDuel;
 
     private final HashMap<String, String> actionsRegexes = new HashMap<>();
 
     {
-        actionsRegexes.put("collect <(?<deckList>.*)>\\[(?<attributeList>.*)]", "collectCards");
+        actionsRegexes.put("collect<(?<deckList>.*)>\\[-(?<class>\\w*)-(?<attributeList>.*)]", "collectCards");
 
 
     }
@@ -35,7 +37,7 @@ public class ActionJsonParser {
         String[] actions = actionsString.split(";");
         for (String action : actions) {
             String actionMethodName = getActionMethodName(action);
-            ActionExecutor.getInstance().execute(actionMethodName, actionMatcher);
+            (new ActionExecutor()).execute(actionMethodName, actionMatcher);
         }
     }
 
@@ -49,13 +51,6 @@ public class ActionJsonParser {
         return "none";
 
     }
-
-   /* public ArrayList<Deck> getDecksByTheirName(String[] deckListStrings) {
-        ArrayList<Deck> deckList = new ArrayList<>();
-        for (String deckName : deckListStrings)
-            deckList.add(Database.getDeckByName(deckName));
-        return deckList;
-    }*/
 
     public Card getDesiredCard(String[] attributeListStrings, String ofClass) {
 
@@ -78,5 +73,49 @@ public class ActionJsonParser {
         }
 
         return card;
+    }
+
+
+    public ArrayList<Deck> getDecksByTheirName(String[] deckLists) {
+        ArrayList<Deck> decks = new ArrayList<>();
+        for (String deckName : deckLists) {
+            switch (deckName) {
+                case "MZ":
+                    decks.add(currentDuel.getOnlinePlayer().getBoard().getMonsterZone());
+                    break;
+                case "OMZ":
+                    decks.add(currentDuel.getOfflinePlayer().getBoard().getMonsterZone());
+                    break;
+                case "SZ":
+                    decks.add(currentDuel.getOnlinePlayer().getBoard().getSpellZone());
+                    break;
+                case "OSZ":
+                    decks.add(currentDuel.getOfflinePlayer().getBoard().getSpellZone());
+                    break;
+                case "GY":
+                    decks.add(currentDuel.getOnlinePlayer().getBoard().getGraveyardZone());
+                    break;
+                case "OGY":
+                    decks.add(currentDuel.getOfflinePlayer().getBoard().getGraveyardZone());
+                    break;
+                case "H":
+                    decks.add(currentDuel.getOnlinePlayer().getBoard().getHand());
+                    break;
+                case "OH":
+                    decks.add(currentDuel.getOfflinePlayer().getBoard().getHand());
+                    break;
+                case "D":
+                    decks.add(currentDuel.getOnlinePlayer().getBoard().getDeckZone());
+                    break;
+                case "OD":
+                    decks.add(currentDuel.getOfflinePlayer().getBoard().getDeckZone());
+                    break;
+            }
+        }
+        return decks;
+    }
+
+    public void setDuel(Duel duel) {
+        currentDuel = duel;
     }
 }
