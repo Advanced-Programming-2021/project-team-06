@@ -80,6 +80,10 @@ public class Card implements Cloneable{
         return description;
     }
 
+    public Deck getCurrentDeck() {
+        return currentDeck;
+    }
+
     public void setCardPlacement(CardPlacement cardPlacement) {
         this.cardPlacement = cardPlacement;
     }
@@ -122,31 +126,19 @@ class CardDeserializerForDeckDatabase implements JsonDeserializer<Card> {
 
     @Override
     public Card deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-        Card card = null;
+        Card card;
         String cardName = jsonElement.getAsString();
         card = Database.getInstance().getMonsterByName(cardName);
         if (card != null) {
-            try {
-                return card.clone();
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
-            }
+            return card;
         }
         card = Database.getInstance().getSpellByName(cardName);
         if (card != null) {
-            try {
-                return card.clone();
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
-            }
+            return card;
         }
         card = Database.getInstance().getTrapByName(cardName);
         if (card != null) {
-            try {
-                return card.clone();
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
-            }
+            return card;
         }
 
         return null;

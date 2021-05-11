@@ -101,6 +101,7 @@ public class Deck {
 
     public void addCard(Card card) {
         mainCards.add(card);
+        card.setCurrentDeck(this);
     }
 
     public void moveCardTo(Deck destination, Card card, boolean isMain) {
@@ -178,6 +179,7 @@ public class Deck {
                 main.add(((Spell)card).clone());
             else if (card instanceof Trap)
                 main.add(((Trap)card).clone());
+            card.setCurrentDeck(this);
         }
         for (Card card : sideCards) {
             if (card instanceof Monster)

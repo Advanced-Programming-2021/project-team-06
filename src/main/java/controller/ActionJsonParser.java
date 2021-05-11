@@ -24,6 +24,8 @@ public class ActionJsonParser {
         actionsRegexes.put("collect<(?<deckList>.*)>\\[-(?<class>\\w*)-(?<attributeList>.*)]", "collectCards");
         actionsRegexes.put("increase-attack-power{(?<amount>\\d+)}", "increaseAttackPower");
         actionsRegexes.put("cancel{(?<eventName>.+)}", "cancel");
+        actionsRegexes.put("kill-offender", "killOffender");
+        actionsRegexes.put("kill", "kill");
 
     }
 
@@ -112,6 +114,20 @@ public class ActionJsonParser {
                     break;
                 case "OD":
                     decks.add(currentDuel.getOfflinePlayer().getBoard().getDeckZone());
+                    break;
+                case "F":
+                    Deck singleCardDeck = new Deck("F" , null);
+                    singleCardDeck.addCard(currentDuel.getOnlinePlayer().getBoard().getFieldZone());
+                    decks.add(singleCardDeck);
+                    break;
+                case "OF":
+                    singleCardDeck = new Deck("OF" , null);
+                    singleCardDeck.addCard(currentDuel.getOfflinePlayer().getBoard().getFieldZone());
+                    decks.add(singleCardDeck);
+                case "AT":
+                    singleCardDeck = new Deck("AT" , null);
+                    singleCardDeck.addCard(currentDuel.getAttackingMonster());
+                    decks.add(singleCardDeck);
                     break;
             }
         }

@@ -6,6 +6,7 @@ import models.cards.Card;
 import models.cards.Monster;
 import models.cards.Spell;
 import models.cards.Trap;
+import view.GameInputs;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -64,7 +65,16 @@ public class ActionExecutor {
                 neededInformation.group("class"));
         collectedDeck.mainCards.removeIf(card -> card == null || !card.isLike(desiredCard));
     }
+    private void kill() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        for (Card card : collectedDeck.mainCards)
+            if (card instanceof Monster)
+                Duel.getCurrentDuel().kill(((Monster)card));
+    }
 
+    private void killOffender() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+     Duel currentDuel = Duel.getCurrentDuel();
+     currentDuel.kill(currentDuel.getOnlinePlayer() , currentDuel.getAttackingMonster());
+    }
     private void increaseAttackPower() {
         int amount = Integer.parseInt(neededInformation.group("amount"));
         for (Card card : collectedDeck.mainCards)
