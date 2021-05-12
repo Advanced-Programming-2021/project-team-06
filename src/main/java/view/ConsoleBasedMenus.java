@@ -62,7 +62,8 @@ public class ConsoleBasedMenus {
             "^increase (--money|-m) (?<amount>\\d+)"
     };
     private final String[] duelMenusRegexes = {
-            "^duel new --second-player (?<username>\\w+) --rounds (?<round>\\d+)$",
+            "^duel new --second-player (?<username>\\w+) (--rounds|-r) (?<round>\\d+)$",
+            "^duel new --single-player (--rounds|-r) (?<round>\\d+)",
             "^menu show-current$",
             "^menu exit$"
     };
@@ -176,7 +177,7 @@ public class ConsoleBasedMenus {
         }
     }
 
-    public void runDeckMenu() throws CloneNotSupportedException {
+    public void runDeckMenu() {
         Matcher commandMatcher;
         String command;
         while (runningMenu.equals("deck")) {
@@ -368,16 +369,20 @@ public class ConsoleBasedMenus {
 
     private void executeDuelMenuCommands(Matcher commandMatcher, int whichCommand) throws CloneNotSupportedException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Player playerLoggedIn = MainMenu.getInstance().getPlayerLoggedIn();
+        String secondUsername, round;
         switch (whichCommand) {
             case 0:
-                String username = commandMatcher.group("username");
-                String round = commandMatcher.group("round");
-                DuelMenuController.getInstance().startGame(playerLoggedIn.getUsername(), username, round);
+                secondUsername = commandMatcher.group("username");
+                round = commandMatcher.group("round");
+                DuelMenuController.getInstance().startGame(playerLoggedIn.getUsername(), secondUsername, round, false);
                 break;
             case 1:
+                round = commandMatcher.group("round");
+                DuelMenuController.getInstance().startGame(playerLoggedIn.getUsername(), "AIPlayer", round, true);
+            case 2:
                 Output.getInstance().showMessage("duel Menu");
                 break;
-            case 2:
+            case 3:
                 runningMenu = "main";
         }
     }

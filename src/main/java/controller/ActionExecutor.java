@@ -1,16 +1,13 @@
 package controller;
 
 import models.Deck;
-import models.Player;
 import models.cards.Card;
 import models.cards.Monster;
 import models.cards.Spell;
 import models.cards.Trap;
-import view.GameInputs;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.regex.Matcher;
 
 public class ActionExecutor {

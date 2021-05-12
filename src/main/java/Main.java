@@ -9,5 +9,7 @@ public class Main {
         Database.getInstance().loadingDatabase();
         ConsoleBasedMenus.getInstance().runRegisterMenu();
         Database.getInstance().updatingDatabase();
+
     }
+
 }

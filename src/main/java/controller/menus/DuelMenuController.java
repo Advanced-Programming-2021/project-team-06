@@ -1,5 +1,6 @@
 package controller.menus;
 
+import controller.AI;
 import controller.Duel;
 import controller.ErrorChecker;
 import models.Database;
@@ -21,9 +22,11 @@ public class DuelMenuController {
         return instance;
     }
 
-    public void startGame(String firstUsername, String secondUsername, String round) throws CloneNotSupportedException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    public void startGame(String firstUsername, String secondUsername, String round, boolean isAI)
+            throws CloneNotSupportedException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Player firstPlayer = Database.getInstance().getPlayerByUsername(firstUsername);
         Player secondPlayer = Database.getInstance().getPlayerByUsername(secondUsername);
+
         if (!ErrorChecker.doesUsernameExist(secondUsername)) {
             Output.getInstance().showMessage("there are no player with this username");
             return;
@@ -50,15 +53,16 @@ public class DuelMenuController {
         }
 
         int numberOfRound = Integer.parseInt(round);
-        Duel duel;
-        int numberOfWinPlayer1 = 0;
-        int numberOfWinPlayer2 = 0;
+        int numberOfWinPlayer1 = 0, numberOfWinPlayer2 = 0;
+
         for (int i = 1; i <= numberOfRound; i++) {
-            GameInputs.getInstance().setOnlineDuel(duel = new Duel(firstPlayer, secondPlayer));
-            GameInputs.getInstance().runGamePlay();
-            if (duel.getWinner().getUsername().equals(firstUsername)) numberOfWinPlayer1++;
-            else numberOfWinPlayer2++;
-            if (numberOfWinPlayer1 == 2 || numberOfWinPlayer2 == 1) break;
+            if (isAI) runSinglePlayer(firstPlayer, secondPlayer);
+            if (!isAI) runMultiplePlayer(firstPlayer, secondPlayer);
+            if (Duel.getCurrentDuel().getWinner().getUsername().equals(firstPlayer.getUsername())) numberOfWinPlayer1++;
+            if (Duel.getCurrentDuel().getWinner().getUsername().equals(secondPlayer.getUsername()))
+                numberOfWinPlayer2++;
+            if ((numberOfWinPlayer1 == 2 && numberOfWinPlayer2 == 0) ||
+                    (numberOfWinPlayer1 == 0 && numberOfWinPlayer2 == 2)) break;
         }
         if (numberOfWinPlayer1 > numberOfWinPlayer2)
             Output.getInstance().showMessage(firstUsername + "won the whole match with score: " +
@@ -66,6 +70,32 @@ public class DuelMenuController {
         else
             Output.getInstance().showMessage(secondUsername + "won the whole match with score: " +
                     secondPlayer.getScore() + "-" + firstPlayer.getScore());
+
+    }
+
+    private void runMultiplePlayer(Player firstPlayer, Player secondPlayer)
+            throws InvocationTargetException, CloneNotSupportedException, NoSuchMethodException, IllegalAccessException {
+        Duel duel;
+        GameInputs.getInstance().setOnlineDuel(duel = new Duel(firstPlayer, secondPlayer));
+
+        while (!duel.isGameOver())
+            GameInputs.getInstance().runGamePlay();
+
+    }
+
+    private void runSinglePlayer(Player firstPlayer, Player secondPlayer)
+            throws InvocationTargetException, CloneNotSupportedException, NoSuchMethodException, IllegalAccessException {
+        Duel duel;
+        GameInputs.getInstance().setOnlineDuel(duel = new Duel(firstPlayer, secondPlayer));
+        AI aiPlayer = AI.getInstance();
+        aiPlayer.setOnlineDuel(duel);
+
+        while (!duel.isGameOver()) {
+            if (duel.getOnlinePlayer().getUsername().equals(firstPlayer.getUsername()))
+                GameInputs.getInstance().runGamePlay();
+            if (duel.getOnlinePlayer().getUsername().equals(secondPlayer.getUsername()))
+                aiPlayer.action();
+        }
 
     }
 

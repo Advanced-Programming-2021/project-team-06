@@ -50,27 +50,26 @@ public class GameInputs {
         return onlineDuel;
     }
 
-
     public void setOnlineDuel(Duel onlineDuel) {
         this.onlineDuel = onlineDuel;
     }
 
-    
+
     public void runGamePlay() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Matcher commandMatcher;
         String command;
-        while (!onlineDuel.isGameOver()) {
-            command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", " ");
-            int whichCommand;
-            for (whichCommand = 0; whichCommand < gamePlayRegexes.length; whichCommand++) {
-                commandMatcher = findMatcher(command, gamePlayRegexes[whichCommand]);
-                if (commandMatcher.find()) {
-                    executeGamePlayCommands(commandMatcher, whichCommand);
-                    break;
-                } else if (whichCommand == gamePlayRegexes.length - 1)
-                    Output.getInstance().showMessage("invalid command");
-            }
+
+        command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", " ");
+        int whichCommand;
+        for (whichCommand = 0; whichCommand < gamePlayRegexes.length; whichCommand++) {
+            commandMatcher = findMatcher(command, gamePlayRegexes[whichCommand]);
+            if (commandMatcher.find()) {
+                executeGamePlayCommands(commandMatcher, whichCommand);
+                break;
+            } else if (whichCommand == gamePlayRegexes.length - 1)
+                Output.getInstance().showMessage("invalid command");
         }
+
     }
 
     public boolean yesOrNoQ() {
