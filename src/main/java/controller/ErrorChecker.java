@@ -247,7 +247,10 @@ public class ErrorChecker {
     }
 
     public static boolean isCardVisible(Card card, boolean status) {
-        if (card.getCardPlacement().equals(CardPlacement.faceDown) && status) {
+        if (card.getCardPlacement() != null) {
+            if (!card.getCardPlacement().equals(CardPlacement.faceDown) || !status) {
+                return true;
+            }
             Output.getInstance().showMessage("card is not visible");
             return false;
         }
@@ -255,7 +258,7 @@ public class ErrorChecker {
     }
 
     public static boolean doesPlayerHaveEnoughCards(Card card, Player player) {
-        if (player.getAllPlayerCard().hasCard(card , true))
+        if (player.getAllPlayerCard().hasCard(card, true))
             return true;
         Output.getInstance().showMessage("you dont have this type of card anymore!");
         return false;

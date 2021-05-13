@@ -27,7 +27,7 @@ public class Player {
         this.password = password;
         this.nickname = nickname;
         this.score = 0;
-        this.health = 5000;
+        this.health = 8000;
         this.roundsWon = 0;
         this.money = 32000000;
         allPlayerCard = new Deck(username + ".purchased-cards", this, false, true);
@@ -172,6 +172,14 @@ public class Player {
                 ", nickname='" + nickname + '\'' +
                 ", score=" + score +
                 '}';
+    }
+
+    public int getRoundsWon() {
+        return roundsWon;
+    }
+
+    public void setRoundsWon(int roundsWon) {
+        this.roundsWon = roundsWon;
     }
 }
 

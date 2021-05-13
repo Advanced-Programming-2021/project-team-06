@@ -13,10 +13,13 @@ public class GameInputs {
     private final String[] gamePlayRegexes = {
             "^select (--monster|-m) (?<address>\\d+)$",
             "^select (--monster|-m) (?<address>\\d+) (--opponent|-o)$",
+            "^select (--opponent|-o) (--monster|-m) (?<address>\\d+)$",
             "^select (--spell|-s) (?<address>\\d+)$",
             "^select (--spell|-s) (?<address>\\d+) (--opponent|-o)$",
+            "^select (--opponent|-o) (--spell|-s) (?<address>\\d+)$",
             "^select (--field|-f) (?<address>\\d+)$",
             "^select (--field|-f) (?<address>\\d+) (--opponent|-o)$",
+            "^select (--opponent|-o) (--field|-f) (?<address>\\d+)$",
             "^select (--hand|-h) (?<address>\\d+)$",
             "^select -d$",
             "^next phase$",
@@ -31,7 +34,6 @@ public class GameInputs {
             "^card show (--selected|-s)$",
             "^increase --LP (?<amount>\\d+)$",
             "^duel set-winner (?<nickname>\\w+)$"
-
     };
 
 
@@ -93,61 +95,64 @@ public class GameInputs {
                 onlineDuel.select(commandMatcher.group("address"), true, "m");
                 break;
             case 1:
+            case 2:
                 onlineDuel.select(commandMatcher.group("address"), false, "m");
                 break;
-            case 2:
+            case 3:
                 onlineDuel.select(commandMatcher.group("address"), true, "s");
                 break;
-            case 3:
+            case 4:
+            case 5:
                 onlineDuel.select(commandMatcher.group("address"), false, "s");
                 break;
-            case 4:
+            case 6:
                 onlineDuel.select(commandMatcher.group("address"), true, "f");
                 break;
-            case 5:
+            case 7:
+            case 8:
                 onlineDuel.select(commandMatcher.group("address"), false, "f");
                 break;
-            case 6:
+            case 9:
                 onlineDuel.select(commandMatcher.group("address"), true, "h");
                 break;
-            case 7:
+            case 10:
                 onlineDuel.deSelect();
                 break;
-            case 8:
+            case 11:
                 onlineDuel.changePhase();
                 break;
-            case 9:
+            case 12:
                 onlineDuel.summon();
                 break;
-            case 10:
+            case 13:
                 onlineDuel.setMonster();
                 onlineDuel.setSpellAndTrap();
                 break;
-            case 11:
+            case 14:
                 onlineDuel.setPosition(commandMatcher.group("mode"));
                 break;
-            case 12:
+            case 15:
                 onlineDuel.flipSummon();
                 break;
-            case 13:
+            case 16:
                 onlineDuel.attack(commandMatcher.group("address"));
                 break;
-            case 14:
+            case 17:
                 onlineDuel.attackDirect();
                 break;
-            case 15:
+            case 18:
                 onlineDuel.activateSpellCard();
                 break;
-            case 16:
+            case 19:
                 onlineDuel.showGraveyard();
                 break;
-            case 17:
+            case 20:
                 onlineDuel.showCard();
                 break;
-            case 18:
+            case 21:
                 onlineDuel.increaseLP(Integer.parseInt(commandMatcher.group("amount")));
                 break;
-            case 19:
+            case 22:
                 onlineDuel.cheatForWinGame(commandMatcher.group("nickname"));
         }
     }

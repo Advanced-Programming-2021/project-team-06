@@ -7,17 +7,20 @@ import models.Scoreboard;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Scanner;
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class ConsoleBasedMenus {
     public static Scanner scanner = new Scanner(System.in);
-
-    private String runningMenu = "register";
-
+    private static ConsoleBasedMenus instance;
     private final String[] registerMenusRegexes = {
             "^user create (--username|-u) (?<username>\\w+) (--nickname|-n) (?<nickname>\\w+) (--password|-p) (?<password>\\w+)$",
             "^user create (--username|-u) (?<username>\\w+) (--password|-p) (?<password>\\w+) (--nickname|-n) (?<nickname>\\w+)$",
+            "^user create (--password|-p) (?<password>\\w+) (--nickname|-n) (?<nickname>\\w+) (--username|-u) (?<username>\\w+)$",
+            "^user create (--password|-p) (?<password>\\w+) (--username|-u) (?<username>\\w+) (--nickname|-n) (?<nickname>\\w+)$",
+            "^user create (--nickname|-n) (?<nickname>\\w+) (--password|-p) (?<password>\\w+) (--username|-u) (?<username>\\w+)$",
+            "^user create (--nickname|-n) (?<nickname>\\w+) (--username|-u) (?<username>\\w+) (--password|-p) (?<password>\\w+)$",
             "^user login (--username|-u) (?<username>\\w+) (--password|-p) (?<password>\\w+)$",
             "^user login (--password|-p) (?<password>\\w+) (--username|-u) (?<username>\\w+)$",
             "^menu enter (?<name>Main|Deck|Duel|Profile|Scoreboard|Shop)$",
@@ -44,11 +47,24 @@ public class ConsoleBasedMenus {
             "^deck delete (?<name>\\w+)$",
             "^deck set-activate (?<name>\\w+)$",
             "^deck add-card (?:--card|-c) (?<cardName>.+) (?:--deck|-d) (?<deckName>.+) (?:--side|-s)$",
+            "^deck add-card (?:--card|-c) (?<cardName>.+) (?:--side|-s) (?:--deck|-d) (?<deckName>.+)$",
+            "^deck add-card (?:--deck|-d) (?<deckName>.+) (?:--card|-c) (?<cardName>.+) (?:--side|-s)$",
+            "^deck add-card (?:--deck|-d) (?<deckName>.+) (?:--side|-s) (?:--card|-c) (?<cardName>.+)$",
+            "^deck add-card (?:--side|-s) (?:--deck|-d) (?<deckName>.+) (?:--card|-c) (?<cardName>.+)$",
+            "^deck add-card (?:--side|-s) (?:--card|-c) (?<cardName>.+) (?:--deck|-d) (?<deckName>.+)$",
             "^deck add-card (?:--card|-c) (?<cardName>.+) (?:--deck|-d) (?<deckName>.+)$",
+            "^deck add-card (?:--deck|-d) (?<deckName>.+) (?:--card|-c) (?<cardName>.+)$",
             "^deck rm-card (?:--card|-c) (?<cardName>.+) (?:--deck|-d) (?<deckName>.+) (?:--side|-s)$",
+            "^deck rm-card (?:--card|-c) (?<cardName>.+) (?:--side|-s) (?:--deck|-d) (?<deckName>.+)$",
+            "^deck rm-card (?:--deck|-d) (?<deckName>.+) (?:--card|-c) (?<cardName>.+) (?:--side|-s)$",
+            "^deck rm-card (?:--deck|-d) (?<deckName>.+) (?:--side|-s) (?:--card|-c) (?<cardName>.+)$",
+            "^deck rm-card (?:--side|-s) (?:--deck|-d) (?<deckName>.+) (?:--card|-c) (?<cardName>.+)$",
+            "^deck rm-card (?:--side|-s) (?:--card|-c) (?<cardName>.+) (?:--deck|-d) (?<deckName>.+)$",
             "^deck rm-card (?:--card|-c) (?<cardName>.+) (?:--deck|-d) (?<deckName>.+)$",
+            "^deck rm-card (?:--deck|-d) (?<deckName>.+) (?:--card|-c) (?<cardName>.+)$",
             "^deck show (?:--all|-a)$",
             "^deck show (?:--deck-name|-d) (?<deckName>.+) (?:--side|-s)$",
+            "^deck show (?:--side|-s) (?:--deck-name|-d) (?<deckName>.+)$",
             "^deck show (?:--deck-name|-d) (?<deckName>.+)$",
             "^menu show-current$",
             "^menu exit$"
@@ -63,15 +79,16 @@ public class ConsoleBasedMenus {
     };
     private final String[] duelMenusRegexes = {
             "^duel new --second-player (?<username>\\w+) (--rounds|-r) (?<round>\\d+)$",
+            "^duel new (--rounds|-r) (?<round>\\d+) --second-player (?<username>\\w+)$",
             "^duel new --single-player (--rounds|-r) (?<round>\\d+)",
+            "^duel new (--rounds|-r) (?<round>\\d+) --single-player",
             "^menu show-current$",
             "^menu exit$"
     };
+    private String runningMenu = "register";
 
     private ConsoleBasedMenus() {
     }
-
-    private static ConsoleBasedMenus instance;
 
     public static ConsoleBasedMenus getInstance() {
         if (instance == null)
@@ -101,14 +118,18 @@ public class ConsoleBasedMenus {
         switch (whichCommand) {
             case 0:
             case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
                 RegisterMenuController.getInstance().createUser(commandMatcher.group("username"),
                         commandMatcher.group("nickname"), commandMatcher.group("password"));
                 break;
-            case 2:
-            case 3:
+            case 6:
+            case 7:
                 RegisterMenuController.getInstance().login(commandMatcher.group("username"), commandMatcher.group("password"));
                 break;
-            case 4:
+            case 8:
                 if (commandMatcher.group("name").equals("Main")) {
                     if (!ErrorChecker.isUserLoggedIn())
                         Output.getInstance().showMessage("please login first");
@@ -118,10 +139,10 @@ public class ConsoleBasedMenus {
                     }
                 } else Output.getInstance().showMessage("menu navigation is not possible");
                 break;
-            case 5:
+            case 9:
                 Output.getInstance().showMessage("Register Menu");
                 break;
-            case 6:
+            case 10:
                 runningMenu = "end";
         }
     }
@@ -209,40 +230,52 @@ public class ConsoleBasedMenus {
                 controller.setActiveDeck(commandMatcher.group("name"), loggedInPlayer);
                 break;
             case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
                 String cardName = commandMatcher.group("cardName"),
                         deckName = commandMatcher.group("deckName");
                 controller.addCardToDeck(cardName, deckName, loggedInPlayer, false);
                 break;
-            case 4:
+            case 9:
+            case 10:
                 cardName = commandMatcher.group("cardName");
                 deckName = commandMatcher.group("deckName");
                 controller.addCardToDeck(cardName, deckName, loggedInPlayer, true);
                 break;
-            case 5:
+            case 11:
+            case 12:
+            case 13:
+            case 14:
+            case 15:
+            case 16:
                 cardName = commandMatcher.group("cardName");
                 deckName = commandMatcher.group("deckName");
                 controller.removeCardFromDeck(cardName, deckName, loggedInPlayer, false);
                 break;
-            case 6:
+            case 17:
+            case 18:
                 cardName = commandMatcher.group("cardName");
                 deckName = commandMatcher.group("deckName");
                 controller.removeCardFromDeck(cardName, deckName, loggedInPlayer, true);
                 break;
-            case 7:
+            case 19:
                 controller.showAllDecks(loggedInPlayer);
                 break;
-            case 8:
+            case 20:
+            case 21:
                 controller.showDeck(commandMatcher.group("deckName"), loggedInPlayer, false);
                 break;
-            case 9:
+            case 22:
                 controller.showDeck(commandMatcher.group("deckName"), loggedInPlayer, true);
                 break;
-            case 10:
+            case 23:
                 Output.getInstance().showMessage("Deck Menu");
                 break;
-            case 11:
+            case 24:
                 runningMenu = "main";
-
         }
     }
 
@@ -372,17 +405,19 @@ public class ConsoleBasedMenus {
         String secondUsername, round;
         switch (whichCommand) {
             case 0:
+            case 1:
                 secondUsername = commandMatcher.group("username");
                 round = commandMatcher.group("round");
                 DuelMenuController.getInstance().startGame(playerLoggedIn.getUsername(), secondUsername, round, false);
                 break;
-            case 1:
+            case 2:
+            case 3:
                 round = commandMatcher.group("round");
                 DuelMenuController.getInstance().startGame(playerLoggedIn.getUsername(), "AIPlayer", round, true);
-            case 2:
+            case 4:
                 Output.getInstance().showMessage("duel Menu");
                 break;
-            case 3:
+            case 5:
                 runningMenu = "main";
         }
     }
