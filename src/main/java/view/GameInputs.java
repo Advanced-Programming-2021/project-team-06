@@ -74,9 +74,9 @@ public class GameInputs {
 
     }
 
-    public boolean yesOrNoQ() {
+    public boolean yesOrNoQuestion() {
         while (true) {
-            String command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", " ");
+            String command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", "");
             if (command.equals("yes")) return true;
             else if (command.equals("no")) return false;
         }

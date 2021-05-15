@@ -2,6 +2,8 @@ package models.cards;
 
 import com.google.gson.annotations.SerializedName;
 import controller.ActionJsonParser;
+import view.GameInputs;
+import view.Output;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.regex.Matcher;
@@ -29,6 +31,7 @@ public class Monster extends Card implements Cloneable{
     private transient String flipTimeActions;
     private transient String gettingRaidTimeActions;
     public transient boolean canBeUnderAttack = true;
+    private transient int numberOfEffectLeft = 1;
     private boolean haveBeenAttackedWithMonsterInTurn = false;
 
 
@@ -133,6 +136,10 @@ public class Monster extends Card implements Cloneable{
     public void die() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (deathTimeActions == null)
             return;
+        Output.getInstance().showMessage("you can now activate the effect of " + this.name +". do you want to?");
+        if (!GameInputs.getInstance().yesOrNoQuestion()) {
+            return;
+        }
         Matcher actionMatcher = getActionMatcher(deathTimeActions);
         if (actionMatcher.group("condition").equals("") || !ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition") , this))
         ActionJsonParser.getInstance().doActionList(actionMatcher.group("action") , this  , "death-time");
@@ -140,22 +147,33 @@ public class Monster extends Card implements Cloneable{
     public void summon() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (normalSummonTimeActions == null)
             return;
+        Output.getInstance().showMessage("you can now activate the effect of " + this.name +". do you want to?");
+        if (!GameInputs.getInstance().yesOrNoQuestion()) {
+            return;
+        }
         Matcher actionMatcher = getActionMatcher(normalSummonTimeActions);
         if (actionMatcher.group("condition").equals("") || !ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition") , this))
         ActionJsonParser.getInstance().doActionList(actionMatcher.group("action") , this  , "summon-time");
     }
 
+    public void consumeEffect() {
+        numberOfEffectLeft--;
+    }
     public void getRaid() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (gettingRaidTimeActions == null)
             return;
+        Output.getInstance().showMessage("you can now activate the effect of " + this.name +". do you want to?");
+        if (!GameInputs.getInstance().yesOrNoQuestion()) {
+            return;
+        }
         Matcher actionMatcher = getActionMatcher(gettingRaidTimeActions);
         if (actionMatcher.group("condition").equals("") || !ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition") , this))
         ActionJsonParser.getInstance().doActionList(actionMatcher.group("action") , this  , "getting-raid");
     }
-    public boolean isAttackable() {
+    public boolean isAttackable() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (isAttackable == null)
             return true;
-        return false;
+        return ActionJsonParser.getInstance().checkConditionList(isAttackable , this);
     }
 
     public void resetAllFields() {

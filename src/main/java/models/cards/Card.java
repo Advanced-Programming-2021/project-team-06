@@ -10,7 +10,7 @@ import models.Deck;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class Card implements Cloneable{
+public class Card implements Cloneable {
     @SerializedName("Name")
     protected String name;
     protected String overriddenName;
@@ -35,12 +35,20 @@ public class Card implements Cloneable{
         return cardPlacement;
     }
 
+    public static CardSerializerForDeckDatabase cardSerializerForDeckDatabase = null;
+
     public static CardSerializerForDeckDatabase getCardSerializerForDeck() {
-        return new CardSerializerForDeckDatabase();
+        if (cardSerializerForDeckDatabase == null)
+            cardSerializerForDeckDatabase = new CardSerializerForDeckDatabase();
+        return cardSerializerForDeckDatabase;
     }
 
+    public static CardDeserializerForDeckDatabase cardDeserializerForDeckDatabase = null;
+
     public static CardDeserializerForDeckDatabase getCardDeserializerForDeck() {
-        return new CardDeserializerForDeckDatabase();
+        if (cardDeserializerForDeckDatabase == null)
+            cardDeserializerForDeckDatabase = new CardDeserializerForDeckDatabase();
+        return cardDeserializerForDeckDatabase;
     }
 
 
@@ -103,8 +111,7 @@ public class Card implements Cloneable{
     }
 
     @Override
-    public Card clone() throws CloneNotSupportedException
-    {
+    public Card clone() throws CloneNotSupportedException {
         Card card = (Card) super.clone();
         card.setName(this.name);
         card.setType(this.type);

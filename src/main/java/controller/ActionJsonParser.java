@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class ActionJsonParser {
 
-    private Matcher conditionMatcher;
+    private Matcher actionMatcher;
     private Duel currentDuel;
 
     private final HashMap<String, String> actionsRegexes = new HashMap<>();
@@ -41,7 +41,7 @@ public class ActionJsonParser {
         String[] actions = actionsString.split(";");
         for (String action : actions) {
             String actionMethodName = getActionMethodName(action);
-            actionExecutor.execute(actionMethodName, conditionMatcher, clientCard);
+            actionExecutor.execute(actionMethodName, actionMatcher, clientCard);
         }
     }
     public boolean checkConditionList(String actionsString, Card clientCard) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
@@ -49,7 +49,7 @@ public class ActionJsonParser {
         String[] conditions = actionsString.split("&");
         boolean result = true;
         for (String condition : conditions) {
-           result &= conditionChecker.check(condition, conditionMatcher, clientCard);
+           result &= conditionChecker.check(condition , clientCard);
         }
         return result;
     }
@@ -57,8 +57,8 @@ public class ActionJsonParser {
     private String getActionMethodName(String action) {
 
         for (String regex : actionsRegexes.keySet()) {
-            conditionMatcher = Pattern.compile(regex).matcher(action);
-            if (conditionMatcher.matches())
+            actionMatcher = Pattern.compile(regex).matcher(action);
+            if (actionMatcher.matches())
                 return actionsRegexes.get(regex);
         }
         return "none";
