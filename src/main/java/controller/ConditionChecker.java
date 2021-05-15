@@ -4,6 +4,7 @@ import models.cards.Card;
 import view.GameInputs;
 import view.Output;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,10 +44,16 @@ public class ConditionChecker {
         } catch (Exception exception) {
             switch (variable) {
                 case "effected{summon-time}" :
-                    Deck collectedDeck =ActionExecutor.getActionExecutorByName("summon-time" + ((Object)clientCard).toString()).getCollectedDeck();
+                    Deck collectedDeck = Objects.requireNonNull(ActionExecutor.getActionExecutorByName("summon-time" + ((Object) clientCard).toString())).getCollectedDeck();
                     if (collectedDeck == null)
                         break;
                    value =  collectedDeck.mainCards.size();
+                    break;
+                case "effected{flip-time}" :
+                    collectedDeck = Objects.requireNonNull(ActionExecutor.getActionExecutorByName("flip-time" + ((Object) clientCard).toString())).getCollectedDeck();
+                    if (collectedDeck == null)
+                        break;
+                    value =  collectedDeck.mainCards.size();
                     break;
             }
         }
