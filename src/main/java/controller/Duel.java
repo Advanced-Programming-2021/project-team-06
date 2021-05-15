@@ -24,7 +24,7 @@ public class Duel {
     private Player winner;
     private Monster attackingMonster, targetMonster;
 
-    public Duel(Player firstPlayer, Player secondPlayer) throws CloneNotSupportedException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    public Duel(Player firstPlayer, Player secondPlayer) throws CloneNotSupportedException{
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
         firstPlayer.setHealth(8000);
@@ -61,7 +61,7 @@ public class Duel {
         return onlinePlayer;
     }
 
-    public void changePhase() {
+    public void changePhase() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (phase.equals(Phases.DRAW)) {
             phase = Phases.STANDBY;
             Output.getInstance().showMessage("phase: " + phase);
@@ -117,11 +117,20 @@ public class Duel {
         }
     }
 
-    public void actionsInEndPhase() {
-        Output.getInstance().showMessage("phase: " + phase + "\n "
-                + "its" + offlinePlayer.getNickname() + "'s turn");
+    public void actionsInEndPhase() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        doEndOfTurnActions();
+        Output.getInstance().showMessage("its " + offlinePlayer.getNickname() + "'s turn");
         setNumberOfCardInHand();
         changeTurn();
+    }
+
+    private void doEndOfTurnActions() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    for (Card card : onlinePlayer.getBoard().getMonsterZoneCards()) {
+        Monster monster = (Monster) card;
+        if (monster == null)
+            continue;
+        monster.endOfTurn();
+    }
     }
 
     private void setNumberOfCardInHand() {

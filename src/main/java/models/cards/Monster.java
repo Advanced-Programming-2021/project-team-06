@@ -30,8 +30,9 @@ public class Monster extends Card implements Cloneable{
     private transient String deathTimeActions;
     private transient String flipTimeActions;
     private transient String gettingRaidTimeActions;
+    private transient String endOfTurnActions;
     public transient boolean canBeUnderAttack = true;
-    private transient int numberOfEffectLeft = 1;
+
     private boolean haveBeenAttackedWithMonsterInTurn = false;
 
 
@@ -55,6 +56,7 @@ public class Monster extends Card implements Cloneable{
                 case "death-time" : deathTimeActions = actionInformation[1]; break;
                 case "getting-raid" : gettingRaidTimeActions = actionInformation[1]; break;
                 case "special-summon-time" : specialSummonTimeActions = actionInformation[1]; break;
+                case "end-of-turn" : endOfTurnActions = actionInformation[1]; break;
             }
         }
     }
@@ -136,39 +138,33 @@ public class Monster extends Card implements Cloneable{
     public void die() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (deathTimeActions == null)
             return;
-        Output.getInstance().showMessage("you can now activate the effect of " + this.name +". do you want to?");
-        if (!GameInputs.getInstance().yesOrNoQuestion()) {
-            return;
-        }
         Matcher actionMatcher = getActionMatcher(deathTimeActions);
-        if (actionMatcher.group("condition").equals("") || !ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition") , this))
+        if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition") , this))
         ActionJsonParser.getInstance().doActionList(actionMatcher.group("action") , this  , "death-time");
     }
     public void summon() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (normalSummonTimeActions == null)
             return;
-        Output.getInstance().showMessage("you can now activate the effect of " + this.name +". do you want to?");
-        if (!GameInputs.getInstance().yesOrNoQuestion()) {
-            return;
-        }
         Matcher actionMatcher = getActionMatcher(normalSummonTimeActions);
-        if (actionMatcher.group("condition").equals("") || !ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition") , this))
+        if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition") , this))
         ActionJsonParser.getInstance().doActionList(actionMatcher.group("action") , this  , "summon-time");
     }
 
-    public void consumeEffect() {
-        numberOfEffectLeft--;
-    }
+
     public void getRaid() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (gettingRaidTimeActions == null)
             return;
-        Output.getInstance().showMessage("you can now activate the effect of " + this.name +". do you want to?");
-        if (!GameInputs.getInstance().yesOrNoQuestion()) {
-            return;
-        }
         Matcher actionMatcher = getActionMatcher(gettingRaidTimeActions);
-        if (actionMatcher.group("condition").equals("") || !ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition") , this))
+        if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition") , this))
         ActionJsonParser.getInstance().doActionList(actionMatcher.group("action") , this  , "getting-raid");
+    }
+    public void endOfTurn() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        if (endOfTurnActions == null)
+            return;
+        Matcher actionMatcher = getActionMatcher(endOfTurnActions);
+        if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition") , this))
+            ActionJsonParser.getInstance().doActionList(actionMatcher.group("action") , this  , "end-of-turn");
+
     }
     public boolean isAttackable() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (isAttackable == null)

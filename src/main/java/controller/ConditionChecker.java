@@ -1,6 +1,8 @@
 package controller;
 import models.Deck;
 import models.cards.Card;
+import view.GameInputs;
+import view.Output;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,6 +10,9 @@ import java.util.regex.Pattern;
 public class ConditionChecker {
     private Card clientCard ;
     public boolean check(String condition , Card clientCard) {
+        if (condition.equals("?")){
+            Output.getInstance().showMessage("you can now activate the effect of " + clientCard.getName() +". do you want to?");
+            return GameInputs.getInstance().yesOrNoQuestion();}
         Matcher conditionMatcher = getSimpleConditionMatcher(condition);
         this.clientCard = clientCard;
         int firstNumber = getVariable(conditionMatcher.group("firstNumber"));

@@ -23,6 +23,10 @@ public class Card implements Cloneable {
     protected ArrayList<PlayType> possiblePlays = new ArrayList<>();
     protected CardPlacement cardPlacement;
     protected ArrayList<ActionExecutor> effectedCards;
+    private int numberOfSummonTimeEffectLeft;
+    private int numberOfDeathTimeEffectLeft;
+    private int numberOfFlipTimeEffectLeft;
+    private int numberOfEndOfTurnTimeEffectLeft;
     @SerializedName("Price")
     protected int price;
 
@@ -96,6 +100,23 @@ public class Card implements Cloneable {
         this.cardPlacement = cardPlacement;
     }
 
+    public void consumeEffect(String whichEffect) {
+        switch (whichEffect) {
+            case "summon-time":
+                numberOfSummonTimeEffectLeft--;
+                break;
+            case "death-time":
+                numberOfDeathTimeEffectLeft--;
+                break;
+            case "flip-time":
+                numberOfFlipTimeEffectLeft--;
+                break;
+            case "end-of-turn":
+                numberOfEndOfTurnTimeEffectLeft--;
+                break;
+        }
+
+    }
 
     public void goTo(Deck deck) {
         setCurrentDeck(deck);

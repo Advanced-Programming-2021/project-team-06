@@ -25,6 +25,7 @@ public class ActionJsonParser {
         actionsRegexes.put("kill", "kill");
         actionsRegexes.put("set-attack-power{(?<amount>\\d+)}", "set-attack-power");
         actionsRegexes.put("cancel-attack", "cancel-attack");
+        actionsRegexes.put("consume-effect", "consumeEffect");
 
     }
 

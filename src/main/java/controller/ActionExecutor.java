@@ -87,6 +87,9 @@ public class ActionExecutor {
             }
     }
 
+    private void consumeEffect() {
+        clientsCard.consumeEffect(collectedDeck.getName().replace(((Object)clientsCard).toString() , ""));
+    }
     private void getCardsFromTheirDeck(ArrayList<Deck> decks, String ofClass) {
         ArrayList<Card> cards = collectedDeck.getMainCards();
         for (Deck deck : decks)
