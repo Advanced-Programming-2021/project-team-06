@@ -1,9 +1,6 @@
 package controller;
 
-import models.Board;
-import models.Database;
 import models.Deck;
-import models.Player;
 import models.cards.*;
 
 
@@ -15,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class ActionJsonParser {
 
-    private Matcher actionMatcher;
+    private Matcher conditionMatcher;
     private Duel currentDuel;
 
     private final HashMap<String, String> actionsRegexes = new HashMap<>();
@@ -26,6 +23,8 @@ public class ActionJsonParser {
         actionsRegexes.put("cancel{(?<eventName>.+)}", "cancel");
         actionsRegexes.put("kill-offender", "killOffender");
         actionsRegexes.put("kill", "kill");
+        actionsRegexes.put("set-attack-power{(?<amount>\\d+)}", "set-attack-power");
+        actionsRegexes.put("cancel-attack", "cancel-attack");
 
     }
 
@@ -42,15 +41,24 @@ public class ActionJsonParser {
         String[] actions = actionsString.split(";");
         for (String action : actions) {
             String actionMethodName = getActionMethodName(action);
-            actionExecutor.execute(actionMethodName, actionMatcher, clientCard);
+            actionExecutor.execute(actionMethodName, conditionMatcher, clientCard);
         }
+    }
+    public boolean checkConditionList(String actionsString, Card clientCard) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        ConditionChecker conditionChecker = new ConditionChecker();
+        String[] conditions = actionsString.split("&");
+        boolean result = true;
+        for (String condition : conditions) {
+           result &= conditionChecker.check(condition, conditionMatcher, clientCard);
+        }
+        return result;
     }
 
     private String getActionMethodName(String action) {
 
         for (String regex : actionsRegexes.keySet()) {
-            actionMatcher = Pattern.compile(regex).matcher(action);
-            if (actionMatcher.matches())
+            conditionMatcher = Pattern.compile(regex).matcher(action);
+            if (conditionMatcher.matches())
                 return actionsRegexes.get(regex);
         }
         return "none";

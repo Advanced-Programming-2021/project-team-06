@@ -404,6 +404,9 @@ public class Duel {
         targetMonster = (Monster) offlinePlayer.getBoard().getMonsterZoneCards().get(address);
         MonsterMode monsterMode = targetMonster.getMonsterMode();
         CardPlacement monsterPlacement = targetMonster.getCardPlacement();
+        if (!targetMonster.isAttackable())
+            return;
+        targetMonster.getRaid();
         if (monsterPlacement.equals(CardPlacement.faceUp) && monsterMode.equals(MonsterMode.attack))
             monsterAttackToAttack(targetMonster, selectedCard);
 
