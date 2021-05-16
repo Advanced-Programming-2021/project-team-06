@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import models.Deck;
 import models.Player;
-import models.cards.Card;
-import models.cards.Monster;
-import models.cards.Spell;
-import models.cards.Trap;
+import models.cards.*;
 
 import java.io.*;
 
@@ -56,7 +53,7 @@ public class FileWorker {
 
     public void writeDeckJSON(Deck deck) {
         String deckName = deck.getName();
-        String fileAddress =  decksDateBase + deckName + ".json";
+        String fileAddress = decksDateBase + deckName + ".json";
         GsonBuilder builder = new GsonBuilder().registerTypeAdapter(Player.class, Player.getPlayerSerializerForDeck()).registerTypeAdapter(Card.class, Card.getCardSerializerForDeck());
         Gson gson = builder.create();
         FileWriter writer;
@@ -89,7 +86,7 @@ public class FileWorker {
     public Monster readMonsterJSON(String fileAddress) {
 
         try (FileReader reader = new FileReader(fileAddress)) {
-            GsonBuilder builder = new GsonBuilder();
+            GsonBuilder builder = new GsonBuilder().registerTypeAdapter(MonsterType.class, MonsterType.get());
             Gson gson = builder.create();
 
             BufferedReader bufferedReader = new BufferedReader(reader);

@@ -2,8 +2,12 @@ package models.cards;
 
 import com.google.gson.annotations.SerializedName;
 import controller.ActionJsonParser;
+import view.GameInputs;
+import view.Output;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Monster extends Card implements Cloneable{
     @SerializedName("Atk")
@@ -26,6 +30,9 @@ public class Monster extends Card implements Cloneable{
     private transient String deathTimeActions;
     private transient String flipTimeActions;
     private transient String gettingRaidTimeActions;
+    private transient String endOfTurnActions;
+    public transient boolean canBeUnderAttack = true;
+
     private boolean haveBeenAttackedWithMonsterInTurn = false;
 
 
@@ -49,6 +56,7 @@ public class Monster extends Card implements Cloneable{
                 case "death-time" : deathTimeActions = actionInformation[1]; break;
                 case "getting-raid" : gettingRaidTimeActions = actionInformation[1]; break;
                 case "special-summon-time" : specialSummonTimeActions = actionInformation[1]; break;
+                case "end-of-turn" : endOfTurnActions = actionInformation[1]; break;
             }
         }
     }
@@ -130,24 +138,49 @@ public class Monster extends Card implements Cloneable{
     public void die() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (deathTimeActions == null)
             return;
-        ActionJsonParser.getInstance().doActionList(deathTimeActions , this  , "death-time");
+        Matcher actionMatcher = getActionMatcher(deathTimeActions);
+        if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition") , this))
+        ActionJsonParser.getInstance().doActionList(actionMatcher.group("action") , this  , "death-time");
     }
     public void summon() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (normalSummonTimeActions == null)
             return;
-        ActionJsonParser.getInstance().doActionList(normalSummonTimeActions , this  , "summon-time");
+        Matcher actionMatcher = getActionMatcher(normalSummonTimeActions);
+        if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition") , this))
+        ActionJsonParser.getInstance().doActionList(actionMatcher.group("action") , this  , "summon-time");
     }
 
-    public boolean isAttackable() {
+
+    public void getRaid() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        if (gettingRaidTimeActions == null)
+            return;
+        Matcher actionMatcher = getActionMatcher(gettingRaidTimeActions);
+        if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition") , this))
+        ActionJsonParser.getInstance().doActionList(actionMatcher.group("action") , this  , "getting-raid");
+    }
+    public void endOfTurn() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        if (endOfTurnActions == null)
+            return;
+        Matcher actionMatcher = getActionMatcher(endOfTurnActions);
+        if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition") , this))
+            ActionJsonParser.getInstance().doActionList(actionMatcher.group("action") , this  , "end-of-turn");
+
+    }
+    public boolean isAttackable() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (isAttackable == null)
             return true;
-        return false;
+        return ActionJsonParser.getInstance().checkConditionList(isAttackable , this);
     }
+
     public void resetAllFields() {
         additionalAttackPower = 0;
         additionalDefencePower = 0;
         overriddenDescription = "";
         overriddenName = "";
+    }
+
+    public Matcher getActionMatcher(String action) {
+        return Pattern.compile("\\*(?<condition>.*)\\*+(?<action>.+)").matcher(action);
     }
 }
 

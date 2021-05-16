@@ -119,10 +119,23 @@ public class ErrorChecker {
 
     public static Card istTheSeatVacant(Board board, int address, String state) {
         Card card = null;
-        if (state.equals("h")) card = board.getHandZoneCards().get(address);
-        if (state.equals("m")) card = board.getMonsterZoneCards().get(address);
-        if (state.equals("s")) card = board.getSpellZoneCards().get(address);
-        if (state.equals("f")) card = board.getFieldZone();
+        switch (state) {
+            case "h":
+                if (address < board.getHandZoneCards().size())
+                card = board.getHandZoneCards().get(address);
+                break;
+            case "m":
+                if (address <= 5)
+                card = board.getMonsterZoneCards().get(address);
+                break;
+            case "s":
+                if (address <= 5)
+                card = board.getSpellZoneCards().get(address);
+                break;
+            case "f":
+                card = board.getFieldZone();
+                break;
+        }
         if (card == null) {
             Output.getInstance().showMessage("no card found in the given position");
             return null;

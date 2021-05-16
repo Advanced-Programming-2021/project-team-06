@@ -1,9 +1,6 @@
 package controller;
 
-import models.Board;
-import models.Database;
 import models.Deck;
-import models.Player;
 import models.cards.*;
 
 
@@ -26,6 +23,10 @@ public class ActionJsonParser {
         actionsRegexes.put("cancel{(?<eventName>.+)}", "cancel");
         actionsRegexes.put("kill-offender", "killOffender");
         actionsRegexes.put("kill", "kill");
+        actionsRegexes.put("set-attack-power{(?<amount>\\d+)}", "set-attack-power");
+        actionsRegexes.put("cancel-attack", "cancel-attack");
+        actionsRegexes.put("consume-effect", "consumeEffect");
+        actionsRegexes.put("select{(?<howMany>\\d+)}", "selectCardsByUserChoice");
 
     }
 
@@ -44,6 +45,15 @@ public class ActionJsonParser {
             String actionMethodName = getActionMethodName(action);
             actionExecutor.execute(actionMethodName, actionMatcher, clientCard);
         }
+    }
+    public boolean checkConditionList(String actionsString, Card clientCard) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        ConditionChecker conditionChecker = new ConditionChecker();
+        String[] conditions = actionsString.split("&");
+        boolean result = true;
+        for (String condition : conditions) {
+           result &= conditionChecker.check(condition , clientCard);
+        }
+        return result;
     }
 
     private String getActionMethodName(String action) {

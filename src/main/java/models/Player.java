@@ -35,12 +35,18 @@ public class Player {
     }
 
 
+    public static PlayerSerializerForDeckDatabase playerSerializerForDeckDatabase = new PlayerSerializerForDeckDatabase();
     public static PlayerSerializerForDeckDatabase getPlayerSerializerForDeck() {
-        return new PlayerSerializerForDeckDatabase();
+        if (playerSerializerForDeckDatabase == null)
+            playerSerializerForDeckDatabase = new PlayerSerializerForDeckDatabase();
+        return playerSerializerForDeckDatabase;
     }
 
+    public static PlayerDeserializerForDeckDatabase playerDeserializerForDeckDatabase = null;
     public static PlayerDeserializerForDeckDatabase getPlayerDeserializerForDeck() {
-        return new PlayerDeserializerForDeckDatabase();
+        if (playerDeserializerForDeckDatabase == null)
+            playerDeserializerForDeckDatabase = new PlayerDeserializerForDeckDatabase();
+        return playerDeserializerForDeckDatabase;
     }
 
     public int getHealth() {

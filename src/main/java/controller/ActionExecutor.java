@@ -78,7 +78,22 @@ public class ActionExecutor {
             if (card instanceof Monster)
                 ((Monster) card).setAdditionalAttackPower(amount);
     }
+    private void setAttackPower() {
+        int amount = Integer.parseInt(neededInformation.group("amount"));
+        for (Card card : collectedDeck.mainCards)
+            if (card instanceof Monster){
+                Monster theMonster = ((Monster) card);
+                theMonster.setAdditionalAttackPower(amount - theMonster.getAttackPower());
+            }
+    }
 
+    private void consumeEffect() {
+        clientsCard.consumeEffect(collectedDeck.getName().replace(((Object)clientsCard).toString() , ""));
+    }
+    private void selectCardsByUserChoice() {
+        //TODO: SELECTIVE DECK
+
+    }
     private void getCardsFromTheirDeck(ArrayList<Deck> decks, String ofClass) {
         ArrayList<Card> cards = collectedDeck.getMainCards();
         for (Deck deck : decks)
