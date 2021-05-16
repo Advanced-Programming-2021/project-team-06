@@ -362,7 +362,7 @@ public class Duel {
         Output.getInstance().showMessage("monster card position changed successfully");
     }
 
-    public void flipSummon() {
+    public void flipSummon() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
         if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
         if (!onlinePlayer.getBoard().isInMonsterZone(selectedCard)) {
@@ -376,6 +376,7 @@ public class Duel {
             return;
         }
         ((Monster) selectedCard).setMonsterMode(MonsterMode.attack);
+        ((Monster) selectedCard).flip();
         onlinePlayer.getBoard().setSelectedCard(null);
         Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
         Output.getInstance().showMessage("flip Summoned successfully");

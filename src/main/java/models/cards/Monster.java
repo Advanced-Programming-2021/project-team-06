@@ -142,6 +142,15 @@ public class Monster extends Card implements Cloneable{
         if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition") , this))
         ActionJsonParser.getInstance().doActionList(actionMatcher.group("action") , this  , "death-time");
     }
+
+    public void flip() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        if (flipTimeActions == null)
+            return;
+        Matcher actionMatcher = getActionMatcher(flipTimeActions);
+        if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition") , this))
+            ActionJsonParser.getInstance().doActionList(actionMatcher.group("action") , this , "flip-time");
+    }
+
     public void summon() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (normalSummonTimeActions == null)
             return;
@@ -149,7 +158,6 @@ public class Monster extends Card implements Cloneable{
         if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition") , this))
         ActionJsonParser.getInstance().doActionList(actionMatcher.group("action") , this  , "summon-time");
     }
-
 
     public void getRaid() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (gettingRaidTimeActions == null)
@@ -166,6 +174,7 @@ public class Monster extends Card implements Cloneable{
             ActionJsonParser.getInstance().doActionList(actionMatcher.group("action") , this  , "end-of-turn");
 
     }
+
     public boolean isAttackable() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (isAttackable == null)
             return true;

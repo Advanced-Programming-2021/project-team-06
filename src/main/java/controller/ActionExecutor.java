@@ -17,8 +17,9 @@ public class ActionExecutor {
     private Matcher neededInformation;
     private Deck collectedDeck;
     private Card clientsCard;
-    public ActionExecutor(String name) {
-        collectedDeck = new Deck(name, null);
+    public ActionExecutor(String name , Card clientsCard) {
+        this.clientsCard = clientsCard;
+        collectedDeck = new Deck(name, clientsCard.getCurrentDeck().getOwner());
         ALL_ACTION_EXECUTORS.add(this);
     }
 
@@ -34,9 +35,8 @@ public class ActionExecutor {
         return collectedDeck;
     }
 
-    public void execute(String methodName, Matcher matcher , Card clientsCard) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public void execute(String methodName, Matcher matcher) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         neededInformation = matcher;
-        this.clientsCard = clientsCard;
         this.getClass().getDeclaredMethod(methodName).invoke(this);
     }
 
@@ -91,7 +91,8 @@ public class ActionExecutor {
         clientsCard.consumeEffect(collectedDeck.getName().replace(((Object)clientsCard).toString() , ""));
     }
     private void selectCardsByUserChoice() {
-        //TODO: SELECTIVE DECK
+        int howMany = Integer.parseInt(neededInformation.group("howMany"));
+        collectedDeck = Deck.getSelectionDeckFrom(collectedDeck , howMany);
 
     }
     private void getCardsFromTheirDeck(ArrayList<Deck> decks, String ofClass) {
