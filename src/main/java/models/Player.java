@@ -34,14 +34,6 @@ public class Player {
         Database.allPlayers.add(this);
     }
 
-    public static Player getUsernameByPlayer(String username) {
-        for (Player playerUser : Database.allPlayers) {
-            if (username.equals(playerUser.getUsername())) {
-                return playerUser;
-            }
-        }
-        return null;
-    }
 
     public static PlayerSerializerForDeckDatabase getPlayerSerializerForDeck() {
         return new PlayerSerializerForDeckDatabase();

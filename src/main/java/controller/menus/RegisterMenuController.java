@@ -6,8 +6,6 @@ import models.Player;
 import view.Output;
 
 public class RegisterMenuController {
-    private String username;
-    private String password;
 
     private RegisterMenuController() {
     }
