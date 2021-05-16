@@ -1,8 +1,6 @@
 {
   "mainCards": [
     "Feral Imp",
-    "Feral Imp",
-    "Yomi Ship",
     "Yomi Ship",
     "Yomi Ship",
     "Leotron",
@@ -43,13 +41,9 @@
     "Hero Of The East",
     "Fireyarou",
     "Fireyarou",
-    "Fireyarou",
-    "Crawling Dragon",
-    "Crawling Dragon",
-    "Crawling Dragon"
+    "Fireyarou"
   ],
   "sideCards": [
-    "Crawling Dragon",
     "Crawling Dragon"
   ],
   "owner": "mhdi",

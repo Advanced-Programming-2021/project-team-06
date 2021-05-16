@@ -131,7 +131,7 @@ public class MenusTest {
 
         player.setMoney(2900);
         shoppingMenuController.buyCard(player, "Battle Ox");
-        Assertions.assertFalse(!player.getAllPlayerCard().getMainCards().contains(database.getCardByName("Battle Ox")));
+        Assertions.assertTrue(player.getAllPlayerCard().getMainCards().contains(database.getCardByName("Battle Ox")));
         Assertions.assertEquals(player.getMoney(), 0);
         Assertions.assertEquals("Card purchased\n", outContent.toString());
 
@@ -171,37 +171,42 @@ public class MenusTest {
         deckMenuController.addCardToDeck("Battle Ox", "deck", player, true);
         deckMenuController.addCardToDeck("Battle Ox", "deck", player, false);
 
-        Assertions.assertFalse(!deck.getMainCards().contains(card));
-        Assertions.assertFalse(!deck.getSideCards().contains(card));
+        Assertions.assertTrue(deck.getMainCards().contains(card));
+        Assertions.assertTrue(deck.getSideCards().contains(card));
 
     }
 
     @Test
-    public void removeCardFromDeckTest() {
-        database.loadMonsters();
-        registerMenuController.createUser("mhdi", "aliz", "1234");
+    public void deleteCardFromDeckTest() {
         Player player = database.getPlayerByUsername("mhdi");
-
-        deckMenuController.createDeck("deck", player);
         Deck deck = database.getDeckByName("deck");
-
-        shoppingMenuController.buyCard(player, "Battle Ox");
-        shoppingMenuController.buyCard(player, "Battle Ox");
-
         Card card = database.getCardByName("Battle Ox");
 
         Assertions.assertNotNull(card);
         Assertions.assertNotNull(player);
         Assertions.assertNotNull(deck);
 
-        deckMenuController.addCardToDeck("Battle Ox", "deck", player, true);
-        deckMenuController.addCardToDeck("Battle Ox", "deck", player, false);
+        deckMenuController.removeCardFromDeck("Battle Ox", "deck", player, true);
+        deckMenuController.removeCardFromDeck("Battle Ox", "deck", player, false);
 
-        //deckMenuController.removeCardFromDeck("Battle Ox", "deck", player, true);
-        //deckMenuController.removeCardFromDeck("Battle Ox", "deck", player, false);
         Assertions.assertFalse(deck.getMainCards().contains(card));
-        //Assertions.assertFalse(deck.getSideCards().contains(card));
+        Assertions.assertFalse(deck.getSideCards().contains(card));
+    }
 
+    @AfterAll
+    public static void deleteDeckTest() {
+        Player player = database.getPlayerByUsername("mhdi");
+        Deck deck = database.getDeckByName("deck");
+        Card card = database.getCardByName("Battle Ox");
+
+        Assertions.assertNotNull(card);
+        Assertions.assertNotNull(player);
+        Assertions.assertNotNull(deck);
+
+        deckMenuController.deleteDeck("deck");
+
+        Assertions.assertNull(database.getDeckByName("deck"));
+        Assertions.assertFalse(player.getAllDeck().contains(deck));
     }
 
 
