@@ -138,7 +138,7 @@ public class Duel {
     private void setNumberOfCardInHand() {
         while (onlinePlayer.getBoard().getHandZoneCards().size() > 6) {
             int address = Integer.parseInt(GameInputs.getInstance().getAddressForDeleteCard());
-            onlinePlayer.getBoard().getHand().moveCardTo(onlinePlayer.getBoard().getGraveyardZone(),
+            onlinePlayer.getBoard().getHand().moveCardToForGame(onlinePlayer.getBoard().getGraveyardZone(),
                     onlinePlayer.getBoard().getHandZoneCards().get(address), true, true);
         }
     }

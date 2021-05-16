@@ -137,6 +137,10 @@ public class Deck {
         removeCard(card, isMainForOrigin);
         destination.addCard(card, isMainForDestination);
     }
+    public void moveCardToForGame(Deck destination, Card card, boolean isMainForOrigin , boolean isMainForDestination) {
+        removeCardForGame(card, isMainForOrigin);
+        destination.addCard(card, isMainForDestination);
+    }
 
     public boolean hasCard(Card card, boolean isMain) {
         if (isMain) {
@@ -165,6 +169,12 @@ public class Deck {
                     sideCards.remove(cardInSide);
                     return;
                 }
+    }
+    public void removeCardForGame(Card card, boolean shouldBeRemovedFromMain) {
+        if (shouldBeRemovedFromMain)
+           mainCards.remove(card);
+         else
+           sideCards.remove(card);
     }
 
     public int getSumOfAttackPowers() {

@@ -260,7 +260,7 @@ public class Board {
 
     public void drawCard() {
         if (deckZone.mainCards.size() > 0) {
-            deckZone.moveCardTo(hand, deckZone.mainCards.get(deckZone.mainCards.size() - 1), true, true);
+            deckZone.moveCardToForGame(hand, deckZone.mainCards.get(deckZone.mainCards.size() - 1), true, true);
         }
     }
 
