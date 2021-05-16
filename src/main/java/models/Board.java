@@ -260,7 +260,7 @@ public class Board {
 
     public void drawCard() {
         if (deckZone.mainCards.size() > 0) {
-            deckZone.moveCardTo(hand,deckZone.mainCards.get(deckZone.mainCards.size() - 1),true , true);
+            deckZone.moveCardTo(hand, deckZone.mainCards.get(deckZone.mainCards.size() - 1), true, true);
         }
     }
 
@@ -285,8 +285,8 @@ public class Board {
     public String toString(Player turn) {
         StringBuilder handString = new StringBuilder(),
                 spellZoneString = new StringBuilder(), monsterZoneString = new StringBuilder();
-        handString.append(("\t" + "c").repeat(Math.max(0, hand.getNumberOfCardsInMainDeck())));
-        if (turn != player) {
+        handString.append(("c" + "\t").repeat(Math.max(0, hand.getNumberOfCardsInMainDeck())));
+        if (!turn.getUsername().equals(player.getUsername())) {
             for (Card card : spellZone.getMainCards()) {
                 if (card == null) spellZoneString.append("\tE");
                 else if (card.getCardPlacement() == CardPlacement.faceUp) spellZoneString.append("\tO");
@@ -296,7 +296,8 @@ public class Board {
                 if (card == null) {
                     monsterZoneString.append("\tE");
                     continue;
-                } else if (((Monster) card).getMonsterMode() == MonsterMode.attack)
+                }
+                if (((Monster) card).getMonsterMode() == MonsterMode.attack)
                     monsterZoneString.append("\tO");
                 else if (((Monster) card).getMonsterMode() == MonsterMode.defence)
                     monsterZoneString.append("\tD");
@@ -307,8 +308,8 @@ public class Board {
                     monsterZoneString.append("H");
             }
 
-            return player.getUsername() + ":" + player.getHealth() + "\n"
-                    + handString + "\n"
+            return player.getUsername() + ":" + player.getHealth() + "\n" +
+                    handString + "\n"
                     + deckZone.getNumberOfCardsInMainDeck() + "\n"
                     + spellZoneString + "\n"
                     + monsterZoneString + "\n" +
@@ -319,22 +320,23 @@ public class Board {
 
         for (Card card : spellZone.getMainCards()) {
             if (card == null) spellZoneString.insert(0, "\tE");
-            else if (card.getCardPlacement() == CardPlacement.faceUp) spellZoneString.insert(0, "\tO");
-            else spellZoneString.insert(0, "\tH");
+            else if (card.getCardPlacement() == CardPlacement.faceUp) spellZoneString.append("\tO");
+            else spellZoneString.append("\tH");
         }
         for (Card card : monsterZone.getMainCards()) {
             if (card == null) {
-                monsterZoneString.insert(0, "\tE");
+                monsterZoneString.append("\tE");
                 continue;
-            } else if (((Monster) card).getMonsterMode() == MonsterMode.attack)
-                monsterZoneString.insert(0, "\tO");
+            }
+            if (((Monster) card).getMonsterMode() == MonsterMode.attack)
+                monsterZoneString.append("\tO");
             else if (((Monster) card).getMonsterMode() == MonsterMode.defence)
-                monsterZoneString.insert(0, "\tD");
+                monsterZoneString.append("\tD");
 
             if (card.getCardPlacement() == CardPlacement.faceUp)
-                monsterZoneString.insert(0, "O");
+                monsterZoneString.append("O");
             else
-                monsterZoneString.insert(0, "H");
+                monsterZoneString.append("H");
         }
 
         return ((fieldZone == null) ? "FZ" : "O") +
@@ -343,7 +345,9 @@ public class Board {
                 spellZoneString + "\n" +
                 "\t\t\t\t\t\t" + deckZone.getNumberOfCardsInMainDeck() + "\n"
                 + handString + "\n" +
-                player.getUsername() + ":" + player.getHealth();
+                player.getUsername() + ":" + player.getHealth() + "\n";
 
     }
+
+
 }

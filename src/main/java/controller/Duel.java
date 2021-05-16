@@ -2,10 +2,7 @@ package controller;
 
 import models.Board;
 import models.Player;
-import models.cards.Card;
-import models.cards.CardPlacement;
-import models.cards.Monster;
-import models.cards.MonsterMode;
+import models.cards.*;
 import view.GameInputs;
 import view.Output;
 
@@ -24,7 +21,7 @@ public class Duel {
     private Player winner;
     private Monster attackingMonster, targetMonster;
 
-    public Duel(Player firstPlayer, Player secondPlayer) throws CloneNotSupportedException{
+    public Duel(Player firstPlayer, Player secondPlayer) throws CloneNotSupportedException {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
         firstPlayer.setHealth(8000);
@@ -62,14 +59,16 @@ public class Duel {
     }
 
     public void changePhase() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        showBoard();
         if (phase.equals(Phases.DRAW)) {
             phase = Phases.STANDBY;
+            actionInStandbyPhase();
             Output.getInstance().showMessage("phase: " + phase);
-            actionsInDrawPhase();
             return;
         }
         if (phase.equals(Phases.STANDBY)) {
             phase = Phases.MAIN1;
+            actionsInMainPhase();
             Output.getInstance().showMessage("phase: " + phase);
             return;
         }
@@ -88,18 +87,21 @@ public class Duel {
         if (phase.equals(Phases.MAIN2)) {
             phase = Phases.END;
             Output.getInstance().showMessage("phase: " + phase);
-            actionsInMainPhase();
+            actionsInEndPhase();
             return;
         }
         if (phase.equals(Phases.END)) {
             phase = Phases.DRAW;
-            actionsInEndPhase();
+            actionsInDrawPhase();
             Output.getInstance().showMessage("phase: " + phase);
         }
     }
 
     public void actionsInDrawPhase() {
         onlinePlayer.getBoard().drawCard();
+    }
+
+    public void actionInStandbyPhase() {
     }
 
     public void actionsInMainPhase() {
@@ -125,19 +127,19 @@ public class Duel {
     }
 
     private void doEndOfTurnActions() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-    for (Card card : onlinePlayer.getBoard().getMonsterZoneCards()) {
-        Monster monster = (Monster) card;
-        if (monster == null)
-            continue;
-        monster.endOfTurn();
-    }
+        for (Card card : onlinePlayer.getBoard().getMonsterZoneCards()) {
+            Monster monster = (Monster) card;
+            if (monster == null)
+                continue;
+            monster.endOfTurn();
+        }
     }
 
     private void setNumberOfCardInHand() {
         while (onlinePlayer.getBoard().getHandZoneCards().size() > 6) {
             int address = Integer.parseInt(GameInputs.getInstance().getAddressForDeleteCard());
             onlinePlayer.getBoard().getHand().moveCardTo(onlinePlayer.getBoard().getGraveyardZone(),
-                    onlinePlayer.getBoard().getHandZoneCards().get(address), true , true);
+                    onlinePlayer.getBoard().getHandZoneCards().get(address), true, true);
         }
     }
 
@@ -184,6 +186,7 @@ public class Duel {
         Card selectedCard;
         if (isMyBoard) {
             if (!state.equals("h")) cardPosition = setCardAddressInMyBoard(cardPosition);
+            else cardPosition = cardPosition - 1;
             if ((selectedCard = ErrorChecker.istTheSeatVacant(onlinePlayer.getBoard(), cardPosition, state)) == null)
                 return;
         } else {
@@ -223,8 +226,8 @@ public class Duel {
             if (!ErrorChecker.isThereOneMonsterForTribute(monsterZone)) return;
             String addressString = GameInputs.getInstance().getAddressForTribute();
             if (addressString.equals("")) return;
-            int address = Integer.parseInt(addressString);
-            if (ErrorChecker.isThereCardInAddress(monsterZone, address)) return;
+            int address = setCardAddressInMyBoard(Integer.parseInt(addressString));
+            if (!ErrorChecker.isThereCardInAddress(monsterZone, address)) return;
             onlinePlayer.getBoard().removeFromMonsterZone(monsterZone.get(address));
             onlinePlayer.getBoard().removeFromHand(selectedCard);
         }
@@ -235,10 +238,10 @@ public class Duel {
             if (addressString1.equals("surrender")) return;
             String addressString2 = GameInputs.getInstance().getAddressForTribute();
             if (addressString2.equals("surrender")) return;
-            int address1 = Integer.parseInt(addressString1);
-            int address2 = Integer.parseInt(addressString2);
-            if (ErrorChecker.isThereCardInAddress(onlinePlayer.getBoard().getMonsterZoneCards(), address1)) return;
-            if (ErrorChecker.isThereCardInAddress(onlinePlayer.getBoard().getMonsterZoneCards(), address2)) return;
+            int address1 = setCardAddressInMyBoard(Integer.parseInt(addressString1));
+            int address2 = setCardAddressInMyBoard(Integer.parseInt(addressString2));
+            if (!ErrorChecker.isThereCardInAddress(onlinePlayer.getBoard().getMonsterZoneCards(), address1)) return;
+            if (!ErrorChecker.isThereCardInAddress(onlinePlayer.getBoard().getMonsterZoneCards(), address2)) return;
             onlinePlayer.getBoard().removeFromMonsterZone(monsterZone.get(address1));
             onlinePlayer.getBoard().removeFromMonsterZone(monsterZone.get(address2));
         }
@@ -247,15 +250,16 @@ public class Duel {
         ((Monster) selectedCard).setMonsterMode(MonsterMode.attack);
         onlinePlayer.getBoard().putCardInMonsterZone(selectedCard);
         onlinePlayer.getBoard().setSummonedOrSetCardInTurn(true);
+        onlinePlayer.getBoard().removeFromHand(selectedCard);
         onlinePlayer.getBoard().setSelectedCard(null);
         ((Monster) selectedCard).summon();
-        Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
         Output.getInstance().showMessage("summoned successfully");
 
     }
 
     public void setMonster() {
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
+        if (!(selectedCard instanceof Monster)) return;
         ArrayList<Card> monsterZone = onlinePlayer.getBoard().getMonsterZoneCards();
         if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
         if (!ErrorChecker.isCardInPlayerHand(selectedCard, onlinePlayer)) {
@@ -273,8 +277,8 @@ public class Duel {
         ((Monster) selectedCard).setMonsterMode(MonsterMode.defence);
         onlinePlayer.getBoard().putCardInMonsterZone(selectedCard);
         onlinePlayer.getBoard().setSummonedOrSetCardInTurn(true);
+        onlinePlayer.getBoard().removeFromHand(selectedCard);
         onlinePlayer.getBoard().setSelectedCard(null);
-        Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
         Output.getInstance().showMessage("set successfully");
     }
 
@@ -286,13 +290,13 @@ public class Duel {
             selectedCard.setCardPlacement(CardPlacement.faceUp);
             onlinePlayer.getBoard().getSpellZone().mainCards.set(index, selectedCard);
             onlinePlayer.getBoard().setSelectedCard(null);
-            Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
             Output.getInstance().showMessage("spell activated");
         }
     }
 
     public void setSpellAndTrap() {
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
+        if (!(selectedCard instanceof Spell || selectedCard instanceof Trap)) return;
         if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
         if (!ErrorChecker.isCardInPlayerHand(selectedCard, onlinePlayer)) {
             Output.getInstance().showMessage("you can't set this card");
@@ -307,8 +311,8 @@ public class Duel {
         selectedCard.setCardPlacement(CardPlacement.faceDown);
         onlinePlayer.getBoard().putInSpellZone(selectedCard);
         onlinePlayer.getBoard().setSummonedOrSetCardInTurn(true);
+        onlinePlayer.getBoard().removeFromHand(selectedCard);
         onlinePlayer.getBoard().setSelectedCard(null);
-        Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
         Output.getInstance().showMessage("set successfully");
     }
 
@@ -326,7 +330,6 @@ public class Duel {
                 Output.getInstance().showMessage("now it will be " + firstPlayer.getUsername() + "'s turn");
             else
                 Output.getInstance().showMessage("now it will be " + secondPlayer.getUsername() + "'s turn");
-            Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
         } else {
             Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
             if (ErrorChecker.isAbleToBeActive(selectedCard, phase, onlinePlayer.getBoard())) {
@@ -358,7 +361,6 @@ public class Duel {
         ((Monster) selectedCard).setMonsterMode(newMonsterMode);
         onlinePlayer.getBoard().setChangePositionInTurn(true);
         onlinePlayer.getBoard().setSelectedCard(null);
-        Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
         Output.getInstance().showMessage("monster card position changed successfully");
     }
 
@@ -378,7 +380,6 @@ public class Duel {
         ((Monster) selectedCard).setMonsterMode(MonsterMode.attack);
         ((Monster) selectedCard).flip();
         onlinePlayer.getBoard().setSelectedCard(null);
-        Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
         Output.getInstance().showMessage("flip Summoned successfully");
     }
 
@@ -407,6 +408,7 @@ public class Duel {
         }
         if (ErrorChecker.istTheSeatVacant(offlinePlayer.getBoard(), cardPosition, "m") == null) return;
         runAttack(cardPosition, (Monster) selectedCard);
+        ((Monster) selectedCard).setHaveBeenAttackedWithMonsterInTurn(true);
 
     }
 
@@ -526,6 +528,7 @@ public class Duel {
         }
 
         offlinePlayer.setHealth(offlinePlayer.getHealth() - ((Monster) selectedCard).getAttackPower());
+        ((Monster) selectedCard).setHaveBeenAttackedWithMonsterInTurn(true);
         Output.getInstance().showMessage("you opponent receives " + ((Monster) selectedCard).getAttackPower()
                 + " battle damage");
     }
@@ -588,6 +591,11 @@ public class Duel {
     public void cheatForWinGame(String nickname) {
         if (onlinePlayer.getNickname().equals(nickname)) offlinePlayer.setHealth(0);
         if (offlinePlayer.getNickname().equals(nickname)) onlinePlayer.setHealth(0);
+    }
+
+    public void showBoard() {
+        Output.getInstance().showMessage(offlinePlayer.getBoard().toString(offlinePlayer) +
+                onlinePlayer.getBoard().toString(onlinePlayer));
     }
 
 }

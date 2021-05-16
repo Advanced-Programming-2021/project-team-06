@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test;
 
 public class GameTest {
     @BeforeAll
-    public void init() {
+    public static void init() {
     }
 
     @Test

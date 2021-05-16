@@ -51,7 +51,7 @@ public class DuelMenuController {
             Output.getInstance().showMessage("number of rounds is not supported");
             return;
         }
-
+        Output.getInstance().showMessage("game on");
         int numberOfRound = Integer.parseInt(round);
         int numberOfWinPlayer1 = 0, numberOfWinPlayer2 = 0;
 

@@ -195,7 +195,7 @@ public class ErrorChecker {
 
     public static boolean isThereOneMonsterForTribute(ArrayList<Card> monsterZone) {
         for (Card card : monsterZone) {
-            if (card == null) return true;
+            if (card != null) return true;
         }
         Output.getInstance().showMessage("there are not enough card for tribute");
         return false;
@@ -204,7 +204,7 @@ public class ErrorChecker {
     public static boolean isThereTwoMonsterForTribute(ArrayList<Card> monsterZone) {
         int counter = 0;
         for (Card card : monsterZone) {
-            if (card == null) counter++;
+            if (card != null) counter++;
         }
         if (counter < 2) {
             Output.getInstance().showMessage("there are not enough card for tribute");
@@ -214,9 +214,9 @@ public class ErrorChecker {
     }
 
     public static boolean isThereCardInAddress(ArrayList<Card> monsterZone, int address) {
-        if (monsterZone.get(address) == null) return false;
+        if (monsterZone.get(address) != null) return true;
         Output.getInstance().showMessage("there are no monster one this address");
-        return true;
+        return false;
     }
 
     public static boolean isNewMonsterMode(Card card, MonsterMode newMonsterMode) {

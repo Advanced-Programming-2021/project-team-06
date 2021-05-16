@@ -33,7 +33,8 @@ public class GameInputs {
             "^show graveyard$",
             "^card show (--selected|-s)$",
             "^increase --LP (?<amount>\\d+)$",
-            "^duel set-winner (?<nickname>\\w+)$"
+            "^duel set-winner (?<nickname>\\w+)$",
+            "show board"
     };
 
 
@@ -154,6 +155,8 @@ public class GameInputs {
                 break;
             case 22:
                 onlineDuel.cheatForWinGame(commandMatcher.group("nickname"));
+            case 23:
+                onlineDuel.showBoard();
         }
     }
 
