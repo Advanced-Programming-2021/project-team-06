@@ -118,7 +118,7 @@ public class Deck {
                     return true;
 
         } else
-            for (Card cardInSide : mainCards)
+            for (Card cardInSide : sideCards)
                 if (cardInSide.getName().equals(card.getName())) {
                     return true;
                 }
