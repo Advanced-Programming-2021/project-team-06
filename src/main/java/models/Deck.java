@@ -106,9 +106,9 @@ public class Deck {
             card.setCurrentDeck(this);
     }
 
-    public void moveCardTo(Deck destination, Card card, boolean isMain) {
-        removeCard(card, true);
-        destination.addCard(card, isMain);
+    public void moveCardTo(Deck destination, Card card, boolean isMainForOrigin , boolean isMainForDestination) {
+        removeCard(card, isMainForOrigin);
+        destination.addCard(card, isMainForDestination);
     }
 
     public boolean hasCard(Card card, boolean isMain) {

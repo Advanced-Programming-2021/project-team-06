@@ -59,7 +59,7 @@ public class DeckMenuController {
                 && ErrorChecker.isNumberOfCardsInDeckLessThanFour(deck, card = Database.getInstance().getCardByName(cardName))
                 && ErrorChecker.doesPlayerHaveEnoughCards(card , player);
         if (isPermitted) {
-            player.getAllPlayerCard().moveCardTo(deck , card , isMain);
+            player.getAllPlayerCard().moveCardTo(deck , card , true , isMain);
             Output.getInstance().showMessage("card added to deck successfully!");
         }
     }
@@ -72,7 +72,7 @@ public class DeckMenuController {
                 && ErrorChecker.doesDeckBelongToPlayer(deck = Database.getInstance().getDeckByName(deckName), player);
         if (isPermitted) {
             card = Database.getInstance().getCardByName(cardName);
-            deck.moveCardTo(player.getAllPlayerCard(),card, isMain);
+            deck.moveCardTo(player.getAllPlayerCard(),card, isMain , true);
             Output.getInstance().showMessage("card removed from deck successfully!");
         }
     }
