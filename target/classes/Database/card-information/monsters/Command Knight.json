@@ -9,6 +9,6 @@
     "Description": "All Warrior-Type monsters you control gain 400 ATK. If you control another monster, monsters your opponent controls cannot target this card for an attack.",
     "Price": 2100,
     "isAttackable": "effected{summon-time}<1&effected{flip-time}<1",
-    "Action":"->**summon-time:collect<MZ>[-Any-];increase-attack-power{400};->**death-time:cancel{summon-time,flip-time};"
+    "Action":"->*?*summon-time:collect<MZ>[-Any-];increase-attack-power{400};->*?*flip-time:collect<MZ>[-Any-];increase-attack-power{400};->**death-time:cancel{summon-time,flip-time};"
 
 }

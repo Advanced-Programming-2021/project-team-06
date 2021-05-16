@@ -5,6 +5,8 @@ import models.cards.Card;
 import models.cards.Monster;
 import models.cards.Spell;
 import models.cards.Trap;
+import view.ConsoleBasedMenus;
+import view.Output;
 
 import java.util.ArrayList;
 
@@ -30,6 +32,29 @@ public class Deck {
         this.name = name;
         sideCards = null;
         this.owner = owner;
+    }
+
+    public static Deck getSelectionDeckFrom(Deck collectedDeck, int howMany) {
+        Output.getInstance().showMessage("you have to select " + howMany + " cards from cards below:");
+        collectedDeck.toString(true);
+        Deck selectionDeck = new Deck("selected collected deck" , collectedDeck.owner);
+        while (howMany > 0) {
+            Output.getInstance().showMessage("you have to select " + howMany + " more card(s)");
+            int number = 0;
+            try {
+                number =Integer.parseInt(ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", ""));
+            } catch (NumberFormatException numberFormatException) {
+                Output.getInstance().showMessage("please just enter a number");
+                continue;
+            }
+            if (number > collectedDeck.mainCards.size()){
+                Output.getInstance().showMessage("invalid number!");
+                continue;
+            }
+            howMany--;
+            selectionDeck.addCard(collectedDeck.getMainCards().get(number - 1));
+        }
+        return selectionDeck;
     }
 
     public void updateOwnerDecks() {
@@ -98,6 +123,8 @@ public class Deck {
             mainCards.add(card);
         else
             sideCards.add(card);
+        if(card != null)
+            card.setCurrentDeck(this);
     }
 
     public void addCard(Card card) {
@@ -199,12 +226,21 @@ public class Deck {
 
     public String toString(boolean isMain) {
         StringBuilder output = new StringBuilder();
+        int number = 1;
         if (isMain)
-            for (Card card : mainCards)
-                output.append(card.toString());
+            for (Card card : mainCards) {
+                if (card == null)
+                    continue;
+                output.append(number).append(". ").append(card.toString());
+                number++;
+            }
         else
-            for (Card card : sideCards)
-                output.append(card.toString());
+            for (Card card : sideCards) {
+                if (card == null)
+                    continue;
+                output.append(number).append(". ").append(card.toString());
+                number++;
+            }
         return output.toString();
     }
 }

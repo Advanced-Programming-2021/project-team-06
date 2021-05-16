@@ -39,11 +39,11 @@ public class ActionJsonParser {
     }
 
     public void doActionList(String actionsString, Card clientCard , String event) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        ActionExecutor actionExecutor = new ActionExecutor(event + ((Object)clientCard).toString());
+        ActionExecutor actionExecutor = new ActionExecutor(event + ((Object)clientCard).toString() , clientCard);
         String[] actions = actionsString.split(";");
         for (String action : actions) {
             String actionMethodName = getActionMethodName(action);
-            actionExecutor.execute(actionMethodName, actionMatcher, clientCard);
+            actionExecutor.execute(actionMethodName, actionMatcher);
         }
     }
     public boolean checkConditionList(String actionsString, Card clientCard) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
