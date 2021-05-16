@@ -7,5 +7,6 @@
     "Atk": 450,
     "Def": 600,
     "Description": "FLIP: Target 1 monster on the field; destroy that target.",
-    "Price": 600
+    "Price": 600,
+      "Action": "->flip-time:**collect<OMZ>[-Any-];select{1};kill;"
   }

@@ -8,6 +8,7 @@ import models.Deck;
 import models.Player;
 import models.cards.Card;
 import org.junit.jupiter.api.*;
+import view.Output;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -191,6 +192,15 @@ public class MenusTest {
 
         Assertions.assertFalse(deck.getMainCards().contains(card));
         Assertions.assertFalse(deck.getSideCards().contains(card));
+    }
+
+    @Test
+    public void showMessageTest() {
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
+
+        Output.getInstance().showMessage("salam");
+        Assertions.assertEquals("salam\n", outContent.toString());
     }
 
     @AfterAll
