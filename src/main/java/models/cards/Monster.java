@@ -64,6 +64,14 @@ public class Monster extends Card implements Cloneable{
         return monsterMode;
     }
 
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
     public void setMonsterMode(MonsterMode monsterMode) {
         this.monsterMode = monsterMode;
     }
@@ -136,8 +144,8 @@ public class Monster extends Card implements Cloneable{
         return "Name: " + super.name + '\n' +
                 "Level: " + this.LEVEL + '\n' +
                 "Type: " + this.monsterType + '\n' +
-                "ATK: " + this.attackPower + '\n' +
-                "DEF: " + this.defencePower + '\n' +
+                "ATK: " + ( this.attackPower + additionalAttackPower ) + '\n' +
+                "DEF: " + (this.defencePower + additionalDefencePower) + '\n' +
                 "Description: " + super.description + '\n';
     }
     @Override
@@ -148,6 +156,8 @@ public class Monster extends Card implements Cloneable{
         monster.setLEVEL(this.LEVEL);
         monster.setAttackPower(this.attackPower);
         monster.setDefencePower(this.defencePower);
+        monster.setAction(this.action);
+        monster.initializeMonstersEffects();
         return monster;
     }
 
@@ -205,7 +215,9 @@ public class Monster extends Card implements Cloneable{
     }
 
     public Matcher getActionMatcher(String action) {
-        return Pattern.compile("\\*(?<condition>.*)\\*+(?<action>.+)").matcher(action);
+        Matcher matcher = Pattern.compile("\\*(?<condition>.*)\\*+(?<action>.+)").matcher(action);
+        matcher.find();
+        return matcher;
     }
 }
 

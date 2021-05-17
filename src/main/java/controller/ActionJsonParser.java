@@ -19,14 +19,14 @@ public class ActionJsonParser {
 
     {
         actionsRegexes.put("collect<(?<deckList>.*)>\\[-(?<class>\\w*)-(?<attributeList>.*)]", "collectCards");
-        actionsRegexes.put("increase-attack-power{(?<amount>\\d+)}", "increaseAttackPower");
-        actionsRegexes.put("cancel{(?<eventName>.+)}", "cancel");
+        actionsRegexes.put("increase-attack-power\\{(?<amount>\\d+)}", "increaseAttackPower");
+        actionsRegexes.put("cancel\\{(?<eventName>.+)}", "cancel");
         actionsRegexes.put("kill-offender", "killOffender");
         actionsRegexes.put("kill", "kill");
-        actionsRegexes.put("set-attack-power{(?<amount>\\d+)}", "set-attack-power");
+        actionsRegexes.put("set-attack-power\\{(?<amount>\\d+)}", "set-attack-power");
         actionsRegexes.put("cancel-attack", "cancel-attack");
         actionsRegexes.put("consume-effect", "consumeEffect");
-        actionsRegexes.put("select{(?<howMany>\\d+)}", "selectCardsByUserChoice");
+        actionsRegexes.put("select\\{(?<howMany>\\d+)}", "selectCardsByUserChoice");
 
     }
 

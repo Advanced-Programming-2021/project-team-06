@@ -15,6 +15,7 @@ public class ConditionChecker {
             Output.getInstance().showMessage("you can now activate the effect of " + clientCard.getName() +". do you want to?");
             return GameInputs.getInstance().yesOrNoQuestion();}
         Matcher conditionMatcher = getSimpleConditionMatcher(condition);
+        conditionMatcher.find();
         this.clientCard = clientCard;
         int firstNumber = getVariable(conditionMatcher.group("firstNumber"));
         int secondNumber = getVariable(conditionMatcher.group("secondNumber"));
@@ -35,7 +36,7 @@ public class ConditionChecker {
     }
 
     private Matcher getSimpleConditionMatcher(String condition) {
-        return Pattern.compile("(?<firstNumber>.?)(?<sign>>|=|<|>=|<=|!=)(?<secondNumber>.+)").matcher(condition);
+        return Pattern.compile("(?<firstNumber>.+)(?<sign>>|=|<|>=|<=|!=)(?<secondNumber>.+)").matcher(condition);
     }
     private int getVariable(String variable) {
         int value = 0;
@@ -44,13 +45,20 @@ public class ConditionChecker {
         } catch (Exception exception) {
             switch (variable) {
                 case "effected{summon-time}" :
-                    Deck collectedDeck = Objects.requireNonNull(ActionExecutor.getActionExecutorByName("summon-time" + ((Object) clientCard).toString())).getCollectedDeck();
+                    ActionExecutor actionExecutor = ActionExecutor.getActionExecutorByName("summon-time" + ((Object) clientCard).toString());
+                    if (actionExecutor == null)
+                        break;
+                    Deck collectedDeck = actionExecutor.getCollectedDeck();
                     if (collectedDeck == null)
                         break;
                    value =  collectedDeck.mainCards.size();
                     break;
                 case "effected{flip-time}" :
-                    collectedDeck = Objects.requireNonNull(ActionExecutor.getActionExecutorByName("flip-time" + ((Object) clientCard).toString())).getCollectedDeck();
+                    actionExecutor =  ActionExecutor.getActionExecutorByName("flip-time" + ((Object) clientCard).toString());
+                    if (actionExecutor == null) {
+                        break;
+                    }
+                    collectedDeck = actionExecutor.getCollectedDeck();
                     if (collectedDeck == null)
                         break;
                     value =  collectedDeck.mainCards.size();

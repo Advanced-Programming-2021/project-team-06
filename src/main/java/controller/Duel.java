@@ -258,11 +258,11 @@ public class Duel {
 
         selectedCard.setCardPlacement(CardPlacement.faceUp);
         ((Monster) selectedCard).setMonsterMode(MonsterMode.attack);
+        ((Monster) selectedCard).summon();
         onlinePlayer.getBoard().putCardInMonsterZone(selectedCard);
         onlinePlayer.getBoard().setSummonedOrSetCardInTurn(true);
         onlinePlayer.getBoard().removeFromHand(selectedCard);
         onlinePlayer.getBoard().setSelectedCard(null);
-        ((Monster) selectedCard).summon();
         Output.getInstance().showMessage("summoned successfully");
 
     }
@@ -431,8 +431,10 @@ public class Duel {
         targetMonster = (Monster) offlinePlayer.getBoard().getMonsterZoneCards().get(address);
         MonsterMode monsterMode = targetMonster.getMonsterMode();
         CardPlacement monsterPlacement = targetMonster.getCardPlacement();
-        if (!targetMonster.isAttackable())
+        if (!targetMonster.isAttackable()) {
+            Output.getInstance().showMessage("you can't attack " + targetMonster.getName() + " because of its effect");
             return;
+        }
         targetMonster.getRaid();
         if (monsterPlacement.equals(CardPlacement.faceUp) && monsterMode.equals(MonsterMode.attack))
             monsterAttackToAttack(targetMonster, selectedCard);
