@@ -1,8 +1,14 @@
 package models.cards;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Spell extends Card implements Cloneable {
     Boolean isActive;
     Boolean isActionable;
+    @SerializedName("Status")
+    String status;
+    @SerializedName("Property")
+    String property;
 
     public Spell(String name) {
         super(name);

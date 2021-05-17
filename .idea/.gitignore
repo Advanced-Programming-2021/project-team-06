@@ -13,7 +13,8 @@
 .idea/**/dictionaries
 .idea/**/shelf
 workspace.xml
-
+./src/main/resources/Database/card-information/spells/
+./src/main/resources/Database/card-information/monsters/
 # Generated files
 .idea/**/contentModel.xml
 

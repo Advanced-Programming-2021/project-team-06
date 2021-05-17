@@ -1,5 +1,6 @@
 package models;
 
+import controller.CSVReader;
 import controller.FileWorker;
 import models.cards.Card;
 import models.cards.Monster;
@@ -7,6 +8,7 @@ import models.cards.Spell;
 import models.cards.Trap;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Database {
@@ -23,6 +25,8 @@ public class Database {
     private final String spellDateBase = "./src/main/resources/Database/card-information/spells/";
     private final String trapDateBase = "./src/main/resources/Database/card-information/traps/";
     private final String decksDateBase = "./src/main/resources/Database/Decks/";
+    private final String spellAndTrapCsvFilePath = "./src/main/resources/Database/CSVs/spells-and-traps.csv";
+    private final String monsterCsvFilePath = "./src/main/resources/Database/CSVs/monsters.csv";
 
 
     private Database() {
@@ -114,7 +118,15 @@ public class Database {
 
     public void loadMonsters() {
         File file = new File(monsterDateBase);
+        if (!file.exists()){
+            file.mkdir();
+        }
         File[] files = file.listFiles();
+        assert files != null;
+        if (files.length < 2) {
+            new CSVReader(monsterCsvFilePath , monsterDateBase);
+        }
+        files = file.listFiles();
         for (File filePointer : files) {
             Monster monster = FileWorker.getInstance().readMonsterJSON(filePointer.toString());
             allMonsters.add(monster);
@@ -126,7 +138,15 @@ public class Database {
 
     public void loadSpells() {
         File file = new File(spellDateBase);
+        if (!file.exists()){
+            file.mkdir();
+        }
         File[] files = file.listFiles();
+        assert files != null;
+        if (files.length < 2) {
+            new CSVReader(spellAndTrapCsvFilePath , spellDateBase);
+        }
+        files = file.listFiles();
         for (File filePointer : files) {
             Spell spell = FileWorker.getInstance().readSpellJSON(filePointer.toString());
             allSpells.add(spell);
@@ -137,6 +157,11 @@ public class Database {
 
     public void loadDecks() {
         File file = new File(decksDateBase);
+        try {
+            file.createNewFile();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
         File[] files = file.listFiles();
         for (File filePointer : files) {
             Deck deck = FileWorker.getInstance().readDeckJSON(filePointer.toString());

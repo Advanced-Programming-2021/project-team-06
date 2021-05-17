@@ -41,7 +41,7 @@ public class ActionExecutor {
     }
 
     public void cancel() {
-        String[] eventNames = neededInformation.group("eventName").split(",");
+        String[] eventNames = neededInformation.group("eventName").split("\\.");
         for (String eventName : eventNames) {
         ActionExecutor actionExecutor = ActionExecutor.getActionExecutorByName(eventName + ((Object)clientsCard).toString());
         if (actionExecutor == null) continue;
@@ -55,10 +55,10 @@ public class ActionExecutor {
     }
 
     private void collectCards() {
-        ArrayList<Deck> deckList = ActionJsonParser.getInstance().getDecksByTheirName(neededInformation.group("deckList").split(","));
+        ArrayList<Deck> deckList = ActionJsonParser.getInstance().getDecksByTheirName(neededInformation.group("deckList").split("\\."));
         getCardsFromTheirDeck(deckList, neededInformation.group("class"));
         Card desiredCard = ActionJsonParser.getInstance().getDesiredCard(
-                neededInformation.group("attributeList").split(","),
+                neededInformation.group("attributeList").split("\\."),
                 neededInformation.group("class"));
         collectedDeck.mainCards.removeIf(card -> card == null || !card.isLike(desiredCard));
     }
