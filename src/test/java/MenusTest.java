@@ -118,7 +118,7 @@ public class MenusTest {
         Player player = database.getPlayerByUsername("mhdi");
 
         player.setMoney(2800);
-        shoppingMenuController.buyCard(player, "Battle Ox");
+        shoppingMenuController.buyCard(player, "Battle OX");
         Assertions.assertEquals("not enough money\n", outContent.toString());
 
     }
@@ -131,8 +131,8 @@ public class MenusTest {
         Player player = database.getPlayerByUsername("mhdi");
 
         player.setMoney(2900);
-        shoppingMenuController.buyCard(player, "Battle Ox");
-        Assertions.assertTrue(player.getAllPlayerCard().getMainCards().contains(database.getCardByName("Battle Ox")));
+        shoppingMenuController.buyCard(player, "Battle OX");
+        Assertions.assertTrue(player.getAllPlayerCard().getMainCards().contains(database.getCardByName("Battle OX")));
         Assertions.assertEquals(player.getMoney(), 0);
         Assertions.assertEquals("Card purchased\n", outContent.toString());
 
@@ -160,7 +160,7 @@ public class MenusTest {
     public void addCardToDeckTest() {
         Player player = database.getPlayerByUsername("mhdi");
         Deck deck = database.getDeckByName("deck");
-        Card card = database.getCardByName("Battle Ox");
+        Card card = database.getCardByName("Battle OX");
 
         Assertions.assertNotNull(card);
         Assertions.assertNotNull(player);
@@ -169,8 +169,8 @@ public class MenusTest {
         player.addCardToAllPlayerCard(card);
         player.addCardToAllPlayerCard(card);
 
-        deckMenuController.addCardToDeck("Battle Ox", "deck", player, true);
-        deckMenuController.addCardToDeck("Battle Ox", "deck", player, false);
+        deckMenuController.addCardToDeck("Battle OX", "deck", player, true);
+        deckMenuController.addCardToDeck("Battle OX", "deck", player, false);
 
         Assertions.assertTrue(deck.getMainCards().contains(card));
         Assertions.assertTrue(deck.getSideCards().contains(card));
@@ -181,14 +181,14 @@ public class MenusTest {
     public void deleteCardFromDeckTest() {
         Player player = database.getPlayerByUsername("mhdi");
         Deck deck = database.getDeckByName("deck");
-        Card card = database.getCardByName("Battle Ox");
+        Card card = database.getCardByName("Battle OX");
 
         Assertions.assertNotNull(card);
         Assertions.assertNotNull(player);
         Assertions.assertNotNull(deck);
 
-        deckMenuController.removeCardFromDeck("Battle Ox", "deck", player, true);
-        deckMenuController.removeCardFromDeck("Battle Ox", "deck", player, false);
+        deckMenuController.removeCardFromDeck("Battle OX", "deck", player, true);
+        deckMenuController.removeCardFromDeck("Battle OX", "deck", player, false);
 
         Assertions.assertFalse(deck.getMainCards().contains(card));
         Assertions.assertFalse(deck.getSideCards().contains(card));
@@ -207,7 +207,7 @@ public class MenusTest {
     public static void deleteDeckTest() {
         Player player = database.getPlayerByUsername("mhdi");
         Deck deck = database.getDeckByName("deck");
-        Card card = database.getCardByName("Battle Ox");
+        Card card = database.getCardByName("Battle OX");
 
         Assertions.assertNotNull(card);
         Assertions.assertNotNull(player);

@@ -1,11 +1,10 @@
 package models;
 
 import com.google.gson.*;
-import com.google.gson.annotations.Expose;
 import models.cards.Card;
 
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
 
 public class Player {
     private String username;
@@ -18,7 +17,6 @@ public class Player {
     private transient ArrayList<Deck> allDeck = new ArrayList<>();
     private transient ArrayList<Deck> gameDecks = new ArrayList<>();
     private transient Deck activeDeck;
-    private int roundsWon;
     private int money;
     private transient Board board = null;
 
@@ -28,7 +26,6 @@ public class Player {
         this.nickname = nickname;
         this.score = 0;
         this.health = 8000;
-        this.roundsWon = 0;
         this.money = 32000000;
         allPlayerCard = new Deck(username + ".purchased-cards", this, false, true);
         Database.allPlayers.add(this);
@@ -172,13 +169,6 @@ public class Player {
                 '}';
     }
 
-    public int getRoundsWon() {
-        return roundsWon;
-    }
-
-    public void setRoundsWon(int roundsWon) {
-        this.roundsWon = roundsWon;
-    }
 }
 
 class PlayerSerializerForDeckDatabase implements JsonSerializer<Player> {
