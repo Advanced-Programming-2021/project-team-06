@@ -72,8 +72,24 @@ public class Monster extends Card implements Cloneable{
         this.additionalAttackPower = additionalAttackPower;
     }
 
+    public int getAdditionalAttackPower() {
+        return additionalAttackPower;
+    }
+
+    public int getAdditionalDefencePower() {
+        return additionalDefencePower;
+    }
+
     public void setAdditionalDefencePower(int additionalDefencePower) {
         this.additionalDefencePower = additionalDefencePower;
+    }
+
+    public int getTotalAttackPower(){
+        return additionalAttackPower + attackPower;
+    }
+
+    public int getTotalDefencePower(){
+        return additionalDefencePower + defencePower;
     }
 
     public void setAttackPower(int attackPower) {

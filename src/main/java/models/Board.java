@@ -282,6 +282,15 @@ public class Board {
         return -1;
     }
 
+    public void clearBoard (){
+        for (int i = 0; i<5; i++){
+            monsterZone.getMainCards().set(i,null);
+            spellZone.getMainCards().set(i,null);
+        }
+        fieldZone = null;
+        graveyardZone.mainCards.clear();
+    }
+
     public String toString(Player turn) {
         StringBuilder handString = new StringBuilder(),
                 spellZoneString = new StringBuilder(), monsterZoneString = new StringBuilder();
@@ -308,7 +317,7 @@ public class Board {
                     monsterZoneString.append("H");
             }
 
-            return player.getUsername() + ":" + player.getHealth() + "\n" +
+            return player.getNickname() + ":" + player.getHealth() + "\n" +
                     handString + "\n"
                     + deckZone.getNumberOfCardsInMainDeck() + "\n"
                     + spellZoneString + "\n"
@@ -345,7 +354,7 @@ public class Board {
                 spellZoneString + "\n" +
                 "\t\t\t\t\t\t" + deckZone.getNumberOfCardsInMainDeck() + "\n"
                 + handString + "\n" +
-                player.getUsername() + ":" + player.getHealth() + "\n";
+                player.getNickname() + ":" + player.getHealth() + "\n";
 
     }
 

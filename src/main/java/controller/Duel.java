@@ -20,6 +20,7 @@ public class Duel {
     private Phases phase = Phases.DRAW;
     private Player winner;
     private Monster attackingMonster, targetMonster;
+    private boolean isFirstTurn = true;
 
     public Duel(Player firstPlayer, Player secondPlayer) throws CloneNotSupportedException {
         this.firstPlayer = firstPlayer;
@@ -56,6 +57,14 @@ public class Duel {
 
     public Player getOnlinePlayer() {
         return onlinePlayer;
+    }
+
+    public Phases getPhase() {
+        return phase;
+    }
+
+    public void setPhase(Phases phase) {
+        this.phase = phase;
     }
 
     public void changePhase() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
@@ -98,6 +107,8 @@ public class Duel {
     }
 
     public void actionsInDrawPhase() {
+        changeTurn();
+        Output.getInstance().showMessage("its " + onlinePlayer.getNickname() + "'s turn");
         onlinePlayer.getBoard().drawCard();
     }
 
@@ -121,9 +132,7 @@ public class Duel {
 
     public void actionsInEndPhase() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         doEndOfTurnActions();
-        Output.getInstance().showMessage("its " + offlinePlayer.getNickname() + "'s turn");
         setNumberOfCardInHand();
-        changeTurn();
     }
 
     private void doEndOfTurnActions() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
@@ -176,6 +185,7 @@ public class Duel {
             this.onlinePlayer = secondPlayer;
             this.offlinePlayer = firstPlayer;
         }
+        isFirstTurn = false;
     }
 
 
@@ -389,6 +399,10 @@ public class Duel {
 
 
     public void attack(String address) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        if(isFirstTurn) {
+            Output.getInstance().showMessage("this is first turn and you can't attack the opponent!");
+            return;
+        }
         if (!ErrorChecker.isValidAddress(address, "m")) return;
         int cardPosition = setCardAddressInOpponentBoard(Integer.parseInt(address));
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
@@ -433,23 +447,23 @@ public class Duel {
     }
 
     private void monsterAttackToAttack(Monster targetMonster, Monster selectedCard) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        if (selectedCard.getAttackPower() > targetMonster.getAttackPower()) {
+        if (selectedCard.getTotalAttackPower() > targetMonster.getTotalAttackPower()) {
             kill(offlinePlayer, targetMonster);
-            int damage = selectedCard.getAttackPower() - targetMonster.getAttackPower();
+            int damage = selectedCard.getTotalAttackPower() - targetMonster.getAttackPower();
             offlinePlayer.setHealth(offlinePlayer.getHealth() - damage);
             Output.getInstance().showMessage("your opponent's monster is destroyed and your opponent receives" +
                     damage + " battle damage");
         }
-        if (selectedCard.getAttackPower() == targetMonster.getAttackPower()) {
+        if (selectedCard.getTotalAttackPower() == targetMonster.getTotalAttackPower()) {
             kill(offlinePlayer, targetMonster);
             kill(onlinePlayer, selectedCard);
             targetMonster.die();
             attackingMonster.die();
             Output.getInstance().showMessage("both you and your opponent monster cards are destroyed and no one receives damage");
         }
-        if (selectedCard.getAttackPower() < targetMonster.getAttackPower()) {
+        if (selectedCard.getTotalAttackPower() < targetMonster.getTotalAttackPower()) {
             kill(onlinePlayer, selectedCard);
-            int damage = targetMonster.getAttackPower() - selectedCard.getAttackPower();
+            int damage = targetMonster.getTotalAttackPower() - selectedCard.getTotalAttackPower();
             onlinePlayer.setHealth(offlinePlayer.getHealth() - damage);
             attackingMonster.die();
             Output.getInstance().showMessage("your monster card is destroyed and you received " + damage + " battle damage");
@@ -457,16 +471,16 @@ public class Duel {
     }
 
     private void monsterAttackToDefenseFaceUp(Monster targetMonster, Monster selectedCard) {
-        if (selectedCard.getAttackPower() > targetMonster.getDefencePower()) {
+        if (selectedCard.getTotalAttackPower() > targetMonster.getTotalDefencePower()) {
             offlinePlayer.getBoard().putInGraveyard(targetMonster);
             offlinePlayer.getBoard().removeFromMonsterZone(targetMonster);
             Output.getInstance().showMessage("the defense position monster is destroyed");
         }
-        if (selectedCard.getAttackPower() == targetMonster.getDefencePower())
+        if (selectedCard.getTotalAttackPower() == targetMonster.getTotalDefencePower())
             Output.getInstance().showMessage("no card destroyed");
 
-        if (selectedCard.getAttackPower() < targetMonster.getDefencePower()) {
-            int damage = targetMonster.getDefencePower() - selectedCard.getAttackPower();
+        if (selectedCard.getTotalAttackPower() < targetMonster.getTotalDefencePower()) {
+            int damage = targetMonster.getTotalDefencePower() - selectedCard.getTotalAttackPower();
             onlinePlayer.setHealth(offlinePlayer.getHealth() - damage);
             Output.getInstance().showMessage("no card is destroyed and you received " + damage + " battle damage");
         }
@@ -508,6 +522,10 @@ public class Duel {
 
     public void attackDirect() {
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
+        if(isFirstTurn) {
+            Output.getInstance().showMessage("this is first turn and you can't attack the opponent directly!");
+            return;
+        }
         if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
         if (!onlinePlayer.getBoard().isInMonsterZone(selectedCard)) {
             Output.getInstance().showMessage("you can't attack with this card");
@@ -596,6 +614,10 @@ public class Duel {
     public void showBoard() {
         Output.getInstance().showMessage(offlinePlayer.getBoard().toString(offlinePlayer) +
                 onlinePlayer.getBoard().toString(onlinePlayer));
+    }
+
+    public void showTurn(){
+        Output.getInstance().showMessage(onlinePlayer.getNickname());
     }
 
 }
