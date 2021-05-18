@@ -40,16 +40,27 @@ public class ActionExecutor {
         this.getClass().getDeclaredMethod(methodName).invoke(this);
     }
 
+    private void die() {
+        Duel.getCurrentDuel().changeDeck(clientsCard, "GY");
+    }
+
+    private void drawCard() {
+        int howMany = Integer.parseInt(neededInformation.group("howMany"));
+        for (int i = 0; i < howMany; i++) {
+            Duel.getCurrentDuel().getOnlinePlayer().getBoard().drawCard();
+        }
+    }
+
     public void cancel() {
         String[] eventNames = neededInformation.group("eventName").split("\\.");
         for (String eventName : eventNames) {
-        ActionExecutor actionExecutor = ActionExecutor.getActionExecutorByName(eventName + ((Object)clientsCard).toString());
-        if (actionExecutor == null) continue;
-        for (Card card: actionExecutor.collectedDeck.mainCards) {
-            if (card instanceof Monster)
-                ((Monster) card).resetAllFields();
-        }
-        ALL_ACTION_EXECUTORS.remove(actionExecutor);
+            ActionExecutor actionExecutor = ActionExecutor.getActionExecutorByName(eventName + ((Object) clientsCard).toString());
+            if (actionExecutor == null) continue;
+            for (Card card : actionExecutor.collectedDeck.mainCards) {
+                if (card instanceof Monster)
+                    ((Monster) card).resetAllFields();
+            }
+            ALL_ACTION_EXECUTORS.remove(actionExecutor);
         }
         ALL_ACTION_EXECUTORS.remove(this);
     }
@@ -62,16 +73,25 @@ public class ActionExecutor {
                 neededInformation.group("class"));
         collectedDeck.mainCards.removeIf(card -> card == null || !card.isLike(desiredCard));
     }
+
     private void kill() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         for (Card card : collectedDeck.mainCards)
             if (card instanceof Monster)
-                Duel.getCurrentDuel().kill(((Monster)card));
+                Duel.getCurrentDuel().kill(((Monster) card));
+    }
+
+    private void sendCardsToDeck() {
+        String destination = neededInformation.group("deckName");
+        for (Card card : collectedDeck.getMainCards()) {
+            Duel.getCurrentDuel().changeDeck(card, destination);
+        }
     }
 
     private void killOffender() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-     Duel currentDuel = Duel.getCurrentDuel();
-     currentDuel.kill(currentDuel.getOnlinePlayer() , currentDuel.getAttackingMonster());
+        Duel currentDuel = Duel.getCurrentDuel();
+        currentDuel.kill(currentDuel.getOnlinePlayer(), currentDuel.getAttackingMonster());
     }
+
     private void increaseAttackPower() {
         int amount = Integer.parseInt(neededInformation.group("amount"));
         for (Card card : collectedDeck.mainCards)

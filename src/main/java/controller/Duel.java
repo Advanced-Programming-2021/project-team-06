@@ -1,11 +1,13 @@
 package controller;
 
 import models.Board;
+import models.Deck;
 import models.Player;
 import models.cards.*;
 import view.GameInputs;
 import view.Output;
 
+import javax.sql.rowset.BaseRowSet;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
@@ -217,6 +219,66 @@ public class Duel {
 
     }
 
+    public void changeDeck(Card card, String destination) {
+        Deck cardDeck = card.getCurrentDeck();
+        Board board = cardDeck.getOwner().getBoard();
+        switch (destination) {
+            case "MZ":
+                if (ErrorChecker.isMonsterCardZoneFull(onlinePlayer.getBoard().getMonsterZoneCards()))
+                    return;
+            case "OMZ":
+                if (ErrorChecker.isMonsterCardZoneFull(offlinePlayer.getBoard().getMonsterZoneCards()))
+                    return;
+            case "SZ":
+                if (!ErrorChecker.isSpellZoneFree(onlinePlayer.getBoard()))
+                    return;
+            case "OSZ":
+                if (!ErrorChecker.isSpellZoneFree(offlinePlayer.getBoard()))
+                    return;
+        }
+        switch (cardDeck.getName()) {
+            case "MZ":
+                board.removeFromMonsterZone(card);
+                break;
+            case "SZ":
+                board.removeFromSpellZone(card);
+                break;
+            case "GY":
+                board.removeFromGraveyard(card);
+                break;
+            case "FZ":
+                board.removeFromFieldZone(card);
+                break;
+            case "H":
+                board.removeFromHand(card);
+                break;
+        }
+
+        switch (destination) {
+            case "MZ":
+                onlinePlayer.getBoard().putCardInMonsterZone(card);
+                break;
+            case "OMZ":
+                offlinePlayer.getBoard().putCardInMonsterZone(card);
+                break;
+            case "SZ":
+                onlinePlayer.getBoard().putCardInSpellZone(card);
+                break;
+            case "OSZ":
+                offlinePlayer.getBoard().putCardInSpellZone(card);
+                break;
+            case "H":
+                onlinePlayer.getBoard().putInHand(card);
+                break;
+            case "GY":
+                onlinePlayer.getBoard().putInGraveyard(card);
+                break;
+            case "F":
+                onlinePlayer.getBoard().putInFieldZone(card);
+                break;
+        }
+    }
+
     public void summon() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
         ArrayList<Card> monsterZone = onlinePlayer.getBoard().getMonsterZoneCards();
@@ -292,14 +354,16 @@ public class Duel {
         Output.getInstance().showMessage("set successfully");
     }
 
-    public void activateSpellCard() {
+    public void activateSpellCard() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
         if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
         if (ErrorChecker.isAbleToBeActive(selectedCard, phase, onlinePlayer.getBoard())) {
             int index = onlinePlayer.getBoard().getFirstFreeSpellZoneIndex();
             selectedCard.setCardPlacement(CardPlacement.faceUp);
+            onlinePlayer.getBoard().removeFromHand(selectedCard);
             onlinePlayer.getBoard().getSpellZone().mainCards.set(index, selectedCard);
             onlinePlayer.getBoard().setSelectedCard(null);
+            ((Spell) selectedCard).activate();
             Output.getInstance().showMessage("spell activated");
         }
     }
@@ -326,7 +390,7 @@ public class Duel {
         Output.getInstance().showMessage("set successfully");
     }
 
-    public void activationOfSpellInOpponentTurn() {
+    public void activationOfSpellInOpponentTurn() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         turn *= -1;
         if (turn == 1)
             Output.getInstance().showMessage("now it will be " + firstPlayer.getUsername() + "'s turn");
@@ -614,7 +678,7 @@ public class Duel {
     }
 
     public void showBoard() {
-        Output.getInstance().showMessage(offlinePlayer.getBoard().toString(offlinePlayer) +
+        Output.getInstance().showMessage(offlinePlayer.getBoard().toString(onlinePlayer) + "\n--------------------------\n" +
                 onlinePlayer.getBoard().toString(onlinePlayer));
     }
 

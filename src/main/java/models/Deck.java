@@ -35,19 +35,23 @@ public class Deck {
     }
 
     public static Deck getSelectionDeckFrom(Deck collectedDeck, int howMany) {
+        Deck selectionDeck = new Deck("selected collected deck", collectedDeck.owner);
+        if (collectedDeck.getMainCards().size() == 0) {
+            Output.getInstance().showMessage("candidate cards to choose are less than" + howMany);
+            return selectionDeck;
+        }
         Output.getInstance().showMessage("you have to select " + howMany + " cards from cards below:");
-        collectedDeck.toString(true);
-        Deck selectionDeck = new Deck("selected collected deck" , collectedDeck.owner);
+        Output.getInstance().showMessage(collectedDeck.toString(true));
         while (howMany > 0) {
             Output.getInstance().showMessage("you have to select " + howMany + " more card(s)");
             int number = 0;
             try {
-                number =Integer.parseInt(ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", ""));
+                number = Integer.parseInt(ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", ""));
             } catch (NumberFormatException numberFormatException) {
                 Output.getInstance().showMessage("please just enter a number");
                 continue;
             }
-            if (number > collectedDeck.mainCards.size()){
+            if (number > collectedDeck.mainCards.size()) {
                 Output.getInstance().showMessage("invalid number!");
                 continue;
             }

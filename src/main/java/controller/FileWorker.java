@@ -119,8 +119,10 @@ public class FileWorker {
             Gson gson = builder.create();
 
             BufferedReader bufferedReader = new BufferedReader(reader);
-
-            return gson.fromJson(bufferedReader, Spell.class);
+            Spell spell = gson.fromJson(bufferedReader, Spell.class);
+            spell.setActive(false);
+            spell.setActionable(true);
+            return spell;
 
         } catch (IOException e) {
             return null;

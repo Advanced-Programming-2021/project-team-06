@@ -2,9 +2,11 @@ package models.cards;
 
 import com.google.gson.annotations.SerializedName;
 import controller.ActionJsonParser;
+import controller.Duel;
 import view.GameInputs;
 import view.Output;
 
+import java.awt.font.TextHitInfo;
 import java.lang.reflect.InvocationTargetException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -162,11 +164,13 @@ public class Monster extends Card implements Cloneable{
     }
 
     public void die() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        currentDeck = currentDeck.getOwner().getBoard().getGraveyardZone();
+        this.resetAllFields();
         if (deathTimeActions == null)
             return;
         Matcher actionMatcher = getActionMatcher(deathTimeActions);
-        if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition") , this))
-        ActionJsonParser.getInstance().doActionList(actionMatcher.group("action") , this  , "death-time");
+        if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition"), this))
+            ActionJsonParser.getInstance().doActionList(actionMatcher.group("action"), this, "death-time");
     }
 
     public void flip() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
@@ -178,6 +182,7 @@ public class Monster extends Card implements Cloneable{
     }
 
     public void summon() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        this.currentDeck = currentDeck.getOwner().getBoard().getMonsterZone();
         if (normalSummonTimeActions == null)
             return;
         Matcher actionMatcher = getActionMatcher(normalSummonTimeActions);
@@ -214,10 +219,5 @@ public class Monster extends Card implements Cloneable{
         overriddenName = "";
     }
 
-    public Matcher getActionMatcher(String action) {
-        Matcher matcher = Pattern.compile("\\*(?<condition>.*)\\*+(?<action>.+)").matcher(action);
-        matcher.find();
-        return matcher;
-    }
 }
 
