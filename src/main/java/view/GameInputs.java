@@ -156,10 +156,8 @@ public class GameInputs {
                 break;
             case 22:
                 onlineDuel.cheatForWinGame(commandMatcher.group("nickname"));
-                break;
             case 23:
                 onlineDuel.showBoard();
-                break;
             case 24:
                 onlineDuel.showTurn();
         }

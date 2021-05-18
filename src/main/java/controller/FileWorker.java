@@ -10,11 +10,8 @@ import java.io.*;
 
 public class FileWorker {
 
-    private final String usersDateBase = "./src/main/resources/Database/Users/";
-    private final String decksDateBase = "./src/main/resources/Database/Decks/";
-    private final String monsterDateBase = "./src/main/resources/Database/card-information/monsters";
-    private final String spellDateBase = "./src/main/resources/Database/card-information/spells";
-    private final String trapDateBase = "./src/main/resources/Database/card-information/traps";
+    private final String usersDataBase = "./src/main/resources/Database/Users/";
+    private final String decksDataBase = "./src/main/resources/Database/Decks/";
 
 
     private FileWorker() {
@@ -46,14 +43,14 @@ public class FileWorker {
     }
 
     public void writeUserJSON(Player player) {
-        String fileAddress = usersDateBase + player.getUsername() + ".json";
+        String fileAddress = usersDataBase + player.getUsername() + ".json";
         writeFileTo(fileAddress, player);
 
     }
 
     public void writeDeckJSON(Deck deck) {
         String deckName = deck.getName();
-        String fileAddress = decksDateBase + deckName + ".json";
+        String fileAddress = decksDataBase + deckName + ".json";
         GsonBuilder builder = new GsonBuilder().registerTypeAdapter(Player.class, Player.getPlayerSerializerForDeck()).registerTypeAdapter(Card.class, Card.getCardSerializerForDeck());
         Gson gson = builder.create();
         FileWriter writer;
@@ -69,7 +66,7 @@ public class FileWorker {
 
     }
 
-    private void writeFileTo(String fileAddress, Object objectToWrite) {
+    public void writeFileTo(String fileAddress, Object objectToWrite) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         FileWriter writer;
@@ -81,6 +78,22 @@ public class FileWorker {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Card readCardJSON(String fileAddress) {
+
+        try (FileReader reader = new FileReader(fileAddress)) {
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+
+            BufferedReader bufferedReader = new BufferedReader(reader);
+
+            return gson.fromJson(bufferedReader, Card.class);
+
+        } catch (IOException e) {
+            return null;
+        }
+
     }
 
     public Monster readMonsterJSON(String fileAddress) {

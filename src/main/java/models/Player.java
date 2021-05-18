@@ -6,7 +6,7 @@ import models.cards.Card;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class Player {
+public class Player implements Comparable<Player> {
     private String username;
     private String password;
     private String nickname;
@@ -33,6 +33,7 @@ public class Player {
 
 
     public static PlayerSerializerForDeckDatabase playerSerializerForDeckDatabase = new PlayerSerializerForDeckDatabase();
+
     public static PlayerSerializerForDeckDatabase getPlayerSerializerForDeck() {
         if (playerSerializerForDeckDatabase == null)
             playerSerializerForDeckDatabase = new PlayerSerializerForDeckDatabase();
@@ -40,6 +41,7 @@ public class Player {
     }
 
     public static PlayerDeserializerForDeckDatabase playerDeserializerForDeckDatabase = null;
+
     public static PlayerDeserializerForDeckDatabase getPlayerDeserializerForDeck() {
         if (playerDeserializerForDeckDatabase == null)
             playerDeserializerForDeckDatabase = new PlayerDeserializerForDeckDatabase();
@@ -159,6 +161,18 @@ public class Player {
         this.board = board;
     }
 
+    @Override
+    public int compareTo(Player player) {
+        if (this.score > player.score)
+            return -1;
+        if (this.score < player.score)
+            return 1;
+        if (this.nickname.compareTo(player.getNickname()) > 0)
+            return -1;
+        if (this.nickname.compareTo(player.getNickname()) < 0)
+            return 1;
+        return 0;
+    }
 
     @Override
     public String toString() {

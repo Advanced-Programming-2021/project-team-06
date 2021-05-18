@@ -29,7 +29,7 @@ public class ConsoleBasedMenus {
     };
 
     private final String[] mainMenusRegexes = {
-            "^menu enter (?<name>Duel|Deck|Scoreboard|Profile|Shop)$",
+            "^menu enter (?<name>Duel|Deck|Scoreboard|Profile|Shop|ImpExp)$",
             "^user logout$",
             "^menu show-current$",
             "^menu exit$"
@@ -82,6 +82,13 @@ public class ConsoleBasedMenus {
             "^duel new (--rounds|-r) (?<round>\\d+) --second-player (?<username>\\w+)$",
             "^duel new --single-player (--rounds|-r) (?<round>\\d+)",
             "^duel new (--rounds|-r) (?<round>\\d+) --single-player",
+            "^menu show-current$",
+            "^menu exit$"
+    };
+
+    private final String[] impExpMenusRegexes = {
+            "^import card (?<card name>\\w+)$",
+            "^export card (?<card name>\\w+)$",
             "^menu show-current$",
             "^menu exit$"
     };
@@ -187,6 +194,10 @@ public class ConsoleBasedMenus {
                 if (menuName.equals("Shop")) {
                     runningMenu = "shopping";
                     runShopping();
+                }
+                if (menuName.equals("ImpExp")) {
+                    runningMenu = "ImpExp";
+                    runImpExpMenu();
                 }
                 break;
             case 3:
@@ -418,6 +429,37 @@ public class ConsoleBasedMenus {
                 Output.getInstance().showMessage("duel Menu");
                 break;
             case 5:
+                runningMenu = "main";
+        }
+    }
+
+    private void runImpExpMenu() throws IllegalAccessException {
+        Matcher commandMatcher;
+        String command;
+        while (runningMenu.equals("ImpExp")) {
+            command = scanner.nextLine().replaceAll("\\s+", " ");
+            int whichCommand;
+            for (whichCommand = 0; whichCommand < impExpMenusRegexes.length; whichCommand++) {
+                commandMatcher = findMatcher(command, impExpMenusRegexes[whichCommand]);
+                if (commandMatcher.find()) {
+                    executeImpExpMenuCommands(commandMatcher, whichCommand);
+                    break;
+                } else if (whichCommand == impExpMenusRegexes.length - 1)
+                    Output.getInstance().showMessage("invalid command");
+            }
+        }
+    }
+
+    private void executeImpExpMenuCommands(Matcher commandMatcher, int whichCommand) {
+        switch (whichCommand) {
+            case 0:
+                ImpExpMenuController.getInstance().importFromFile(commandMatcher.group("card name"));
+            case 1:
+                ImpExpMenuController.getInstance().exportToFile(commandMatcher.group("card name"));
+            case 2:
+                Output.getInstance().showMessage("import/export Menu");
+                break;
+            case 3:
                 runningMenu = "main";
         }
     }

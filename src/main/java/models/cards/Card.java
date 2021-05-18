@@ -13,6 +13,8 @@ import java.util.ArrayList;
 public class Card implements Cloneable {
     @SerializedName("Name")
     protected String name;
+    @SerializedName("Type")
+    protected String typeCard;
     protected String overriddenName;
     @SerializedName("Card Type")
     protected CardType type;
@@ -70,6 +72,10 @@ public class Card implements Cloneable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTypeCard() {
+        return typeCard;
     }
 
     public void setType(CardType type) {
