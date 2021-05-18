@@ -48,6 +48,22 @@ public class ErrorChecker {
 
     }
 
+    public static boolean isMonsterZoneFree(Board board) {
+        if (board.getFirstFreeMonsterZoneIndex() == -1)
+        {
+            Output.getInstance().showMessage("Monster Zone Is Full!");
+            return false;
+        }
+        else  return true;
+    }
+    public static boolean isSpellZoneFree(Board board) {
+        if (board.getFirstFreeSpellZoneIndex() == -1)
+        {
+            Output.getInstance().showMessage("Spell Zone Is Full!");
+            return false;
+        }
+        else  return true;
+    }
     public static boolean doesDeckExist(String name) {
         Deck deck = Database.getInstance().getDeckByName(name);
         if (deck != null)

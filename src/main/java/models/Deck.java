@@ -35,10 +35,15 @@ public class Deck {
     }
 
     public static Deck getSelectionDeckFrom(Deck collectedDeck, int howMany) {
-        Output.getInstance().showMessage("you have to select " + howMany + " cards from cards below:");
-        collectedDeck.toString(true);
         Deck selectionDeck = new Deck("selected collected deck" , collectedDeck.owner);
-        while (howMany > 0) {
+        if (collectedDeck.getMainCards().size() == 0)
+        {
+            Output.getInstance().showMessage("candidate cards to choose are less than" + howMany);
+            return selectionDeck;
+        }
+        Output.getInstance().showMessage("you have to select " + howMany + " cards from cards below:");
+        Output.getInstance().showMessage(collectedDeck.toString(true));
+           while (howMany > 0) {
             Output.getInstance().showMessage("you have to select " + howMany + " more card(s)");
             int number = 0;
             try {

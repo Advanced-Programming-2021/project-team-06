@@ -152,14 +152,21 @@ public class Board {
     }
 
     public void putCardInMonsterZone(Card card) {
+        card.setCurrentDeck(card.getCurrentDeck().getOwner().getBoard().getMonsterZone());
         monsterZone.mainCards.set(getFirstFreeMonsterZoneIndex(), card);
     }
 
+    public void putCardInSpellZone(Card card) {
+        card.setCurrentDeck(card.getCurrentDeck().getOwner().getBoard().getSpellZone());
+        spellZone.mainCards.set(getFirstFreeSpellZoneIndex(), card);
+    }
     public void putInSpellZone(Card card) {
+        card.setCurrentDeck(card.getCurrentDeck().getOwner().getBoard().getSpellZone());
         spellZone.mainCards.set(getFirstFreeSpellZoneIndex(), card);
     }
 
     public void putInFieldZone(Card card) {
+        card.setCurrentDeck(card.getCurrentDeck().getOwner().getBoard().getSpellZone());
         if (fieldZone != null) {
             putInGraveyard(fieldZone);
         }
@@ -167,29 +174,37 @@ public class Board {
     }
 
     public void putInGraveyard(Card card) {
+        card.setCurrentDeck(card.getCurrentDeck().getOwner().getBoard().getGraveyardZone());
         graveyardZone.mainCards.add(card);
     }
 
     public void putInBanished(Card card) {
+        card.setCurrentDeck(card.getCurrentDeck().getOwner().getBoard().getBanishedZone());
         banishedZone.mainCards.add(card);
     }
 
     public void putInHand(Card card) {
+        card.setCurrentDeck(card.getCurrentDeck().getOwner().getBoard().getHand());
         for (int i = 0; i < 6; i++)
             if (hand.getMainCards().get(i) == null)
                 hand.getMainCards().add(i, card);
     }
 
     public void putInDeck(Card card) {
+        card.setCurrentDeck(card.getCurrentDeck().getOwner().getBoard().getDeckZone());
         deckZone.mainCards.add(card);
     }
 
     public void removeFromMonsterZone(Card card) {
-        monsterZone.mainCards.set(monsterZone.mainCards.indexOf(card), null);
+        int index = monsterZone.mainCards.indexOf(card);
+        if (index != -1)
+        monsterZone.mainCards.set(index, null);
     }
 
     public void removeFromSpellZone(Card card) {
-        spellZone.mainCards.set(spellZone.mainCards.indexOf(card), null);
+        int index = spellZone.mainCards.indexOf(card);
+        if (index != -1)
+            spellZone.mainCards.set(index, null);
     }
 
     public void removeFromFieldZone(Card card) {
@@ -317,8 +332,8 @@ public class Board {
                     monsterZoneString.append("H");
             }
 
-            return player.getNickname() + ":" + player.getHealth() + "\n" +
-                    handString + "\n"
+            return  "\n--------------------------\n"  + player.getNickname() + "\t\t:\t\t" + player.getHealth() + "\n" +
+                    handString + "\n"+
                     + deckZone.getNumberOfCardsInMainDeck() + "\n"
                     + spellZoneString + "\n"
                     + monsterZoneString + "\n" +
@@ -354,7 +369,7 @@ public class Board {
                 spellZoneString + "\n" +
                 "\t\t\t\t\t\t" + deckZone.getNumberOfCardsInMainDeck() + "\n"
                 + handString + "\n" +
-                player.getNickname() + ":" + player.getHealth() + "\n";
+                player.getNickname() + "\t\t:\t\t" + player.getHealth() + "\n--------------------------\n" ;
 
     }
 

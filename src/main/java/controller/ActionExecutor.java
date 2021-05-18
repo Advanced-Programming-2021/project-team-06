@@ -39,6 +39,15 @@ public class ActionExecutor {
         neededInformation = matcher;
         this.getClass().getDeclaredMethod(methodName).invoke(this);
     }
+    private void die() {
+        Duel.getCurrentDuel().changeDeck(clientsCard , "GY");
+    }
+    private void drawCard() {
+        int howMany = Integer.parseInt(neededInformation.group("howMany"));
+        for (int i = 0 ; i < howMany; i++) {
+            Duel.getCurrentDuel().getOnlinePlayer().getBoard().drawCard();
+        }
+    }
 
     public void cancel() {
         String[] eventNames = neededInformation.group("eventName").split("\\.");
@@ -68,6 +77,12 @@ public class ActionExecutor {
                 Duel.getCurrentDuel().kill(((Monster)card));
     }
 
+    private void sendCardsToDeck() {
+        String destination = neededInformation.group("deckName");
+        for (Card card : collectedDeck.getMainCards()) {
+            Duel.getCurrentDuel().changeDeck(card , destination);
+        }
+    }
     private void killOffender() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
      Duel currentDuel = Duel.getCurrentDuel();
      currentDuel.kill(currentDuel.getOnlinePlayer() , currentDuel.getAttackingMonster());

@@ -9,6 +9,8 @@ import models.Deck;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Card implements Cloneable {
     @SerializedName("Name")
@@ -126,6 +128,11 @@ public class Card implements Cloneable {
         return true;
     }
 
+    public Matcher getActionMatcher(String action) {
+        Matcher matcher = Pattern.compile("\\*(?<condition>.*)\\*+(?<action>.+)").matcher(action);
+        matcher.find();
+        return matcher;
+    }
     @Override
     public String toString() {
         return name + ':' + description + '\n';
