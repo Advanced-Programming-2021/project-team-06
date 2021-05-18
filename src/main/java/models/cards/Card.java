@@ -72,13 +72,9 @@ public class Card implements Cloneable {
         return this.name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setName(String name) { this.name = name; }
 
-    public String getTypeCard() {
-        return typeCard;
-    }
+    public String getTypeCard() { return typeCard; }
 
     public void setType(CardType type) {
         this.type = type;

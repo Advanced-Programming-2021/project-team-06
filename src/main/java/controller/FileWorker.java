@@ -80,21 +80,6 @@ public class FileWorker {
         }
     }
 
-    public Card readCardJSON(String fileAddress) {
-
-        try (FileReader reader = new FileReader(fileAddress)) {
-            GsonBuilder builder = new GsonBuilder();
-            Gson gson = builder.create();
-
-            BufferedReader bufferedReader = new BufferedReader(reader);
-
-            return gson.fromJson(bufferedReader, Card.class);
-
-        } catch (IOException e) {
-            return null;
-        }
-
-    }
 
     public Monster readMonsterJSON(String fileAddress) {
 

@@ -2,6 +2,7 @@ package view;
 
 import controller.ErrorChecker;
 import controller.menus.*;
+import models.Database;
 import models.Player;
 import models.Scoreboard;
 
@@ -87,8 +88,8 @@ public class ConsoleBasedMenus {
     };
 
     private final String[] impExpMenusRegexes = {
-            "^import card (?<card name>\\w+)$",
-            "^export card (?<card name>\\w+)$",
+            "^import card (?<name>.+)$",
+            "^export card (?<name>.+)$",
             "^menu show-current$",
             "^menu exit$"
     };
@@ -453,9 +454,11 @@ public class ConsoleBasedMenus {
     private void executeImpExpMenuCommands(Matcher commandMatcher, int whichCommand) {
         switch (whichCommand) {
             case 0:
-                ImpExpMenuController.getInstance().importFromFile(commandMatcher.group("card name"));
+                ImpExpMenuController.getInstance().importFromFile(commandMatcher.group("name"));
+                break;
             case 1:
-                ImpExpMenuController.getInstance().exportToFile(commandMatcher.group("card name"));
+                ImpExpMenuController.getInstance().exportToFile(commandMatcher.group("name"));
+                break;
             case 2:
                 Output.getInstance().showMessage("import/export Menu");
                 break;
