@@ -273,6 +273,9 @@ public class Duel {
             case "GY":
                 onlinePlayer.getBoard().putInGraveyard(card);
                 break;
+            case "OGY":
+                offlinePlayer.getBoard().putInGraveyard(card);
+                break;
             case "F":
                 onlinePlayer.getBoard().putInFieldZone(card);
                 break;
@@ -628,7 +631,7 @@ public class Duel {
         } else Output.getInstance().showMessage("graveyard empty");
         while (true) {
             if (GameInputs.getInstance().backQ()) {
-                Output.getInstance().showMessage(onlinePlayer.getBoard().toString(onlinePlayer));
+                Duel.getCurrentDuel().showBoard();
                 return;
             }
         }

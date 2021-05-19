@@ -15,6 +15,8 @@ public class Spell extends Card implements Cloneable {
     String property;
     @SerializedName("Action")
     String action;
+    private transient String activationTimeActions;
+    private transient String deathTimeActions;
 
     public Spell(String name) {
         super(name);
@@ -31,13 +33,26 @@ public class Spell extends Card implements Cloneable {
         return isActionable;
     }
 
-    public void activate() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        currentDeck = currentDeck.getOwner().getBoard().getSpellZone();
+    public void initializeSpellEffects() {
         if (action == null)
             return;
-        Matcher actionMatcher = getActionMatcher(action);
+        String[] actions = action.split("->");
+        for (String action : actions) {
+            String[] actionInformation = action.split(":");
+            switch (actionInformation[0]){
+                case "activation-time" : activationTimeActions = actionInformation[1]; break;
+                case "death-time": deathTimeActions = actionInformation[1]; break;
+            }
+        }
+    }
+
+    public void activate() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        currentDeck = currentDeck.getOwner().getBoard().getSpellZone();
+        if (activationTimeActions == null)
+            return;
+        Matcher actionMatcher = getActionMatcher(activationTimeActions);
         if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition"), this))
-            ActionJsonParser.getInstance().doActionList(actionMatcher.group("action"), this, "spell-activation");
+            ActionJsonParser.getInstance().doActionList(actionMatcher.group("action"), this, "activation-time");
         isActive = true;
     }
 
@@ -55,7 +70,10 @@ public class Spell extends Card implements Cloneable {
 
     @Override
     public Spell clone() throws CloneNotSupportedException {
-        return (Spell) super.clone();
+        Spell spell =  (Spell) super.clone();
+        spell.action = this.action;
+        spell.initializeSpellEffects();
+        return spell;
     }
 
     public void setActive(boolean isActive) {

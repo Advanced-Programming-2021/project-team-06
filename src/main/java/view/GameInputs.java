@@ -85,6 +85,7 @@ public class GameInputs {
     }
 
     public boolean backQ() {
+        Output.getInstance().showMessage("\ntype \"back\" to return ");
         while (true) {
             String command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", " ");
             if (command.equals("back")) return true;
