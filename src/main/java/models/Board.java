@@ -1,9 +1,15 @@
 package models;
 
+import models.cards.Card;
+import models.cards.CardPlacement;
+import models.cards.Monster;
+import models.cards.MonsterMode;
+
 import models.cards.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 public class Board {
     Player player;
@@ -292,40 +298,13 @@ public class Board {
         return -1;
     }
 
-    public void clearBoard() {
-        for (int i = 0; i < 5; i++) {
-            monsterZone.getMainCards().set(i, null);
-            spellZone.getMainCards().set(i, null);
+    public void clearBoard (){
+        for (int i = 0; i<5; i++){
+            monsterZone.getMainCards().set(i,null);
+            spellZone.getMainCards().set(i,null);
         }
         fieldZone = null;
         graveyardZone.mainCards.clear();
-    }
-
-    public boolean isThereRitualInHand() {
-        for (Card monster : hand.getMainCards()) {
-            if (monster.getType() == CardType.ritual) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean isCardsLevelsEnoughForTribute() {
-        int sum = 0;
-        int monsterMinLevel = 20;
-        for (Card monster : hand.getMainCards()) {
-            if (monster.getType() == CardType.ritual &&
-                    monster instanceof Monster && monsterMinLevel > ((Monster) monster).getLEVEL()) {
-                monsterMinLevel = ((Monster) monster).getLEVEL();
-            }
-        }
-        for (Card monster : monsterZone.getMainCards()) {
-            sum += ((Monster) monster).getLEVEL();
-        }
-        if (sum < monsterMinLevel) {
-            return false;
-        }
-        return true;
     }
 
     public String toString(Player turn) {
