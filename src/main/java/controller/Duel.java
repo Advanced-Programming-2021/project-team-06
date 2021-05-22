@@ -4,10 +4,10 @@ import models.Board;
 import models.Deck;
 import models.Player;
 import models.cards.*;
+import view.ConsoleBasedMenus;
 import view.GameInputs;
 import view.Output;
 
-import javax.sql.rowset.BaseRowSet;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
@@ -465,7 +465,41 @@ public class Duel {
     }
 
     public void ritualSummon() {
-
+        Output.getInstance().showMessage("Select a Ritual Monster");
+        Card monster = onlinePlayer.getBoard().getSelectedCard();
+        if (!ErrorChecker.isCardInPlayerHand(monster, onlinePlayer) ||
+                !ErrorChecker.isMonsterCard(monster) ) {
+            Output.getInstance().showMessage("you can't summon"+ monster.getName() +"card");
+            return;
+        }
+        Output.getInstance().showMessage("Select your tributes");
+        Deck selectedCards = Deck.getSelectionDeckFrom(onlinePlayer.getBoard().getMonsterZone(),-1);
+        ArrayList<Card> monsterZone = onlinePlayer.getBoard().getMonsterZoneCards();
+        if(!(onlinePlayer.getBoard().isThereRitualInHand() && onlinePlayer.getBoard().isCardsLevelsEnoughForTribute())){
+            Output.getInstance().showMessage("there is no way you could ritual summon a monster");
+        }
+        if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
+        if (!ErrorChecker.isMainPhase(phase)) return;
+        if (ErrorChecker.isMonsterCardZoneFull(monsterZone)) return;
+        if (onlinePlayer.getBoard().isSummonedOrSetCardInTurn()) {
+            Output.getInstance().showMessage("you already summoned/set on this turn");
+            return;
+        }
+        Output.getInstance().showMessage("select position of your ritual monster : attack or defence");
+        String position = ConsoleBasedMenus.scanner.nextLine();
+        setPosition(position);
+        onlinePlayer.getBoard().putCardInMonsterZone(monster);
+        for(Card monster1 : selectedCards.mainCards){
+            onlinePlayer.getBoard().getMonsterZone().moveCardToForGame(onlinePlayer.getBoard().getGraveyardZone() , monster1,true,true);
+        }
+        Card spell = onlinePlayer.getBoard().getSelectedCard();
+        while (!(spell instanceof Spell) || !(spell.getType() == CardType.ritual)){
+            Output.getInstance().showMessage("this is not ritual select another one");
+            spell = onlinePlayer.getBoard().getSelectedCard();
+        }
+        onlinePlayer.getBoard().getSpellZone().moveCardToForGame(onlinePlayer.getBoard().getGraveyardZone(),spell,true,true);
+        onlinePlayer.getBoard().setSelectedCard(null);
+        Output.getInstance().showMessage("Ritual Summoned successfully");
     }
 
 

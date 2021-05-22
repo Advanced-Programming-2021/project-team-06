@@ -40,7 +40,10 @@ public class Deck {
             Output.getInstance().showMessage("candidate cards to choose are less than" + howMany);
             return selectionDeck;
         }
-        Output.getInstance().showMessage("you have to select " + howMany + " cards from cards below:");
+        if(howMany > 0)
+            Output.getInstance().showMessage("you have to select " + howMany + " cards from cards below:");
+        else
+            Output.getInstance().showMessage("you have to select cards from cards below:");
         Output.getInstance().showMessage(collectedDeck.toString(true));
         while (howMany > 0) {
             Output.getInstance().showMessage("you have to select " + howMany + " more card(s)");
@@ -57,6 +60,25 @@ public class Deck {
             }
             howMany--;
             selectionDeck.addCard(collectedDeck.getMainCards().get(number - 1));
+        }
+        if(howMany < 0){
+            String progress = "notYet";
+            while(!progress.equals("Yes")){
+                Output.getInstance().showMessage("Are You Done?");
+                progress = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", "");
+                int number = 0;
+                try {
+                    number = Integer.parseInt(ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", ""));
+                } catch (NumberFormatException numberFormatException) {
+                    Output.getInstance().showMessage("please just enter a number");
+                    continue;
+                }
+                if (number > collectedDeck.mainCards.size()) {
+                    Output.getInstance().showMessage("invalid number!");
+                    continue;
+                }
+                selectionDeck.addCard(collectedDeck.getMainCards().get(number - 1));
+            }
         }
         return selectionDeck;
     }
