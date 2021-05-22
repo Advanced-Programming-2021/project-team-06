@@ -1,4 +1,4 @@
-Name,Level,Attribute,Monster Type, Card Type ,Atk,Def,Description,Price,Action,isAttackable,Type
+Name,Level,Attribute,Monster Type,Card Type,Atk,Def,Description,Price,Action,isAttackable,Type
 Battle OX,4,EARHT,Beast-Warrior,Normal,1700,1000,A monster with tremendous power it destroys enemies with a swing of its axe.,2900,e,e,Monster
 Axe Raider,4,EARHT,Warrior,Normal,1700,1150,An axe-wielding monster of tremendous strength and agility.,3100,e,e,Monster
 Yomi Ship,3,WATER,Aqua,Effect,800,1400,If this card is destroyed by battle and sent to the GY: Destroy the monster that destroyed this card.,1700,->death-time:**kill-offender,e,Monster
@@ -40,3 +40,4 @@ Terratiger The Empowered Warrior,4,EARTH,Warrior,Effect,1800,1200,When this card
 The Tricky,5,WIND,Spellcaster,Effect,2000,1200,You can Special Summon this card (from your hand) by discarding 1 card.,4300,e,e,Monster
 Spiral Serpent,8,WATER,Sea Serpent,Normal,2900,2900,When huge whirlpools lay cities asunder it is the hunger of this sea serpent at work. No one has ever escaped its dreaded Spiral Wave to accurately describe the terror they experienced.,11700,e,e,Monster
 Command Knight,4,Fire,Warrior,Effect,1000,1000,All Warrior-Type monsters you control gain 400 ATK. If you control another monster monsters your opponent controls cannot target this card for an attack.,2100,->summon-time:*?*collect<MZ>[-Any-];increase-attack-power{400};->flip-time:*?*collect<MZ>[-Any-];increase-attack-power{400};->death-time:**cancel{summon-time.flip-time};,effected{summon-time}<1&effected{flip-time}<1,Monster
+Feral Imp,4,DARK,Fiend,Normal,1300,1400,A playful little fiend that lurks in the dark waiting to attack an unwary enemy.,2800,e,e,Monster

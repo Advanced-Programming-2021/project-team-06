@@ -84,7 +84,7 @@ public class FileWorker {
     public Monster readMonsterJSON(String fileAddress) {
 
         try (FileReader reader = new FileReader(fileAddress)) {
-            GsonBuilder builder = new GsonBuilder().registerTypeAdapter(MonsterType.class, MonsterType.get());
+            GsonBuilder builder = new GsonBuilder().registerTypeAdapter(MonsterType.class, MonsterType.get()).registerTypeAdapter(CardType.class , CardType.get());
             Gson gson = builder.create();
 
             BufferedReader bufferedReader = new BufferedReader(reader);

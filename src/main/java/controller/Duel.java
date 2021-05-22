@@ -297,6 +297,10 @@ public class Duel {
             Output.getInstance().showMessage("you already summoned/set on this turn");
             return;
         }
+        if (selectedCard.getType() == CardType.ritual) {
+            Output.getInstance().showMessage("you can't normal summon a ritual monster.");
+            return;
+        }
         if (((Monster) selectedCard).getLEVEL() == 5 || ((Monster) selectedCard).getLEVEL() == 6) {
             if (!ErrorChecker.isThereOneMonsterForTribute(monsterZone)) return;
             String addressString = GameInputs.getInstance().getAddressForTribute();
