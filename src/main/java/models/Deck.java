@@ -1,6 +1,5 @@
 package models;
 
-import controller.AI;
 import models.cards.Card;
 import models.cards.Monster;
 import models.cards.Spell;
@@ -40,7 +39,10 @@ public class Deck {
             Output.getInstance().showMessage("candidate cards to choose are less than" + howMany);
             return selectionDeck;
         }
-        Output.getInstance().showMessage("you have to select " + howMany + " cards from cards below:");
+        if (howMany > 0)
+            Output.getInstance().showMessage("you have to select " + howMany + " cards from cards below:");
+        else
+            Output.getInstance().showMessage("you have to select cards from cards below:");
         Output.getInstance().showMessage(collectedDeck.toString(true));
         while (howMany > 0) {
             Output.getInstance().showMessage("you have to select " + howMany + " more card(s)");
@@ -57,6 +59,25 @@ public class Deck {
             }
             howMany--;
             selectionDeck.addCard(collectedDeck.getMainCards().get(number - 1));
+        }
+        if (howMany < 0) {
+            String progress = "notYet";
+            while (!progress.equals("Yes")) {
+                Output.getInstance().showMessage("Are You Done?");
+                progress = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", "");
+                int number = 0;
+                try {
+                    number = Integer.parseInt(ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", ""));
+                } catch (NumberFormatException numberFormatException) {
+                    Output.getInstance().showMessage("please just enter a number");
+                    continue;
+                }
+                if (number > collectedDeck.mainCards.size()) {
+                    Output.getInstance().showMessage("invalid number!");
+                    continue;
+                }
+                selectionDeck.addCard(collectedDeck.getMainCards().get(number - 1));
+            }
         }
         return selectionDeck;
     }
@@ -90,12 +111,12 @@ public class Deck {
         this.sideCards = sideCards;
     }
 
-    public void setOwner(Player owner) {
-        this.owner = owner;
-    }
-
     public Player getOwner() {
         return owner;
+    }
+
+    public void setOwner(Player owner) {
+        this.owner = owner;
     }
 
     public void setActive(Boolean active) {
@@ -127,21 +148,22 @@ public class Deck {
             mainCards.add(card);
         else
             sideCards.add(card);
-        if(card != null)
+        if (card != null)
             card.setCurrentDeck(this);
     }
 
     public void addCard(Card card) {
         mainCards.add(card);
-        if(card != null)
+        if (card != null)
             card.setCurrentDeck(this);
     }
 
-    public void moveCardTo(Deck destination, Card card, boolean isMainForOrigin , boolean isMainForDestination) {
+    public void moveCardTo(Deck destination, Card card, boolean isMainForOrigin, boolean isMainForDestination) {
         removeCard(card, isMainForOrigin);
         destination.addCard(card, isMainForDestination);
     }
-    public void moveCardToForGame(Deck destination, Card card, boolean isMainForOrigin , boolean isMainForDestination) {
+
+    public void moveCardToForGame(Deck destination, Card card, boolean isMainForOrigin, boolean isMainForDestination) {
         removeCardForGame(card, isMainForOrigin);
         destination.addCard(card, isMainForDestination);
     }
@@ -174,11 +196,12 @@ public class Deck {
                     return;
                 }
     }
+
     public void removeCardForGame(Card card, boolean shouldBeRemovedFromMain) {
         if (shouldBeRemovedFromMain)
-           mainCards.remove(card);
-         else
-           sideCards.remove(card);
+            mainCards.remove(card);
+        else
+            sideCards.remove(card);
     }
 
     public int getSumOfAttackPowers() {
@@ -210,28 +233,28 @@ public class Deck {
     public int getNumberOfCardsInSideDeck() {
         return sideCards.size();
     }
+
     @Override
     protected Deck clone() throws CloneNotSupportedException {
-        Deck deck = new Deck(this.name , this.owner , true , false);
-        ArrayList<Card> main = new ArrayList<>()
-                , side = new ArrayList<>();
+        Deck deck = new Deck(this.name, this.owner, true, false);
+        ArrayList<Card> main = new ArrayList<>(), side = new ArrayList<>();
         for (Card card : mainCards) {
             if (card instanceof Monster)
-                main.add(((Monster)card).clone());
+                main.add(((Monster) card).clone());
             else if (card instanceof Spell)
-                main.add(((Spell)card).clone());
+                main.add(((Spell) card).clone());
             else if (card instanceof Trap)
-                main.add(((Trap)card).clone());
-            if(card != null)
+                main.add(((Trap) card).clone());
+            if (card != null)
                 card.setCurrentDeck(this);
         }
         for (Card card : sideCards) {
             if (card instanceof Monster)
-                side.add(((Monster)card).clone());
+                side.add(((Monster) card).clone());
             else if (card instanceof Spell)
-                side.add(((Spell)card).clone());
+                side.add(((Spell) card).clone());
             else if (card instanceof Trap)
-                side.add(((Trap)card).clone());
+                side.add(((Trap) card).clone());
         }
         deck.setMainCards(main);
         deck.setSideCards(side);
