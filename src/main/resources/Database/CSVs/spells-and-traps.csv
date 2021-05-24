@@ -25,8 +25,8 @@ Messenger Of Peace,Spell,Continuous,Monsters with 1500 or more ATK cannot declar
 Twin Twisters,Spell,Quick-play,Discard 1 card then target up to 2 Spells/Traps on the field; destroy them.,Unlimited,3500,->activation-time:**collect<H>[--];send-to{GY};collect<OSZ>[--];select{2};send-to{OGY};die;
 Mystical Space Typhoon,Spell,Quick-play,Target 1 Spell/Trap on the field; destroy that target.,Unlimited,3500,->activation-time:**collect<OSZ>[--];select{1};send-to{OGY};die;
 Ring Of Defense,Spell,Quick-play,When a Trap effect that inflicts damage is activated: Make that effect damage 0.,Unlimited,3500,e
-Yami,Spell,Field,All Fiend and Spellcaster monsters on the field gain 200 ATK/DEF also all Fairy monsters on the field lose 200 ATK/DEF.,Unlimited,4300,e
-Forest,Spell,Field,All Insect- Beast- Plant- and Beast-Warrior monsters on the field gain 200 ATK/DEF.,Unlimited,4300,e
+Yami,Spell,Field,All Fiend and Spellcaster monsters on the field gain 200 ATK/DEF also all Fairy monsters on the field lose 200 ATK/DEF.,Unlimited,4300,->activation-time:**collect<MZ.OMZ>[--!MonsterType!=10&MonsterType!=1];increase-attack-power{200};increase-defence-power{200};->activation-time:**collect<MZ.OMZ>[--MonsterType=14];increase-attack-power{-200};increase-defence-power{-200};->death-time:**cancel{activation-time}
+Forest,Spell,Field,All Insect- Beast- Plant- and Beast-Warrior monsters on the field gain 200 ATK/DEF.,Unlimited,4300,->activation-time:**collect<MZ.OMZ>[--!MonsterType!=6&MonsterType!=8&MonsterType!=13];increase-attack-power{200};increase-defence-power{200};->death-time:**cancel{activation-time}
 Closed Forest,Spell,Field,All Beast-Type monsters you control gain 100 ATK for each monster in your Graveyard. Field Spell Cards cannot be activated. Field Spell Cards cannot be activated during the turn this card is destroyed.,Unlimited,4300,e
 Umiiruka,Spell,Field,Increase the ATK of all WATER monsters by 500 points and decrease their DEF by 400 points.,Unlimited,4300,e
 Sword Of dark destruction,Spell,Equip,A DARK monster equipped with this card increases its ATK by 400 points and decreases its DEF by 200 points.,Unlimited,4300,e

@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import controller.ActionJsonParser;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 
 public class Spell extends Card implements Cloneable {
@@ -15,8 +16,8 @@ public class Spell extends Card implements Cloneable {
     String property;
     @SerializedName("Action")
     String action;
-    private transient String activationTimeActions;
-    private transient String deathTimeActions;
+    private transient ArrayList<String> activationTimeActions = new ArrayList<>();
+    private transient ArrayList<String> deathTimeActions = new ArrayList<>();
 
     public Spell(String name) {
         super(name);
@@ -40,22 +41,44 @@ public class Spell extends Card implements Cloneable {
         for (String action : actions) {
             String[] actionInformation = action.split(":");
             switch (actionInformation[0]){
-                case "activation-time" : activationTimeActions = actionInformation[1]; break;
-                case "death-time": deathTimeActions = actionInformation[1]; break;
+                case "activation-time" :
+                    if (activationTimeActions == null)
+                        activationTimeActions = new ArrayList<>();
+                    activationTimeActions.add(actionInformation[1]); break;
+                case "death-time":
+                    if (deathTimeActions == null)
+                        deathTimeActions = new ArrayList<>();
+                    deathTimeActions.add(actionInformation[1]); break;
             }
         }
+    }
+
+    public void die() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        if (deathTimeActions == null)
+            return;
+        for (String action : deathTimeActions) {
+            Matcher actionMatcher = getActionMatcher(action);
+            if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition"), this))
+                ActionJsonParser.getInstance().doActionList(actionMatcher.group("action"), this, "death-time");
+        }
+        isActive = true;
     }
 
     public void activate() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         currentDeck = currentDeck.getOwner().getBoard().getSpellZone();
         if (activationTimeActions == null)
             return;
-        Matcher actionMatcher = getActionMatcher(activationTimeActions);
-        if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition"), this))
-            ActionJsonParser.getInstance().doActionList(actionMatcher.group("action"), this, "activation-time");
+        for (String action : activationTimeActions) {
+            Matcher actionMatcher = getActionMatcher(action);
+            if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition"), this))
+                ActionJsonParser.getInstance().doActionList(actionMatcher.group("action"), this, "activation-time");
+        }
         isActive = true;
     }
 
+    protected boolean isLike() {
+        return true;
+    }
     public Boolean getActive() {
         return isActive;
     }

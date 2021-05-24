@@ -2,16 +2,18 @@ package models.cards;
 
 import com.google.gson.annotations.SerializedName;
 import controller.ActionJsonParser;
+import controller.ConditionChecker;
 import controller.Duel;
 import view.GameInputs;
 import view.Output;
 
 import java.awt.font.TextHitInfo;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Monster extends Card implements Cloneable{
+public class Monster extends Card implements Cloneable {
     @SerializedName("Atk")
     int attackPower;
     int additionalAttackPower;
@@ -27,7 +29,7 @@ public class Monster extends Card implements Cloneable{
     @SerializedName("Action")
     private String action;
     private String isAttackable;
-    private transient String normalSummonTimeActions;
+    private transient ArrayList<String> normalSummonTimeActions = new ArrayList<>();
     private transient String specialSummonTimeActions;
     private transient String deathTimeActions;
     private transient String flipTimeActions;
@@ -52,16 +54,31 @@ public class Monster extends Card implements Cloneable{
         String[] actions = action.split("->");
         for (String action : actions) {
             String[] actionInformation = action.split(":");
-            switch (actionInformation[0]){
-                case "summon-time" : normalSummonTimeActions = actionInformation[1]; break;
-                case "flip-time" : flipTimeActions = actionInformation[1]; break;
-                case "death-time" : deathTimeActions = actionInformation[1]; break;
-                case "getting-raid" : gettingRaidTimeActions = actionInformation[1]; break;
-                case "special-summon-time" : specialSummonTimeActions = actionInformation[1]; break;
-                case "end-of-turn" : endOfTurnActions = actionInformation[1]; break;
+            switch (actionInformation[0]) {
+                case "summon-time":
+                    if (normalSummonTimeActions == null)
+                        normalSummonTimeActions = new ArrayList<>();
+                    normalSummonTimeActions.add(actionInformation[1]);
+                    break;
+                case "flip-time":
+                    flipTimeActions = actionInformation[1];
+                    break;
+                case "death-time":
+                    deathTimeActions = actionInformation[1];
+                    break;
+                case "getting-raid":
+                    gettingRaidTimeActions = actionInformation[1];
+                    break;
+                case "special-summon-time":
+                    specialSummonTimeActions = actionInformation[1];
+                    break;
+                case "end-of-turn":
+                    endOfTurnActions = actionInformation[1];
+                    break;
             }
         }
     }
+
     public MonsterMode getMonsterMode() {
         return monsterMode;
     }
@@ -94,11 +111,11 @@ public class Monster extends Card implements Cloneable{
         this.additionalDefencePower = additionalDefencePower;
     }
 
-    public int getTotalAttackPower(){
+    public int getTotalAttackPower() {
         return additionalAttackPower + attackPower;
     }
 
-    public int getTotalDefencePower(){
+    public int getTotalDefencePower() {
         return additionalDefencePower + defencePower;
     }
 
@@ -117,6 +134,7 @@ public class Monster extends Card implements Cloneable{
     public int getAttackPower() {
         return attackPower;
     }
+
     public int getDefencePower() {
         return defencePower;
     }
@@ -133,6 +151,10 @@ public class Monster extends Card implements Cloneable{
         this.haveBeenAttackedWithMonsterInTurn = haveBeenAttackedWithMonsterInTurn;
     }
 
+    public MonsterType getMonsterType() {
+        return monsterType;
+    }
+
     public MonsterAttribute getMonsterAttribute() {
         return monsterAttribute;
     }
@@ -146,13 +168,13 @@ public class Monster extends Card implements Cloneable{
         return "Name: " + super.name + '\n' +
                 "Level: " + this.LEVEL + '\n' +
                 "Type: " + this.monsterType + '\n' +
-                "ATK: " + ( this.attackPower + additionalAttackPower ) + '\n' +
+                "ATK: " + (this.attackPower + additionalAttackPower) + '\n' +
                 "DEF: " + (this.defencePower + additionalDefencePower) + '\n' +
                 "Description: " + super.description + '\n';
     }
+
     @Override
-    public Monster clone() throws CloneNotSupportedException
-    {
+    public Monster clone() throws CloneNotSupportedException {
         Monster monster = (Monster) super.clone();
         monster.setType(this.type);
         monster.setLEVEL(this.LEVEL);
@@ -177,39 +199,46 @@ public class Monster extends Card implements Cloneable{
         if (flipTimeActions == null)
             return;
         Matcher actionMatcher = getActionMatcher(flipTimeActions);
-        if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition") , this))
-            ActionJsonParser.getInstance().doActionList(actionMatcher.group("action") , this , "flip-time");
+        if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition"), this))
+            ActionJsonParser.getInstance().doActionList(actionMatcher.group("action"), this, "flip-time");
     }
 
     public void summon() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         this.currentDeck = currentDeck.getOwner().getBoard().getMonsterZone();
         if (normalSummonTimeActions == null)
             return;
-        Matcher actionMatcher = getActionMatcher(normalSummonTimeActions);
-        if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition") , this))
-        ActionJsonParser.getInstance().doActionList(actionMatcher.group("action") , this  , "summon-time");
+        for (String action : normalSummonTimeActions) {
+            Matcher actionMatcher = getActionMatcher(action);
+            if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition"), this))
+                ActionJsonParser.getInstance().doActionList(actionMatcher.group("action"), this, "summon-time");
+        }
     }
 
     public void getRaid() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (gettingRaidTimeActions == null)
             return;
         Matcher actionMatcher = getActionMatcher(gettingRaidTimeActions);
-        if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition") , this))
-        ActionJsonParser.getInstance().doActionList(actionMatcher.group("action") , this  , "getting-raid");
+        if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition"), this))
+            ActionJsonParser.getInstance().doActionList(actionMatcher.group("action"), this, "getting-raid");
     }
+
     public void endOfTurn() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (endOfTurnActions == null)
             return;
         Matcher actionMatcher = getActionMatcher(endOfTurnActions);
-        if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition") , this))
-            ActionJsonParser.getInstance().doActionList(actionMatcher.group("action") , this  , "end-of-turn");
+        if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition"), this))
+            ActionJsonParser.getInstance().doActionList(actionMatcher.group("action"), this, "end-of-turn");
 
     }
 
     public boolean isAttackable() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (isAttackable == null)
             return true;
-        return ActionJsonParser.getInstance().checkConditionList(isAttackable , this);
+        return ActionJsonParser.getInstance().checkConditionList(isAttackable, this);
+    }
+
+    boolean isLike(String attributeList) {
+        return ActionJsonParser.getInstance().checkConditionList(attributeList, this);
     }
 
     public void resetAllFields() {

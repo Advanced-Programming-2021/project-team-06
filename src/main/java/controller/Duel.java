@@ -148,9 +148,15 @@ public class Duel {
 
     private void setNumberOfCardInHand() {
         while (onlinePlayer.getBoard().getHandZoneCards().size() > 6) {
-            int address = Integer.parseInt(GameInputs.getInstance().getAddressForDeleteCard());
-            onlinePlayer.getBoard().getHand().moveCardToForGame(onlinePlayer.getBoard().getGraveyardZone(),
-                    onlinePlayer.getBoard().getHandZoneCards().get(address), true, true);
+            int address;
+            try {
+                address = Integer.parseInt(GameInputs.getInstance().getAddressForDeleteCard());
+                onlinePlayer.getBoard().getHand().moveCardToForGame(onlinePlayer.getBoard().getGraveyardZone(),
+                        onlinePlayer.getBoard().getHandZoneCards().get(address), true, true);
+            } catch (Exception e) {
+                Output.getInstance().showMessage("Please Input A Valid Number");
+            }
+
         }
     }
 
@@ -219,7 +225,7 @@ public class Duel {
 
     }
 
-    public void changeDeck(Card card, String destination) {
+    public void changeDeck(Card card, String destination) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Deck cardDeck = card.getCurrentDeck();
         Board board = cardDeck.getOwner().getBoard();
         switch (destination) {
@@ -272,9 +278,17 @@ public class Duel {
                 break;
             case "GY":
                 onlinePlayer.getBoard().putInGraveyard(card);
+                if (card instanceof Spell)
+                    ((Spell)card).die();
+                if (card instanceof Monster)
+                    ((Monster)card).die();
                 break;
             case "OGY":
                 offlinePlayer.getBoard().putInGraveyard(card);
+                if (card instanceof Spell)
+                    ((Spell)card).die();
+                if (card instanceof Monster)
+                    ((Monster)card).die();
                 break;
             case "F":
                 onlinePlayer.getBoard().putInFieldZone(card);
@@ -470,7 +484,7 @@ public class Duel {
 
 
     public void attack(String address) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        if(isFirstTurn) {
+        if (isFirstTurn) {
             Output.getInstance().showMessage("this is first turn and you can't attack the opponent!");
             return;
         }
@@ -595,7 +609,7 @@ public class Duel {
 
     public void attackDirect() {
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
-        if(isFirstTurn) {
+        if (isFirstTurn) {
             Output.getInstance().showMessage("this is first turn and you can't attack the opponent directly!");
             return;
         }
@@ -689,7 +703,7 @@ public class Duel {
                 onlinePlayer.getBoard().toString(onlinePlayer));
     }
 
-    public void showTurn(){
+    public void showTurn() {
         Output.getInstance().showMessage(onlinePlayer.getNickname());
     }
 

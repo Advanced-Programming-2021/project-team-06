@@ -12,6 +12,10 @@ public class Trap extends Card implements Cloneable {
         isActive = true;
     }
 
+    protected boolean isLike() {
+        return true;
+    }
+
     public Boolean getActive() {
         return isActive;
     }

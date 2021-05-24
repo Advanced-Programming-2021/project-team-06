@@ -1,6 +1,7 @@
 package controller;
 import models.Deck;
 import models.cards.Card;
+import models.cards.Monster;
 import view.GameInputs;
 import view.Output;
 
@@ -36,7 +37,7 @@ public class ConditionChecker {
     }
 
     private Matcher getSimpleConditionMatcher(String condition) {
-        return Pattern.compile("(?<firstNumber>.+)(?<sign>>|=|<|>=|<=|!=)(?<secondNumber>.+)").matcher(condition);
+        return Pattern.compile("(?<firstNumber>.+?)(?<sign>>|=|<|>=|<=|!=)(?<secondNumber>.+)").matcher(condition);
     }
     private int getVariable(String variable) {
         int value = 0;
@@ -63,6 +64,39 @@ public class ConditionChecker {
                         break;
                     value =  collectedDeck.mainCards.size();
                     break;
+                case "ATK" :
+                    if (clientCard instanceof Monster)
+                        return ((Monster)clientCard).getTotalAttackPower();
+                    else
+                        return 0;
+                case "DEF":
+                    if (clientCard instanceof Monster)
+                        return ((Monster)clientCard).getTotalDefencePower();
+                    else
+                        return 0;
+                case "MonsterType":
+                    if (clientCard instanceof Monster)
+                        return ((Monster)clientCard).getMonsterType().ordinal();
+                    else
+                        return 0;
+                case "CardPlacement":
+                        return clientCard.getCardPlacement().ordinal();
+                case "MonsterMode":
+                    if (clientCard instanceof Monster)
+                        return ((Monster)clientCard).getMonsterMode().ordinal();
+                    else
+                        return 0;
+                case "MonsterAttribute":
+                    if (clientCard instanceof Monster)
+                        return ((Monster)clientCard).getMonsterAttribute().ordinal();
+                    else
+                        return 0;
+                case "Level":
+                    if (clientCard instanceof Monster)
+                        return ((Monster)clientCard).getLEVEL();
+                    else
+                        return 0;
+
             }
         }
         return value;

@@ -17,12 +17,17 @@ public class ActionExecutor {
     private Matcher neededInformation;
     private Deck collectedDeck;
     private Card clientsCard;
-    public ActionExecutor(String name , Card clientsCard) {
+    private String actionString;
+    public ActionExecutor(String name , Card clientsCard , String actionString) {
+        this.actionString = actionString;
         this.clientsCard = clientsCard;
         collectedDeck = new Deck(name, clientsCard.getCurrentDeck().getOwner());
         ALL_ACTION_EXECUTORS.add(this);
     }
 
+    public void redo() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        ActionJsonParser.getInstance().doActionExecutor(this , actionString);
+    }
     public  static ActionExecutor getActionExecutorByName(String name) {
         for (ActionExecutor actionExecutor : ALL_ACTION_EXECUTORS) {
             if (actionExecutor.getCollectedDeck().getName().equals(name))
@@ -40,7 +45,7 @@ public class ActionExecutor {
         this.getClass().getDeclaredMethod(methodName).invoke(this);
     }
 
-    private void die() {
+    private void die() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Duel.getCurrentDuel().changeDeck(clientsCard, "GY");
     }
 
@@ -55,12 +60,14 @@ public class ActionExecutor {
         String[] eventNames = neededInformation.group("eventName").split("\\.");
         for (String eventName : eventNames) {
             ActionExecutor actionExecutor = ActionExecutor.getActionExecutorByName(eventName + ((Object) clientsCard).toString());
-            if (actionExecutor == null) continue;
-            for (Card card : actionExecutor.collectedDeck.mainCards) {
-                if (card instanceof Monster)
-                    ((Monster) card).resetAllFields();
+            while (actionExecutor != null) {
+                for (Card card : actionExecutor.collectedDeck.mainCards) {
+                    if (card instanceof Monster)
+                        ((Monster) card).resetAllFields();
+                }
+                ALL_ACTION_EXECUTORS.remove(actionExecutor);
+                actionExecutor = ActionExecutor.getActionExecutorByName(eventName + ((Object) clientsCard).toString());
             }
-            ALL_ACTION_EXECUTORS.remove(actionExecutor);
         }
         ALL_ACTION_EXECUTORS.remove(this);
     }
@@ -68,10 +75,8 @@ public class ActionExecutor {
     private void collectCards() {
         ArrayList<Deck> deckList = ActionJsonParser.getInstance().getDecksByTheirName(neededInformation.group("deckList").split("\\."));
         getCardsFromTheirDeck(deckList, neededInformation.group("class"));
-        Card desiredCard = ActionJsonParser.getInstance().getDesiredCard(
-                neededInformation.group("attributeList").split("\\."),
-                neededInformation.group("class"));
-        collectedDeck.mainCards.removeIf(card -> card == null || !card.isLike(desiredCard));
+        String attributeList = neededInformation.group("attributeList");
+        collectedDeck.mainCards.removeIf(card -> card == null || !card.hasAttributes(attributeList));
     }
 
     private void kill() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
@@ -80,7 +85,7 @@ public class ActionExecutor {
                 Duel.getCurrentDuel().kill(((Monster) card));
     }
 
-    private void sendCardsToDeck() {
+    private void sendCardsToDeck() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         String destination = neededInformation.group("deckName");
         for (Card card : collectedDeck.getMainCards()) {
             Duel.getCurrentDuel().changeDeck(card, destination);
@@ -97,6 +102,12 @@ public class ActionExecutor {
         for (Card card : collectedDeck.mainCards)
             if (card instanceof Monster)
                 ((Monster) card).setAdditionalAttackPower(amount);
+    }
+    private void increaseDefencePower() {
+        int amount = Integer.parseInt(neededInformation.group("amount"));
+        for (Card card : collectedDeck.mainCards)
+            if (card instanceof Monster)
+                ((Monster) card).setAdditionalDefencePower(amount);
     }
     private void setAttackPower() {
         int amount = Integer.parseInt(neededInformation.group("amount"));

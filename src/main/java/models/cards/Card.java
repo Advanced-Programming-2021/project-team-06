@@ -130,8 +130,13 @@ public class Card implements Cloneable {
         setCurrentDeck(deck);
     }
 
-    public Boolean isLike(Card card) {
-        return true;
+    public Boolean hasAttributes(String attributeList) {
+        if (this instanceof Monster)
+        return ((Monster)this).isLike(attributeList);
+        else if (this instanceof Spell)
+            return ((Spell)this).isLike();
+        else
+            return ((Trap)this).isLike();
     }
 
     public Matcher getActionMatcher(String action) {

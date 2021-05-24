@@ -21,7 +21,8 @@ public enum MonsterType {
     fiend,
     pyro,
     aqua,
-    beast;
+    beast,
+    fairy;
 
     private static MonsterTypeDeserializer monsterTypeDeserializer = null;
     public static MonsterTypeDeserializer get() {

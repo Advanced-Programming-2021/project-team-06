@@ -19,7 +19,8 @@ public class ActionJsonParser {
 
     {
         actionsRegexes.put("collect<(?<deckList>.*)>\\[-(?<class>\\w*)-(?<attributeList>.*)]", "collectCards");
-        actionsRegexes.put("increase-attack-power\\{(?<amount>\\d+)}", "increaseAttackPower");
+        actionsRegexes.put("increase-attack-power\\{(?<amount>-?\\d+)}", "increaseAttackPower");
+        actionsRegexes.put("increase-defence-power\\{(?<amount>-?\\d+)}", "increaseDefencePower");
         actionsRegexes.put("draw\\{(?<howMany>\\d+)}", "drawCard");
         actionsRegexes.put("cancel\\{(?<eventName>.+)}", "cancel");
         actionsRegexes.put("kill-offender", "killOffender");
@@ -42,22 +43,34 @@ public class ActionJsonParser {
         return actionJsonParserInstance;
     }
 
-    public void doActionList(String actionsString, Card clientCard , String event) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        ActionExecutor actionExecutor = new ActionExecutor(event + ((Object)clientCard).toString() , clientCard);
+    public void doActionList(String actionsString, Card clientCard, String event) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        ActionExecutor actionExecutor = new ActionExecutor(event + ((Object) clientCard).toString(), clientCard , actionsString);
+
+    }
+
+    public void doActionExecutor(ActionExecutor actionExecutor , String actionsString) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         String[] actions = actionsString.split(";");
         for (String action : actions) {
             String actionMethodName = getActionMethodName(action);
             actionExecutor.execute(actionMethodName, actionMatcher);
         }
     }
-    public boolean checkConditionList(String actionsString, Card clientCard) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+
+    public boolean checkConditionList(String conditionListString, Card clientCard) {
+        boolean shouldBeInverted = false;
         ConditionChecker conditionChecker = new ConditionChecker();
-        String[] conditions = actionsString.split("&");
+        if (conditionListString.charAt(0) == '!') {
+            shouldBeInverted = true;
+            conditionListString = conditionListString.replaceFirst("!", "");
+        }
+        String[] conditions = conditionListString.split("&");
         boolean result = true;
         for (String condition : conditions) {
-           result &= conditionChecker.check(condition , clientCard);
+            result &= conditionChecker.check(condition, clientCard);
         }
-        return result;
+        if (shouldBeInverted)
+            return !result;
+        else return result;
     }
 
     private String getActionMethodName(String action) {
@@ -130,16 +143,16 @@ public class ActionJsonParser {
                     decks.add(currentDuel.getOfflinePlayer().getBoard().getDeckZone());
                     break;
                 case "F":
-                    Deck singleCardDeck = new Deck("F" , null);
+                    Deck singleCardDeck = new Deck("F", null);
                     singleCardDeck.addCard(currentDuel.getOnlinePlayer().getBoard().getFieldZone());
                     decks.add(singleCardDeck);
                     break;
                 case "OF":
-                    singleCardDeck = new Deck("OF" , null);
+                    singleCardDeck = new Deck("OF", null);
                     singleCardDeck.addCard(currentDuel.getOfflinePlayer().getBoard().getFieldZone());
                     decks.add(singleCardDeck);
                 case "AT":
-                    singleCardDeck = new Deck("AT" , null);
+                    singleCardDeck = new Deck("AT", null);
                     singleCardDeck.addCard(currentDuel.getAttackingMonster());
                     decks.add(singleCardDeck);
                     break;
