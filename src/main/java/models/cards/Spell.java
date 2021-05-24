@@ -2,6 +2,7 @@ package models.cards;
 
 import com.google.gson.annotations.SerializedName;
 import controller.ActionJsonParser;
+import controller.Duel;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -39,33 +40,39 @@ public class Spell extends Card implements Cloneable {
     }
 
     public void initializeSpellEffects() {
+        if (horcruxOf == null)
+            horcruxOf = new ArrayList<>();
         if (action == null)
             return;
         String[] actions = action.split("->");
         for (String action : actions) {
             String[] actionInformation = action.split(":");
-            switch (actionInformation[0]){
-                case "activation-time" :
+            switch (actionInformation[0]) {
+                case "activation-time":
                     if (activationTimeActions == null)
                         activationTimeActions = new ArrayList<>();
-                    activationTimeActions.add(actionInformation[1]); break;
+                    activationTimeActions.add(actionInformation[1]);
+                    break;
                 case "death-time":
                     if (deathTimeActions == null)
                         deathTimeActions = new ArrayList<>();
-                    deathTimeActions.add(actionInformation[1]); break;
+                    deathTimeActions.add(actionInformation[1]);
+                    break;
             }
         }
     }
 
     public void die() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        if (deathTimeActions == null)
-            return;
-        for (String action : deathTimeActions) {
-            Matcher actionMatcher = getActionMatcher(action);
-            if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition"), this))
-                ActionJsonParser.getInstance().doActionList(actionMatcher.group("action"), this, "death-time");
+        if (deathTimeActions != null) {
+            for (String action : deathTimeActions) {
+                Matcher actionMatcher = getActionMatcher(action);
+                if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition"), this))
+                    ActionJsonParser.getInstance().doActionList(actionMatcher.group("action"), this, "death-time");
+            }
+            isActive = false;
         }
-        isActive = true;
+        for (Card card : horcruxOf)
+            Duel.getCurrentDuel().changeDeck(card , "GY");
     }
 
     public void activate() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
@@ -83,6 +90,7 @@ public class Spell extends Card implements Cloneable {
     protected boolean isLike() {
         return true;
     }
+
     public Boolean getActive() {
         return isActive;
     }
@@ -97,7 +105,7 @@ public class Spell extends Card implements Cloneable {
 
     @Override
     public Spell clone() throws CloneNotSupportedException {
-        Spell spell =  (Spell) super.clone();
+        Spell spell = (Spell) super.clone();
         spell.action = this.action;
         spell.initializeSpellEffects();
         return spell;

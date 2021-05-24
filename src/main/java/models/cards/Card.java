@@ -25,6 +25,7 @@ public class Card implements Cloneable {
     protected String overriddenDescription;
     protected Deck currentDeck;
     protected ArrayList<PlayType> possiblePlays = new ArrayList<>();
+    protected transient ArrayList<Card> horcruxOf = new ArrayList<>();
     protected CardPlacement cardPlacement;
     protected ArrayList<ActionExecutor> effectedCards;
     private int numberOfSummonTimeEffectLeft;
@@ -59,6 +60,9 @@ public class Card implements Cloneable {
         return cardDeserializerForDeckDatabase;
     }
 
+    public void beACardsHorcrux(Card card) {
+        horcruxOf.add(card);
+    }
 
     public int getPrice() {
         return price;

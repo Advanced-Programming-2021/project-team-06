@@ -31,6 +31,7 @@ public class ActionJsonParser {
         actionsRegexes.put("consume-effect", "consumeEffect");
         actionsRegexes.put("select\\{(?<howMany>\\d+)}", "selectCardsByUserChoice");
         actionsRegexes.put("send-to\\{(?<deckName>.+)}", "sendCardsToDeck");
+        actionsRegexes.put("make-horcrux", "makeHorcrux");
 
 
     }

@@ -34,7 +34,7 @@ public class Deck {
     }
 
     public static Deck getSelectionDeckFrom(Deck collectedDeck, int howMany) {
-        Deck selectionDeck = new Deck("selected collected deck", collectedDeck.owner);
+        Deck selectionDeck = new Deck(collectedDeck.name, collectedDeck.owner);
         if (collectedDeck.getMainCards().size() == 0) {
             Output.getInstance().showMessage("candidate cards to choose are less than" + howMany);
             return selectionDeck;

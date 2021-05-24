@@ -56,6 +56,10 @@ public class ActionExecutor {
         }
     }
 
+    public void makeHorcrux() {
+        for (Card card : collectedDeck.mainCards)
+            card.beACardsHorcrux(clientsCard);
+    }
     public void cancel() {
         String[] eventNames = neededInformation.group("eventName").split("\\.");
         for (String eventName : eventNames) {

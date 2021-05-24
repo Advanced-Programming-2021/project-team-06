@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import controller.ActionJsonParser;
 import controller.ConditionChecker;
 import controller.Duel;
+import models.Deck;
 import view.GameInputs;
 import view.Output;
 
@@ -29,8 +30,8 @@ public class Monster extends Card implements Cloneable {
     @SerializedName("Action")
     private String action;
     private String isAttackable;
-    private transient HashMap<Card,Integer> additionalAttackPower = new HashMap<>();
-    private transient HashMap<Card,Integer> additionalDefencePower = new HashMap<>();
+    private transient HashMap<Card, Integer> additionalAttackPower = new HashMap<>();
+    private transient HashMap<Card, Integer> additionalDefencePower = new HashMap<>();
     private transient ArrayList<String> normalSummonTimeActions = new ArrayList<>();
     private transient String specialSummonTimeActions;
     private transient String deathTimeActions;
@@ -51,6 +52,8 @@ public class Monster extends Card implements Cloneable {
 
 
     public void initializeMonstersEffects() {
+        if (horcruxOf == null)
+            horcruxOf = new ArrayList<>();
         if (this.additionalAttackPower == null)
             this.additionalAttackPower = new HashMap<>();
         if (this.additionalDefencePower == null)
@@ -101,22 +104,16 @@ public class Monster extends Card implements Cloneable {
         this.monsterMode = monsterMode;
     }
 
-    public void setAdditionalAttackPower(int additionalAttackPower , Card clientCard) {
-        if (this.additionalAttackPower == null)
-            this.additionalAttackPower = new HashMap<>();
-        this.additionalAttackPower.put(clientCard , additionalAttackPower);
+    public void setAdditionalAttackPower(int additionalAttackPower, Card clientCard) {
+        this.additionalAttackPower.put(clientCard, additionalAttackPower);
     }
 
 
-    public void setAdditionalDefencePower(int additionalDefencePower , Card clientCard) {
-        if (this.additionalDefencePower == null)
-            this.additionalDefencePower = new HashMap<>();
-        this.additionalDefencePower.put(clientCard , additionalDefencePower);
+    public void setAdditionalDefencePower(int additionalDefencePower, Card clientCard) {
+        this.additionalDefencePower.put(clientCard, additionalDefencePower);
     }
 
     public int getTotalAttackPower() {
-        if (this.additionalAttackPower == null)
-            this.additionalAttackPower = new HashMap<>();
         int totalAttackPower = attackPower;
         for (Card client : additionalAttackPower.keySet())
             totalAttackPower += additionalAttackPower.get(client);
@@ -124,11 +121,9 @@ public class Monster extends Card implements Cloneable {
     }
 
     public int getTotalDefencePower() {
-        if (this.additionalDefencePower == null)
-            this.additionalDefencePower = new HashMap<>();
         int totalDefencePower = defencePower;
         for (Card client : additionalDefencePower.keySet())
-        totalDefencePower += additionalDefencePower.get(client);
+            totalDefencePower += additionalDefencePower.get(client);
         return totalDefencePower;
     }
 
@@ -201,11 +196,13 @@ public class Monster extends Card implements Cloneable {
     public void die() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         currentDeck = currentDeck.getOwner().getBoard().getGraveyardZone();
         this.resetAllFields(this);
-        if (deathTimeActions == null)
-            return;
-        Matcher actionMatcher = getActionMatcher(deathTimeActions);
-        if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition"), this))
-            ActionJsonParser.getInstance().doActionList(actionMatcher.group("action"), this, "death-time");
+        if (deathTimeActions != null) {
+            Matcher actionMatcher = getActionMatcher(deathTimeActions);
+            if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition"), this))
+                ActionJsonParser.getInstance().doActionList(actionMatcher.group("action"), this, "death-time");
+        }
+        for (Card card : horcruxOf)
+                Duel.getCurrentDuel().changeDeck(card , "GY");
     }
 
     public void flip() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
@@ -258,8 +255,7 @@ public class Monster extends Card implements Cloneable {
         if (client == this) {
             additionalAttackPower = new HashMap<>();
             additionalDefencePower = new HashMap<>();
-        }
-        else {
+        } else {
             additionalAttackPower.remove(client);
             additionalDefencePower.remove(client);
         }

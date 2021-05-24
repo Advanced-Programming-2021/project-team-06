@@ -280,7 +280,7 @@ public class Duel {
                 onlinePlayer.getBoard().putInHand(card);
                 break;
             case "GY":
-                onlinePlayer.getBoard().putInGraveyard(card);
+                cardDeck.getOwner().getBoard().putInGraveyard(card);
                 if (card instanceof Spell)
                     ((Spell)card).die();
                 if (card instanceof Monster)
@@ -571,10 +571,10 @@ public class Duel {
 
     private void monsterAttackToAttack(Monster targetMonster, Monster selectedCard) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (selectedCard.getTotalAttackPower() > targetMonster.getTotalAttackPower()) {
-            kill(offlinePlayer, targetMonster);
-            int damage = selectedCard.getTotalAttackPower() - targetMonster.getAttackPower();
+            int damage = selectedCard.getTotalAttackPower() - targetMonster.getTotalAttackPower();
             offlinePlayer.setHealth(offlinePlayer.getHealth() - damage);
-            Output.getInstance().showMessage("your opponent's monster is destroyed and your opponent receives" +
+            kill(offlinePlayer, targetMonster);
+            Output.getInstance().showMessage("your opponent's monster is destroyed and your opponent receives " +
                     damage + " battle damage");
         }
         if (selectedCard.getTotalAttackPower() == targetMonster.getTotalAttackPower()) {
