@@ -258,6 +258,9 @@ public class Duel {
             case "H":
                 board.removeFromHand(card);
                 break;
+            case "D":
+                board.removeFromDeck(card);
+                break;
         }
 
         switch (destination) {

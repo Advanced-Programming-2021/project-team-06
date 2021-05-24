@@ -13,7 +13,7 @@ public class Spell extends Card implements Cloneable {
     @SerializedName("Status")
     String status;
     @SerializedName("Property")
-    String property;
+    SpellProperty property;
     @SerializedName("Action")
     String action;
     private transient ArrayList<String> activationTimeActions = new ArrayList<>();
@@ -22,6 +22,10 @@ public class Spell extends Card implements Cloneable {
     public Spell(String name) {
         super(name);
         isActive = false;
+    }
+
+    public SpellProperty getProperty() {
+        return property;
     }
 
     public void setActionable(Boolean actionable) {
@@ -87,7 +91,7 @@ public class Spell extends Card implements Cloneable {
     public String toString() {
         return "Name: " + name + "\n" +
                 "Spell" + "\n" +
-                "Type: " + type + "\n" +
+                "Type: " + property + "\n" +
                 "Description: " + description + "\n";
     }
 

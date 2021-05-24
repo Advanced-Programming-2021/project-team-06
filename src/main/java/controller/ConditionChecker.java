@@ -2,6 +2,8 @@ package controller;
 import models.Deck;
 import models.cards.Card;
 import models.cards.Monster;
+import models.cards.Spell;
+import models.cards.SpellProperty;
 import view.GameInputs;
 import view.Output;
 
@@ -89,6 +91,11 @@ public class ConditionChecker {
                 case "MonsterAttribute":
                     if (clientCard instanceof Monster)
                         return ((Monster)clientCard).getMonsterAttribute().ordinal();
+                    else
+                        return 0;
+                case "SpellProperty":
+                    if (clientCard instanceof Spell)
+                        return ((Spell)clientCard).getProperty().ordinal();
                     else
                         return 0;
                 case "Level":

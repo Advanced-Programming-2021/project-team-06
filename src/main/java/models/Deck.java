@@ -154,7 +154,7 @@ public class Deck {
 
     public void addCard(Card card) {
         mainCards.add(card);
-        if (card != null)
+        if (card != null && !name.equals("selected collected deck"))
             card.setCurrentDeck(this);
     }
 
@@ -279,5 +279,16 @@ public class Deck {
                 number++;
             }
         return output.toString();
+    }
+
+    public void updateCurrentDeck() {
+        if (mainCards != null)
+            for (Card card : mainCards)
+                if (card != null)
+                    card.setCurrentDeck(this);
+        if (sideCards != null)
+            for (Card card : sideCards)
+                if (card != null)
+                    card.setCurrentDeck(this);
     }
 }
