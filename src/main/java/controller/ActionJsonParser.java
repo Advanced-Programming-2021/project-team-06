@@ -45,7 +45,7 @@ public class ActionJsonParser {
 
     public void doActionList(String actionsString, Card clientCard, String event) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         ActionExecutor actionExecutor = new ActionExecutor(event + ((Object) clientCard).toString(), clientCard , actionsString);
-
+        doActionExecutor(actionExecutor , actionsString);
     }
 
     public void doActionExecutor(ActionExecutor actionExecutor , String actionsString) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
@@ -57,6 +57,8 @@ public class ActionJsonParser {
     }
 
     public boolean checkConditionList(String conditionListString, Card clientCard) {
+        if (conditionListString.length() == 0)
+            return true;
         boolean shouldBeInverted = false;
         ConditionChecker conditionChecker = new ConditionChecker();
         if (conditionListString.charAt(0) == '!') {

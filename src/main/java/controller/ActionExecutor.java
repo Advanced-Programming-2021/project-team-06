@@ -63,7 +63,7 @@ public class ActionExecutor {
             while (actionExecutor != null) {
                 for (Card card : actionExecutor.collectedDeck.mainCards) {
                     if (card instanceof Monster)
-                        ((Monster) card).resetAllFields();
+                        ((Monster) card).resetAllFields(clientsCard);
                 }
                 ALL_ACTION_EXECUTORS.remove(actionExecutor);
                 actionExecutor = ActionExecutor.getActionExecutorByName(eventName + ((Object) clientsCard).toString());
@@ -101,20 +101,20 @@ public class ActionExecutor {
         int amount = Integer.parseInt(neededInformation.group("amount"));
         for (Card card : collectedDeck.mainCards)
             if (card instanceof Monster)
-                ((Monster) card).setAdditionalAttackPower(amount);
+                ((Monster) card).setAdditionalAttackPower(amount , clientsCard);
     }
     private void increaseDefencePower() {
         int amount = Integer.parseInt(neededInformation.group("amount"));
         for (Card card : collectedDeck.mainCards)
             if (card instanceof Monster)
-                ((Monster) card).setAdditionalDefencePower(amount);
+                ((Monster) card).setAdditionalDefencePower(amount , clientsCard);
     }
     private void setAttackPower() {
         int amount = Integer.parseInt(neededInformation.group("amount"));
         for (Card card : collectedDeck.mainCards)
             if (card instanceof Monster){
                 Monster theMonster = ((Monster) card);
-                theMonster.setAdditionalAttackPower(amount - theMonster.getAttackPower());
+                theMonster.setAdditionalAttackPower(amount - theMonster.getAttackPower() , clientsCard);
             }
     }
 
