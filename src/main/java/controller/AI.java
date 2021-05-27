@@ -18,7 +18,6 @@ public class AI {
     private Duel onlineDuel;
     private Player aiPlayer;
     private Player singlePlayer;
-
     private AI() {
     }
 
@@ -115,7 +114,7 @@ public class AI {
         Monster monster = null;
         for (Card card : aiPlayer.getBoard().getHand().mainCards) {
             if (card instanceof Monster && ((Monster) card).getAttackPower() > power
-                    && card.getCardPlacement().equals("faceUp") && isThereWeakerCard((Monster) card) != null) {
+                    && ((Monster) card).getMonsterMode().equals("attack") && isThereWeakerCard((Monster) card) != null) {
                 power = ((Monster) card).getAttackPower();
                 monster = (Monster) card;
             }
