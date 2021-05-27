@@ -2,7 +2,6 @@ package view;
 
 import controller.ErrorChecker;
 import controller.menus.*;
-import models.Database;
 import models.Player;
 import models.Scoreboard;
 
@@ -81,8 +80,8 @@ public class ConsoleBasedMenus {
     private final String[] duelMenusRegexes = {
             "^duel new --second-player (?<username>\\w+) (--rounds|-r) (?<round>\\d+)$",
             "^duel new (--rounds|-r) (?<round>\\d+) --second-player (?<username>\\w+)$",
-            "^duel new --single-player (--rounds|-r) (?<round>\\d+)",
-            "^duel new (--rounds|-r) (?<round>\\d+) --single-player",
+            "^duel new --single-player (--rounds|-r) (?<round>\\d+)$",
+            "^duel new (--rounds|-r) (?<round>\\d+) --single-player$",
             "^menu show-current$",
             "^menu exit$"
     };
@@ -425,6 +424,7 @@ public class ConsoleBasedMenus {
             case 2:
             case 3:
                 round = commandMatcher.group("round");
+                new Player("AIPlayer", "AIPlayer", "AIPlayer");
                 DuelMenuController.getInstance().startGame(playerLoggedIn.getUsername(), "AIPlayer", round, true);
             case 4:
                 Output.getInstance().showMessage("duel Menu");

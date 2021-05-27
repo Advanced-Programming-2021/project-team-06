@@ -272,6 +272,13 @@ public class Board {
         return true;
     }
 
+    public boolean isMonsterZoneEmpty() {
+        for (Card card : monsterZone.getMainCards()) {
+            if (card != null) return false;
+        }
+        return true;
+    }
+
     public void drawCard() {
         if (deckZone.mainCards.size() > 0) {
             deckZone.moveCardToForGame(hand, deckZone.mainCards.get(deckZone.mainCards.size() - 1), true, true);
@@ -326,10 +333,7 @@ public class Board {
         for (Card monster : monsterZone.getMainCards()) {
             sum += ((Monster) monster).getLEVEL();
         }
-        if (sum < monsterMinLevel) {
-            return false;
-        }
-        return true;
+        return sum >= monsterMinLevel;
     }
 
 
