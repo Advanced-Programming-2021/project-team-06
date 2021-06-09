@@ -77,7 +77,7 @@ public class ActionExecutor {
     }
 
     private void collectCards() {
-        ArrayList<Deck> deckList = ActionJsonParser.getInstance().getDecksByTheirName(neededInformation.group("deckList").split("\\."));
+        ArrayList<Deck> deckList = ActionJsonParser.getInstance().getDecksByTheirName(neededInformation.group("deckList").split("\\.") , clientsCard.getCurrentDeck().getOwner());
         getCardsFromTheirDeck(deckList, neededInformation.group("class"));
         String attributeList = neededInformation.group("attributeList");
         collectedDeck.mainCards.removeIf(card -> card == null || !card.hasAttributes(attributeList));

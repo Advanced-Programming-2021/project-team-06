@@ -61,6 +61,10 @@ public class Duel {
         return onlinePlayer;
     }
 
+    public Player getOpponent(Player player) {
+        return (player == onlinePlayer) ?offlinePlayer :onlinePlayer;
+    }
+
     public Phases getPhase() {
         return phase;
     }
@@ -227,19 +231,20 @@ public class Duel {
 
     public void changeDeck(Card card, String destination) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Deck cardDeck = card.getCurrentDeck();
-        Board board = cardDeck.getOwner().getBoard();
+        Player player = cardDeck.getOwner();
+        Board board = player.getBoard();
         switch (destination) {
             case "MZ":
-                if (ErrorChecker.isMonsterCardZoneFull(onlinePlayer.getBoard().getMonsterZoneCards()))
+                if (ErrorChecker.isMonsterCardZoneFull(player.getBoard().getMonsterZoneCards()))
                     return;
             case "OMZ":
-                if (ErrorChecker.isMonsterCardZoneFull(offlinePlayer.getBoard().getMonsterZoneCards()))
+                if (ErrorChecker.isMonsterCardZoneFull(getOpponent(player).getBoard().getMonsterZoneCards()))
                     return;
             case "SZ":
-                if (!ErrorChecker.isSpellZoneFree(onlinePlayer.getBoard()))
+                if (!ErrorChecker.isSpellZoneFree(player.getBoard()))
                     return;
             case "OSZ":
-                if (!ErrorChecker.isSpellZoneFree(offlinePlayer.getBoard()))
+                if (!ErrorChecker.isSpellZoneFree(getOpponent(player).getBoard()))
                     return;
         }
         switch (cardDeck.getName()) {
@@ -265,36 +270,36 @@ public class Duel {
 
         switch (destination) {
             case "MZ":
-                onlinePlayer.getBoard().putCardInMonsterZone(card);
+                player.getBoard().putCardInMonsterZone(card);
                 break;
             case "OMZ":
-                offlinePlayer.getBoard().putCardInMonsterZone(card);
+                getOpponent(player).getBoard().putCardInMonsterZone(card);
                 break;
             case "SZ":
-                onlinePlayer.getBoard().putCardInSpellZone(card);
+                player.getBoard().putCardInSpellZone(card);
                 break;
             case "OSZ":
-                offlinePlayer.getBoard().putCardInSpellZone(card);
+                getOpponent(player).getBoard().putCardInSpellZone(card);
                 break;
             case "H":
-                onlinePlayer.getBoard().putInHand(card);
+                player.getBoard().putInHand(card);
                 break;
             case "GY":
-                cardDeck.getOwner().getBoard().putInGraveyard(card);
+                player.getBoard().putInGraveyard(card);
                 if (card instanceof Spell)
                     ((Spell)card).die();
                 if (card instanceof Monster)
                     ((Monster)card).die();
                 break;
             case "OGY":
-                offlinePlayer.getBoard().putInGraveyard(card);
+                getOpponent(player).getBoard().putInGraveyard(card);
                 if (card instanceof Spell)
                     ((Spell)card).die();
                 if (card instanceof Monster)
                     ((Monster)card).die();
                 break;
             case "F":
-                onlinePlayer.getBoard().putInFieldZone(card);
+                player.getBoard().putInFieldZone(card);
                 break;
         }
     }

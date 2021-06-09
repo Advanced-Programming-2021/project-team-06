@@ -1,6 +1,7 @@
 package controller;
 
 import models.Deck;
+import models.Player;
 import models.cards.*;
 
 
@@ -111,39 +112,39 @@ public class ActionJsonParser {
     }
 
 
-    public ArrayList<Deck> getDecksByTheirName(String[] deckLists) {
+    public ArrayList<Deck> getDecksByTheirName(String[] deckLists , Player client) {
         ArrayList<Deck> decks = new ArrayList<>();
         for (String deckName : deckLists) {
             switch (deckName) {
                 case "MZ":
-                    decks.add(currentDuel.getOnlinePlayer().getBoard().getMonsterZone());
+                    decks.add(client.getBoard().getMonsterZone());
                     break;
                 case "OMZ":
-                    decks.add(currentDuel.getOfflinePlayer().getBoard().getMonsterZone());
+                    decks.add(currentDuel.getOpponent(client).getBoard().getMonsterZone());
                     break;
                 case "SZ":
-                    decks.add(currentDuel.getOnlinePlayer().getBoard().getSpellZone());
+                    decks.add(client.getBoard().getSpellZone());
                     break;
                 case "OSZ":
-                    decks.add(currentDuel.getOfflinePlayer().getBoard().getSpellZone());
+                    decks.add(currentDuel.getOpponent(client).getBoard().getSpellZone());
                     break;
                 case "GY":
-                    decks.add(currentDuel.getOnlinePlayer().getBoard().getGraveyardZone());
+                    decks.add(client.getBoard().getGraveyardZone());
                     break;
                 case "OGY":
-                    decks.add(currentDuel.getOfflinePlayer().getBoard().getGraveyardZone());
+                    decks.add(currentDuel.getOpponent(client).getBoard().getGraveyardZone());
                     break;
                 case "H":
-                    decks.add(currentDuel.getOnlinePlayer().getBoard().getHand());
+                    decks.add(client.getBoard().getHand());
                     break;
                 case "OH":
-                    decks.add(currentDuel.getOfflinePlayer().getBoard().getHand());
+                    decks.add(currentDuel.getOpponent(client).getBoard().getHand());
                     break;
                 case "D":
-                    decks.add(currentDuel.getOnlinePlayer().getBoard().getDeckZone());
+                    decks.add(client.getBoard().getDeckZone());
                     break;
                 case "OD":
-                    decks.add(currentDuel.getOfflinePlayer().getBoard().getDeckZone());
+                    decks.add(currentDuel.getOpponent(client).getBoard().getDeckZone());
                     break;
                 case "F":
                     Deck singleCardDeck = new Deck("F", null);
