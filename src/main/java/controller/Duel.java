@@ -62,7 +62,7 @@ public class Duel {
     }
 
     public Player getOpponent(Player player) {
-        return (player == onlinePlayer) ?offlinePlayer :onlinePlayer;
+        return (player == onlinePlayer) ? offlinePlayer : onlinePlayer;
     }
 
     public Phases getPhase() {
@@ -287,16 +287,16 @@ public class Duel {
             case "GY":
                 player.getBoard().putInGraveyard(card);
                 if (card instanceof Spell)
-                    ((Spell)card).die();
+                    ((Spell) card).die();
                 if (card instanceof Monster)
-                    ((Monster)card).die();
+                    ((Monster) card).die();
                 break;
             case "OGY":
                 getOpponent(player).getBoard().putInGraveyard(card);
                 if (card instanceof Spell)
-                    ((Spell)card).die();
+                    ((Spell) card).die();
                 if (card instanceof Monster)
-                    ((Monster)card).die();
+                    ((Monster) card).die();
                 break;
             case "F":
                 player.getBoard().putInFieldZone(card);
@@ -392,8 +392,11 @@ public class Duel {
             onlinePlayer.getBoard().removeFromHand(selectedCard);
             onlinePlayer.getBoard().getSpellZone().mainCards.set(index, selectedCard);
             onlinePlayer.getBoard().setSelectedCard(null);
-            ((Spell) selectedCard).activate();
-            Output.getInstance().showMessage("spell activated");
+            if (selectedCard instanceof Spell)
+                ((Spell) selectedCard).activate();
+            if (selectedCard instanceof Trap)
+                ((Trap) selectedCard).activate();
+            Output.getInstance().showMessage(selectedCard.getTypeCard() + " activated");
         }
     }
 

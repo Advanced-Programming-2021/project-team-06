@@ -33,6 +33,7 @@ public class ActionJsonParser {
         actionsRegexes.put("select\\{(?<howMany>\\d+)}", "selectCardsByUserChoice");
         actionsRegexes.put("send-to\\{(?<deckName>.+)}", "sendCardsToDeck");
         actionsRegexes.put("make-horcrux", "makeHorcrux");
+        actionsRegexes.put("be-horcrux", "beHorcrux");
 
 
     }

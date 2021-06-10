@@ -118,7 +118,7 @@ public class FileWorker {
     public Trap readTrapJSON(String fileAddress) {
 
         try (FileReader reader = new FileReader(fileAddress)) {
-            GsonBuilder builder = new GsonBuilder();
+            GsonBuilder builder = new GsonBuilder().registerTypeAdapter(SpellProperty.class , SpellProperty.get());
             Gson gson = builder.create();
 
             BufferedReader bufferedReader = new BufferedReader(reader);

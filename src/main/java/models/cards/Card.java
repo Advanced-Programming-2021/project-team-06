@@ -163,6 +163,12 @@ public class Card implements Cloneable {
         card.setPrice(this.price);
         return card;
     }
+
+    public ArrayList<Card> getHrocruxes() {
+        if (horcruxOf == null)
+            horcruxOf = new ArrayList<>();
+        return horcruxOf;
+    }
 }
 
 class CardSerializerForDeckDatabase implements JsonSerializer<Card> {

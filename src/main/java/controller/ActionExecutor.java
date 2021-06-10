@@ -60,6 +60,10 @@ public class ActionExecutor {
         for (Card card : collectedDeck.mainCards)
             card.beACardsHorcrux(clientsCard);
     }
+    public void beHorcrux() {
+        for (Card card : collectedDeck.mainCards)
+            clientsCard.getHrocruxes().add(card);
+    }
     public void cancel() {
         String[] eventNames = neededInformation.group("eventName").split("\\.");
         for (String eventName : eventNames) {
@@ -142,7 +146,7 @@ public class ActionExecutor {
                 cards.removeIf(card -> !(card instanceof Monster));
                 break;
             case "Spell":
-                cards.removeIf(card -> !(card instanceof Spell));
+                cards.removeIf(card -> card instanceof Trap);
                 break;
             case "Trap":
                 cards.removeIf(card -> !(card instanceof Trap));

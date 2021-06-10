@@ -195,6 +195,8 @@ public class Monster extends Card implements Cloneable {
     }
 
     public void die() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        if (currentDeck == currentDeck.getOwner().getBoard().getGraveyardZone())
+            return;
         currentDeck = currentDeck.getOwner().getBoard().getGraveyardZone();
         this.resetAllFields(this);
         if (deathTimeActions != null) {
@@ -203,7 +205,7 @@ public class Monster extends Card implements Cloneable {
                 ActionJsonParser.getInstance().doActionList(actionMatcher.group("action"), this, "death-time");
         }
         for (Card card : horcruxOf)
-                Duel.getCurrentDuel().changeDeck(card , "GY");
+            Duel.getCurrentDuel().changeDeck(card, "GY");
     }
 
     public void flip() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {

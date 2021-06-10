@@ -25,7 +25,8 @@ public class Database {
     private final String spellDateBase = "./src/main/resources/Database/card-information/spells/";
     private final String trapDateBase = "./src/main/resources/Database/card-information/traps/";
     private final String decksDateBase = "./src/main/resources/Database/Decks/";
-    private final String spellAndTrapCsvFilePath = "./src/main/resources/Database/CSVs/spells-and-traps.csv";
+    private final String spellCsvFilePath = "./src/main/resources/Database/CSVs/spells.csv";
+    private final String trapCsvFilePath = "./src/main/resources/Database/CSVs/traps.csv";
     private final String monsterCsvFilePath = "./src/main/resources/Database/CSVs/monsters.csv";
 
 
@@ -134,6 +135,24 @@ public class Database {
         }
 
     }
+    public void loadTraps() {
+        File file = new File(trapDateBase);
+        if (!file.exists()){
+            file.mkdir();
+        }
+        File[] files = file.listFiles();
+        assert files != null;
+        if (files.length < 2) {
+            new CSVReader(trapCsvFilePath, trapDateBase);
+        }
+        files = file.listFiles();
+        for (File filePointer : files) {
+            Trap trap = FileWorker.getInstance().readTrapJSON(filePointer.toString());
+            allTraps.add(trap);
+            allCards.add(trap);
+        }
+
+    }
 
     public void loadSpells() {
         File file = new File(spellDateBase);
@@ -143,7 +162,7 @@ public class Database {
         File[] files = file.listFiles();
         assert files != null;
         if (files.length < 2) {
-            new CSVReader(spellAndTrapCsvFilePath , spellDateBase);
+            new CSVReader(spellCsvFilePath, spellDateBase);
         }
         files = file.listFiles();
         for (File filePointer : files) {
@@ -166,17 +185,6 @@ public class Database {
             Deck deck = FileWorker.getInstance().readDeckJSON(filePointer.toString());
             allDecks.add(deck);
             deck.updateOwnerDecks();
-        }
-
-    }
-
-    public void loadTraps() {
-        File file = new File(trapDateBase);
-        File[] files = file.listFiles();
-        for (File filePointer : files) {
-            Trap trap = FileWorker.getInstance().readTrapJSON(filePointer.toString());
-            allTraps.add(trap);
-            allCards.add(trap);
         }
 
     }

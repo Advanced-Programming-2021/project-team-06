@@ -136,15 +136,15 @@ public class ErrorChecker {
         switch (state) {
             case "h":
                 if (address < board.getHandZoneCards().size())
-                card = board.getHandZoneCards().get(address);
+                    card = board.getHandZoneCards().get(address);
                 break;
             case "m":
                 if (address <= 5)
-                card = board.getMonsterZoneCards().get(address);
+                    card = board.getMonsterZoneCards().get(address);
                 break;
             case "s":
                 if (address <= 5)
-                card = board.getSpellZoneCards().get(address);
+                    card = board.getSpellZoneCards().get(address);
                 break;
             case "f":
                 card = board.getFieldZone();
@@ -251,15 +251,28 @@ public class ErrorChecker {
 
     public static boolean isAbleToBeActive(Card card, Phases phase, Board board) {
         if (!(card instanceof Spell || card instanceof Trap)) {
-            Output.getInstance().showMessage("activate effect is only for spell cards.");
+            Output.getInstance().showMessage("this command is only for spell cards.");
             return false;
+        } else if (card instanceof Trap) {
+            if (card.getCardPlacement() == null) {
+                Output.getInstance().showMessage("you should first set traps in order to activate them.");
+                return false;
+            }
+            if (((Trap) card).getProperty() == SpellProperty.counter) {
+                Output.getInstance().showMessage("this trap should be triggered. you cant activate it manually ");
+                return false;
+            }
         }
         if (!(phase.equals(Phases.MAIN1) || phase.equals(Phases.MAIN2))) {
             Output.getInstance().showMessage("you can't activate an effect on this turn");
             return false;
         }
-        assert card instanceof Spell;
-        if (((Spell) card).getActive()) {
+        if (card instanceof Spell) {
+            if (((Spell) card).getActive()) {
+                Output.getInstance().showMessage("you have already activated this card");
+                return false;
+            }
+        } else   if (((Trap) card).getActive()) {
             Output.getInstance().showMessage("you have already activated this card");
             return false;
         }
@@ -267,7 +280,11 @@ public class ErrorChecker {
             Output.getInstance().showMessage("spell card zone is full");
             return false;
         }
-        if (!(((Spell) card).getActionable())) {
+        if (card instanceof Spell) {
+            if (!(((Spell) card).getActionable())) {
+                Output.getInstance().showMessage("preparations of this spell are not done yet");
+            }
+        }else if (!(((Trap) card).getActionable())) {
             Output.getInstance().showMessage("preparations of this spell are not done yet");
         }
         return true;

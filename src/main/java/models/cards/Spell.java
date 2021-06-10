@@ -36,11 +36,12 @@ public class Spell extends Card implements Cloneable {
 
     public Boolean getActionable() {
         if (isActionable == null)
-            return false;
+            return true;
         return isActionable;
     }
 
     public void initializeSpellEffects() {
+        isActive = false;
         if (horcruxOf == null)
             horcruxOf = new ArrayList<>();
         if (action == null)
@@ -103,6 +104,7 @@ public class Spell extends Card implements Cloneable {
         return "Name: " + name + "\n" +
                 "Spell" + "\n" +
                 "Type: " + property + "\n" +
+                "Status" + status + "\n" +
                 "Description: " + description + "\n";
     }
 
