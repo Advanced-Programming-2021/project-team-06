@@ -30,6 +30,8 @@ public class Monster extends Card implements Cloneable {
     int LEVEL;
     @SerializedName("Action")
     private String action;
+    @SerializedName("Trigger")
+    private String trigger;
     private String isAttackable;
     private transient HashMap<Card, Integer> additionalAttackPower = new HashMap<>();
     private transient HashMap<Card, Integer> additionalDefencePower = new HashMap<>();
@@ -190,6 +192,7 @@ public class Monster extends Card implements Cloneable {
         monster.setAttackPower(this.attackPower);
         monster.setDefencePower(this.defencePower);
         monster.setAction(this.action);
+        monster.trigger = this.trigger;
         monster.initializeMonstersEffects();
         return monster;
     }
@@ -227,6 +230,7 @@ public class Monster extends Card implements Cloneable {
             if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition"), this))
                 ActionJsonParser.getInstance().doActionList(actionMatcher.group("action"), this, "summon-time");
         }
+        EventHandler.assignWaitingEffect(trigger , this);
     }
 
     public void getRaid() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {

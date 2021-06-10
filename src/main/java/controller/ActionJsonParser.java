@@ -34,6 +34,7 @@ public class ActionJsonParser {
         actionsRegexes.put("send-to\\{(?<deckName>.+)}", "sendCardsToDeck");
         actionsRegexes.put("make-horcrux", "makeHorcrux");
         actionsRegexes.put("be-horcrux", "beHorcrux");
+        actionsRegexes.put("skip-phase", "skipPhase");
 
 
     }

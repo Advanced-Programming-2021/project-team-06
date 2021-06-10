@@ -18,6 +18,8 @@ public class Trap extends Card implements Cloneable {
     SpellProperty property;
     @SerializedName("Action")
     String action;
+    @SerializedName("Trigger")
+    String trigger;
     private transient ArrayList<String> activationTimeActions = new ArrayList<>();
     private transient ArrayList<String> deathTimeActions = new ArrayList<>();
 
@@ -82,6 +84,8 @@ public class Trap extends Card implements Cloneable {
     public void activate() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         EventHandler.triggerTrapActivation(this);
         EventHandler.triggerOpponentTrapActivation(this);
+        EventHandler.triggerSpellTrapActivation(this);
+        EventHandler.triggerOpponentSpellTrapActivation(this);
         currentDeck = currentDeck.getOwner().getBoard().getSpellZone();
         if (activationTimeActions == null)
             return;
@@ -115,6 +119,7 @@ public class Trap extends Card implements Cloneable {
     public Trap clone() throws CloneNotSupportedException {
         Trap trap = (Trap) super.clone();
         trap.action = this.action;
+        trap.trigger = this.trigger;
         trap.initializeTrapEffects();
         return trap;
     }

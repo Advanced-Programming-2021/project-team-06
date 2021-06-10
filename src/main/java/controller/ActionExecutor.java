@@ -87,6 +87,10 @@ public class ActionExecutor {
         collectedDeck.mainCards.removeIf(card -> card == null || !card.hasAttributes(attributeList));
     }
 
+    private void skipPhase() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        Duel.setPhaseSkip(true);
+    }
+
     private void kill() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         for (Card card : collectedDeck.mainCards)
             if (card instanceof Monster)

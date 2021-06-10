@@ -4,6 +4,7 @@ package models.cards;
 import com.google.gson.*;
 import com.google.gson.annotations.SerializedName;
 import controller.ActionExecutor;
+import controller.EventHandler;
 import models.Database;
 import models.Deck;
 
@@ -76,9 +77,13 @@ public class Card implements Cloneable {
         return this.name;
     }
 
-    public void setName(String name) { this.name = name; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getTypeCard() { return typeCard; }
+    public String getTypeCard() {
+        return typeCard;
+    }
 
     public CardType getType() {
         return type;
@@ -109,6 +114,10 @@ public class Card implements Cloneable {
     }
 
     public void setCardPlacement(CardPlacement cardPlacement) {
+        if (this instanceof Trap)
+            if (cardPlacement == CardPlacement.faceDown)
+                EventHandler.assignWaitingEffect(((Trap) this).trigger, this);
+
         this.cardPlacement = cardPlacement;
     }
 
@@ -136,11 +145,11 @@ public class Card implements Cloneable {
 
     public Boolean hasAttributes(String attributeList) {
         if (this instanceof Monster)
-        return ((Monster)this).isLike(attributeList);
+            return ((Monster) this).isLike(attributeList);
         else if (this instanceof Spell)
-            return ((Spell)this).isLike();
+            return ((Spell) this).isLike();
         else
-            return ((Trap)this).isLike();
+            return ((Trap) this).isLike();
     }
 
     public Matcher getActionMatcher(String action) {

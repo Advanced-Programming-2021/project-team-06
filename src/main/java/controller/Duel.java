@@ -8,6 +8,7 @@ import view.ConsoleBasedMenus;
 import view.GameInputs;
 import view.Output;
 
+import javax.print.DocFlavor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
@@ -23,6 +24,7 @@ public class Duel {
     private Player winner;
     private Monster attackingMonster, targetMonster;
     private boolean isFirstTurn = true;
+    private static boolean isPhaseSkipped = false;
 
     public Duel(Player firstPlayer, Player secondPlayer) throws CloneNotSupportedException {
         this.firstPlayer = firstPlayer;
@@ -39,6 +41,10 @@ public class Duel {
 
     public static Duel getCurrentDuel() {
         return currentDuel;
+    }
+
+    public static void setPhaseSkip(boolean shouldBeSkipped) {
+        isPhaseSkipped = shouldBeSkipped;
     }
 
     public Player getWinner() {
@@ -107,6 +113,12 @@ public class Duel {
         }
         if (phase.equals(Phases.END)) {
             phase = Phases.DRAW;
+            EventHandler.triggerDrawPhase(onlinePlayer);
+            if (isPhaseSkipped) {
+                changePhase();
+                isPhaseSkipped = false;
+                return;
+            }
             actionsInDrawPhase();
             Output.getInstance().showMessage("phase: " + phase);
         }
@@ -393,8 +405,8 @@ public class Duel {
                 onlinePlayer.getBoard().getSpellZone().mainCards.set(index, selectedCard);
             }
 
-        selectedCard.setCardPlacement(CardPlacement.faceUp);
-        onlinePlayer.getBoard().setSelectedCard(null);
+            selectedCard.setCardPlacement(CardPlacement.faceUp);
+            onlinePlayer.getBoard().setSelectedCard(null);
             if (selectedCard instanceof Spell)
                 ((Spell) selectedCard).activate();
             if (selectedCard instanceof Trap)
