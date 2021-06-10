@@ -387,11 +387,14 @@ public class Duel {
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
         if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
         if (ErrorChecker.isAbleToBeActive(selectedCard, phase, onlinePlayer.getBoard())) {
-            int index = onlinePlayer.getBoard().getFirstFreeSpellZoneIndex();
-            selectedCard.setCardPlacement(CardPlacement.faceUp);
-            onlinePlayer.getBoard().removeFromHand(selectedCard);
-            onlinePlayer.getBoard().getSpellZone().mainCards.set(index, selectedCard);
-            onlinePlayer.getBoard().setSelectedCard(null);
+            if (selectedCard.getCardPlacement() == null) {
+                int index = onlinePlayer.getBoard().getFirstFreeSpellZoneIndex();
+                onlinePlayer.getBoard().removeFromHand(selectedCard);
+                onlinePlayer.getBoard().getSpellZone().mainCards.set(index, selectedCard);
+            }
+
+        selectedCard.setCardPlacement(CardPlacement.faceUp);
+        onlinePlayer.getBoard().setSelectedCard(null);
             if (selectedCard instanceof Spell)
                 ((Spell) selectedCard).activate();
             if (selectedCard instanceof Trap)
