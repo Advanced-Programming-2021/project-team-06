@@ -553,6 +553,8 @@ public class Duel {
     }
 
     private void runAttack(int address, Monster selectedCard) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        EventHandler.triggerMonsterAttack(selectedCard);
+        EventHandler.triggerOpponentMonsterAttack(selectedCard);
         attackingMonster = selectedCard;
         targetMonster = (Monster) offlinePlayer.getBoard().getMonsterZoneCards().get(address);
         MonsterMode monsterMode = targetMonster.getMonsterMode();

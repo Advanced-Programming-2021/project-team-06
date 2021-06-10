@@ -3,6 +3,7 @@ package models.cards;
 import com.google.gson.annotations.SerializedName;
 import controller.ActionJsonParser;
 import controller.Duel;
+import controller.EventHandler;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -76,6 +77,8 @@ public class Spell extends Card implements Cloneable {
     }
 
     public void activate() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        EventHandler.triggerSpellActivation(this);
+        EventHandler.triggerOpponentSpellActivation(this);
         currentDeck = currentDeck.getOwner().getBoard().getSpellZone();
         if (activationTimeActions == null)
             return;

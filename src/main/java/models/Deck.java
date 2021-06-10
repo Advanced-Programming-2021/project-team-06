@@ -247,6 +247,8 @@ public class Deck {
                 main.add(((Trap) card).clone());
             if (card != null)
                 card.setCurrentDeck(this);
+            if (card != null)
+                card.setCurrentDeck(deck);
         }
         for (Card card : sideCards) {
             if (card instanceof Monster)

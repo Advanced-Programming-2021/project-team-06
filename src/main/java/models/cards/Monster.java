@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import controller.ActionJsonParser;
 import controller.ConditionChecker;
 import controller.Duel;
+import controller.EventHandler;
 import models.Deck;
 import view.GameInputs;
 import view.Output;
@@ -214,6 +215,8 @@ public class Monster extends Card implements Cloneable {
     }
 
     public void summon() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        EventHandler.triggerOpponentMonsterSummon(this);
+        EventHandler.triggerMonsterSummon(this);
         this.currentDeck = currentDeck.getOwner().getBoard().getMonsterZone();
         if (normalSummonTimeActions == null)
             return;
