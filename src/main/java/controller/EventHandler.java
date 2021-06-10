@@ -25,12 +25,16 @@ public class EventHandler {
     private static Card trigger;
     private static Player player;
 
+    public static Card getTrigger() {
+        return trigger;
+    }
+
     public static void assignWaitingEffect(String waitingEffectString, Card client) {
         if (waitingEffectString == null)
             return;
         String[] waiters = waitingEffectString.split("\\|");
         for (String waiter : waiters) {
-            Matcher matcher = Pattern.compile("wait-for\\{(?<event>.+?)}then-do\\{(?<action>.+?)}").matcher(waiter);
+            Matcher matcher = Pattern.compile("wait-for\\{\\{(?<event>.+?)}}then-do\\{\\{(?<action>.+?)}}").matcher(waiter);
             matcher.find();
             waitFor(matcher.group("event"), matcher.group("action"), client);
         }
@@ -54,7 +58,7 @@ public class EventHandler {
 
     public static void triggerMonsterAttack(Card trigger) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         EventHandler.trigger = trigger;
-        triggerEvents(monsterSummonEvent, false, "spell-activation-trigger");
+        triggerEvents(monsterAttackEvent, false, "spell-activation-trigger");
     }
 
     public static void triggerOpponentTrapActivation(Card trigger) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
@@ -151,7 +155,7 @@ public class EventHandler {
         for (Card card : event.keySet()) {
             if (justFromOpponent) {
                 Player waitingCardOwner = card.getCurrentDeck().getOwner();
-                if (waitingCardOwner != player)
+                if (waitingCardOwner == player)
                     continue;
             }
             String action = event.get(card);
@@ -185,7 +189,7 @@ public class EventHandler {
                 waitForSpellActivation(card, action);
                 break;
             case "STA":
-                waitForSpellActivation(card, action);
+                waitForSpellTrapActivation(card, action);
                 break;
             case "OTA":
                 waitForOpponentTrapActivation(card, action);

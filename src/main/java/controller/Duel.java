@@ -8,7 +8,6 @@ import view.ConsoleBasedMenus;
 import view.GameInputs;
 import view.Output;
 
-import javax.print.DocFlavor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
@@ -24,7 +23,7 @@ public class Duel {
     private Player winner;
     private Monster attackingMonster, targetMonster;
     private boolean isFirstTurn = true;
-    private static boolean isPhaseSkipped = false;
+    private static boolean isPhaseSkipped = false, isAttackNegated = false, isActivationNegated = false, isSummonNegated = false;
 
     public Duel(Player firstPlayer, Player secondPlayer) throws CloneNotSupportedException {
         this.firstPlayer = firstPlayer;
@@ -83,30 +82,55 @@ public class Duel {
         showBoard();
         if (phase.equals(Phases.DRAW)) {
             phase = Phases.STANDBY;
+            if (isPhaseSkipped) {
+                changePhase();
+                isPhaseSkipped = false;
+                return;
+            }
             actionInStandbyPhase();
             Output.getInstance().showMessage("phase: " + phase);
             return;
         }
         if (phase.equals(Phases.STANDBY)) {
             phase = Phases.MAIN1;
+            if (isPhaseSkipped) {
+                changePhase();
+                isPhaseSkipped = false;
+                return;
+            }
             actionsInMainPhase();
             Output.getInstance().showMessage("phase: " + phase);
             return;
         }
         if (phase.equals(Phases.MAIN1)) {
             phase = Phases.BATTLE;
+            if (isPhaseSkipped) {
+                changePhase();
+                isPhaseSkipped = false;
+                return;
+            }
             actionsInBattlePhase();
             Output.getInstance().showMessage("phase: " + phase);
             return;
         }
         if (phase.equals(Phases.BATTLE)) {
             phase = Phases.MAIN2;
+            if (isPhaseSkipped) {
+                changePhase();
+                isPhaseSkipped = false;
+                return;
+            }
             actionsInMainPhase();
             Output.getInstance().showMessage("phase: " + phase);
             return;
         }
         if (phase.equals(Phases.MAIN2)) {
             phase = Phases.END;
+            if (isPhaseSkipped) {
+                changePhase();
+                isPhaseSkipped = false;
+                return;
+            }
             Output.getInstance().showMessage("phase: " + phase);
             actionsInEndPhase();
             return;
@@ -272,6 +296,7 @@ public class Duel {
             case "FZ":
                 board.removeFromFieldZone(card);
                 break;
+            case "HZ":
             case "H":
                 board.removeFromHand(card);
                 break;
@@ -297,21 +322,21 @@ public class Duel {
                 player.getBoard().putInHand(card);
                 break;
             case "GY":
-                player.getBoard().putInGraveyard(card);
                 if (card instanceof Spell)
                     ((Spell) card).die();
                 if (card instanceof Monster)
                     ((Monster) card).die();
+                player.getBoard().putInGraveyard(card);
                 break;
             case "OGY":
-                getOpponent(player).getBoard().putInGraveyard(card);
                 if (card instanceof Spell)
                     ((Spell) card).die();
                 if (card instanceof Monster)
                     ((Monster) card).die();
+            getOpponent(player).getBoard().putInGraveyard(card);
                 break;
             case "F":
-                player.getBoard().putInFieldZone(card);
+                player.getBoard().putCardInFieldZone(card);
                 break;
         }
     }
@@ -319,6 +344,13 @@ public class Duel {
     public void summon() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
         ArrayList<Card> monsterZone = onlinePlayer.getBoard().getMonsterZoneCards();
+        EventHandler.triggerOpponentMonsterSummon(selectedCard);
+        EventHandler.triggerMonsterSummon(selectedCard);
+        if (isSummonNegated) {
+            Output.getInstance().showMessage("summon is negated");
+            isSummonNegated = false;
+            return;
+        }
         if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
         if (!ErrorChecker.isCardInPlayerHand(selectedCard, onlinePlayer) ||
                 !ErrorChecker.isMonsterCard(selectedCard)) {
@@ -399,19 +431,36 @@ public class Duel {
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
         if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
         if (ErrorChecker.isAbleToBeActive(selectedCard, phase, onlinePlayer.getBoard())) {
-            if (selectedCard.getCardPlacement() == null) {
-                int index = onlinePlayer.getBoard().getFirstFreeSpellZoneIndex();
-                onlinePlayer.getBoard().removeFromHand(selectedCard);
-                onlinePlayer.getBoard().getSpellZone().mainCards.set(index, selectedCard);
+            if (selectedCard instanceof Spell) {
+                EventHandler.triggerSpellActivation(selectedCard);
+                EventHandler.triggerOpponentSpellActivation(selectedCard);
+                EventHandler.triggerSpellTrapActivation(selectedCard);
+                EventHandler.triggerOpponentSpellTrapActivation(selectedCard);
+            }
+            if (selectedCard instanceof Trap) {
+                EventHandler.triggerTrapActivation(selectedCard);
+                EventHandler.triggerOpponentTrapActivation(selectedCard);
+                EventHandler.triggerSpellTrapActivation(selectedCard);
+                EventHandler.triggerOpponentSpellTrapActivation(selectedCard);
+            }
+            if (!isActivationNegated) {
+                if (selectedCard.getCardPlacement() == null) {
+                    int index = onlinePlayer.getBoard().getFirstFreeSpellZoneIndex();
+                    onlinePlayer.getBoard().removeFromHand(selectedCard);
+                    onlinePlayer.getBoard().getSpellZone().mainCards.set(index, selectedCard);
+                }
+
+                if (selectedCard instanceof Spell)
+                    ((Spell) selectedCard).activate();
+                if (selectedCard instanceof Trap)
+                    ((Trap) selectedCard).activate();
+                Output.getInstance().showMessage(selectedCard.getTypeCard() + " activated");
+            } else {
+                Output.getInstance().showMessage(selectedCard.getName() + " activation negated");
             }
 
             selectedCard.setCardPlacement(CardPlacement.faceUp);
             onlinePlayer.getBoard().setSelectedCard(null);
-            if (selectedCard instanceof Spell)
-                ((Spell) selectedCard).activate();
-            if (selectedCard instanceof Trap)
-                ((Trap) selectedCard).activate();
-            Output.getInstance().showMessage(selectedCard.getTypeCard() + " activated");
         }
     }
 
@@ -430,8 +479,7 @@ public class Duel {
             return;
         }
         selectedCard.setCardPlacement(CardPlacement.faceDown);
-        onlinePlayer.getBoard().putInSpellZone(selectedCard);
-        onlinePlayer.getBoard().setSummonedOrSetCardInTurn(true);
+        onlinePlayer.getBoard().putCardInSpellZone(selectedCard);
         onlinePlayer.getBoard().removeFromHand(selectedCard);
         onlinePlayer.getBoard().setSelectedCard(null);
         Output.getInstance().showMessage("set successfully");
@@ -504,6 +552,14 @@ public class Duel {
         Output.getInstance().showMessage("flip Summoned successfully");
     }
 
+    public void negateAttack() {
+        isAttackNegated = true;
+    }
+
+    public void negateActivation() {
+        isActivationNegated = true;
+    }
+
     public void ritualSummon() {
         Output.getInstance().showMessage("Select a Ritual Monster");
         Card monster = onlinePlayer.getBoard().getSelectedCard();
@@ -573,23 +629,28 @@ public class Duel {
     private void runAttack(int address, Monster selectedCard) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         EventHandler.triggerMonsterAttack(selectedCard);
         EventHandler.triggerOpponentMonsterAttack(selectedCard);
-        attackingMonster = selectedCard;
-        targetMonster = (Monster) offlinePlayer.getBoard().getMonsterZoneCards().get(address);
-        MonsterMode monsterMode = targetMonster.getMonsterMode();
-        CardPlacement monsterPlacement = targetMonster.getCardPlacement();
-        if (!targetMonster.isAttackable()) {
-            Output.getInstance().showMessage("you can't attack " + targetMonster.getName() + " because of its effect");
-            return;
+        if (!isAttackNegated) {
+            attackingMonster = selectedCard;
+            targetMonster = (Monster) offlinePlayer.getBoard().getMonsterZoneCards().get(address);
+            MonsterMode monsterMode = targetMonster.getMonsterMode();
+            CardPlacement monsterPlacement = targetMonster.getCardPlacement();
+            if (!targetMonster.isAttackable()) {
+                Output.getInstance().showMessage("you can't attack " + targetMonster.getName() + " because of its effect");
+                return;
+            }
+            targetMonster.getRaid();
+            if (monsterPlacement.equals(CardPlacement.faceUp) && monsterMode.equals(MonsterMode.attack))
+                monsterAttackToAttack(targetMonster, selectedCard);
+
+            if (monsterPlacement.equals(CardPlacement.faceUp) && monsterMode.equals(MonsterMode.defence))
+                monsterAttackToDefenseFaceUp(targetMonster, selectedCard);
+
+            if (monsterPlacement.equals(CardPlacement.faceDown) && monsterMode.equals(MonsterMode.defence))
+                monsterAttackToDefenseFaceDown(targetMonster, selectedCard);
+            isAttackNegated = false;
+        } else {
+            Output.getInstance().showMessage(selectedCard.getName() + " attack negated");
         }
-        targetMonster.getRaid();
-        if (monsterPlacement.equals(CardPlacement.faceUp) && monsterMode.equals(MonsterMode.attack))
-            monsterAttackToAttack(targetMonster, selectedCard);
-
-        if (monsterPlacement.equals(CardPlacement.faceUp) && monsterMode.equals(MonsterMode.defence))
-            monsterAttackToDefenseFaceUp(targetMonster, selectedCard);
-
-        if (monsterPlacement.equals(CardPlacement.faceDown) && monsterMode.equals(MonsterMode.defence))
-            monsterAttackToDefenseFaceDown(targetMonster, selectedCard);
         attackingMonster = null;
         targetMonster = null;
     }
@@ -768,4 +829,7 @@ public class Duel {
         Output.getInstance().showMessage(onlinePlayer.getNickname());
     }
 
+    public void negateSummon() {
+        isSummonNegated = true;
+    }
 }

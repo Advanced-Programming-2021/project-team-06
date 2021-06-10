@@ -14,6 +14,7 @@ public class ActionExecutor {
 
 
     private static final ArrayList<ActionExecutor> ALL_ACTION_EXECUTORS = new ArrayList<>();
+    private final String name;
     private Matcher neededInformation;
     private Deck collectedDeck;
     private Card clientsCard;
@@ -21,7 +22,7 @@ public class ActionExecutor {
     public ActionExecutor(String name , Card clientsCard , String actionString) {
         this.actionString = actionString;
         this.clientsCard = clientsCard;
-        collectedDeck = new Deck(name, clientsCard.getCurrentDeck().getOwner());
+        this.name = name;
         ALL_ACTION_EXECUTORS.add(this);
     }
 
@@ -81,6 +82,7 @@ public class ActionExecutor {
     }
 
     private void collectCards() {
+        collectedDeck = new Deck(name, clientsCard.getCurrentDeck().getOwner());
         ArrayList<Deck> deckList = ActionJsonParser.getInstance().getDecksByTheirName(neededInformation.group("deckList").split("\\.") , clientsCard.getCurrentDeck().getOwner());
         getCardsFromTheirDeck(deckList, neededInformation.group("class"));
         String attributeList = neededInformation.group("attributeList");
@@ -89,6 +91,16 @@ public class ActionExecutor {
 
     private void skipPhase() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Duel.setPhaseSkip(true);
+    }
+
+    private void negateAttack () {
+        Duel.getCurrentDuel().negateAttack();
+    }
+    private void negateActivation () {
+        Duel.getCurrentDuel().negateActivation();
+    }
+    private void negateSummon() {
+        Duel.getCurrentDuel().negateSummon();
     }
 
     private void kill() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {

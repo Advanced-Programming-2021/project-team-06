@@ -200,7 +200,7 @@ public class Monster extends Card implements Cloneable {
     public void die() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (currentDeck == currentDeck.getOwner().getBoard().getGraveyardZone())
             return;
-        currentDeck = currentDeck.getOwner().getBoard().getGraveyardZone();
+        currentDeck.getOwner().getBoard().putInGraveyard(this);
         this.resetAllFields(this);
         if (deathTimeActions != null) {
             Matcher actionMatcher = getActionMatcher(deathTimeActions);
@@ -220,8 +220,6 @@ public class Monster extends Card implements Cloneable {
     }
 
     public void summon() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        EventHandler.triggerOpponentMonsterSummon(this);
-        EventHandler.triggerMonsterSummon(this);
         this.currentDeck = currentDeck.getOwner().getBoard().getMonsterZone();
         if (normalSummonTimeActions == null)
             return;

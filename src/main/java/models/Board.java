@@ -24,7 +24,7 @@ public class Board {
         deckZone = player.getActiveDeck().clone();
         deckZone.setName("D");
         deckZone.updateCurrentDeck();
-        graveyardZone = new Deck("GZ", player);
+        graveyardZone = new Deck("GY", player);
         graveyardZone.updateCurrentDeck();
         banishedZone = new Deck("BZ", player);
         banishedZone.updateCurrentDeck();
@@ -92,7 +92,7 @@ public class Board {
     }
 
     public Deck getHand() {
-        return hand;
+         return hand;
     }
 
     public void setHand(Deck hand) {
@@ -152,21 +152,20 @@ public class Board {
     }
 
     public void putCardInMonsterZone(Card card) {
+        if (card.getCurrentDeck() == card.getCurrentDeck().getOwner().getBoard().getMonsterZone())
+            return;
         card.setCurrentDeck(card.getCurrentDeck().getOwner().getBoard().getMonsterZone());
         monsterZone.mainCards.set(getFirstFreeMonsterZoneIndex(), card);
     }
 
     public void putCardInSpellZone(Card card) {
+        if (card.getCurrentDeck() == card.getCurrentDeck().getOwner().getBoard().getSpellZone())
+            return;
         card.setCurrentDeck(card.getCurrentDeck().getOwner().getBoard().getSpellZone());
         spellZone.mainCards.set(getFirstFreeSpellZoneIndex(), card);
     }
 
-    public void putInSpellZone(Card card) {
-        card.setCurrentDeck(card.getCurrentDeck().getOwner().getBoard().getSpellZone());
-        spellZone.mainCards.set(getFirstFreeSpellZoneIndex(), card);
-    }
-
-    public void putInFieldZone(Card card) {
+    public void putCardInFieldZone(Card card) {
         card.setCurrentDeck(card.getCurrentDeck().getOwner().getBoard().getSpellZone());
         if (fieldZone != null) {
             putInGraveyard(fieldZone);
@@ -175,16 +174,22 @@ public class Board {
     }
 
     public void putInGraveyard(Card card) {
+        if (card.getCurrentDeck() == card.getCurrentDeck().getOwner().getBoard().getGraveyardZone())
+            return;
         card.setCurrentDeck(card.getCurrentDeck().getOwner().getBoard().getGraveyardZone());
         graveyardZone.mainCards.add(card);
     }
 
     public void putInBanished(Card card) {
+        if (card.getCurrentDeck() == card.getCurrentDeck().getOwner().getBoard().getBanishedZone())
+            return;
         card.setCurrentDeck(card.getCurrentDeck().getOwner().getBoard().getBanishedZone());
         banishedZone.mainCards.add(card);
     }
 
     public void putInHand(Card card) {
+        if (card.getCurrentDeck() == card.getCurrentDeck().getOwner().getBoard().getHand())
+            return;
         card.setCurrentDeck(card.getCurrentDeck().getOwner().getBoard().getHand());
         hand.getMainCards().add(card);
     }

@@ -41,12 +41,12 @@ public class GameTest {
         Assertions.assertNull(onlineDuel.getOnlinePlayer().getBoard().getSelectedCard());
 
 
-        onlineDuel.getOnlinePlayer().getBoard().putInSpellZone(database.getCardByName("Alexandrite Dragon"));
+        onlineDuel.getOnlinePlayer().getBoard().putCardInSpellZone(database.getCardByName("Alexandrite Dragon"));
         onlineDuel.select("5", true, "s");
         Assertions.assertNotNull(onlineDuel.getOnlinePlayer().getBoard().getSelectedCard());
 
         onlineDuel.getOnlinePlayer().getBoard().setSelectedCard(null);
-        onlineDuel.getOfflinePlayer().getBoard().putInSpellZone(database.getCardByName("Alexandrite Dragon"));
+        onlineDuel.getOfflinePlayer().getBoard().putCardInSpellZone(database.getCardByName("Alexandrite Dragon"));
         onlineDuel.select("4", false, "s");
         Assertions.assertNotNull(onlineDuel.getOnlinePlayer().getBoard().getSelectedCard());
 

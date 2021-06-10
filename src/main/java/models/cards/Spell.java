@@ -80,11 +80,6 @@ public class Spell extends Card implements Cloneable {
     }
 
     public void activate() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        EventHandler.assignWaitingEffect(trigger , this);
-        EventHandler.triggerSpellActivation(this);
-        EventHandler.triggerOpponentSpellActivation(this);
-        EventHandler.triggerSpellTrapActivation(this);
-        EventHandler.triggerOpponentSpellTrapActivation(this);
         currentDeck = currentDeck.getOwner().getBoard().getSpellZone();
         if (activationTimeActions == null)
             return;

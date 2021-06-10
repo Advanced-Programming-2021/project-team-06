@@ -35,7 +35,9 @@ public class ActionJsonParser {
         actionsRegexes.put("make-horcrux", "makeHorcrux");
         actionsRegexes.put("be-horcrux", "beHorcrux");
         actionsRegexes.put("skip-phase", "skipPhase");
-
+        actionsRegexes.put("negate-attack", "negateAttack");
+        actionsRegexes.put("negate-activation", "negateActivation");
+        actionsRegexes.put("negate-summon", "negateSummon");
 
     }
 
@@ -150,16 +152,22 @@ public class ActionJsonParser {
                     break;
                 case "F":
                     Deck singleCardDeck = new Deck("F", null);
-                    singleCardDeck.addCard(currentDuel.getOnlinePlayer().getBoard().getFieldZone());
+                    singleCardDeck.getMainCards().add(currentDuel.getOnlinePlayer().getBoard().getFieldZone());
                     decks.add(singleCardDeck);
                     break;
                 case "OF":
                     singleCardDeck = new Deck("OF", null);
-                    singleCardDeck.addCard(currentDuel.getOfflinePlayer().getBoard().getFieldZone());
+                    singleCardDeck.getMainCards().add(currentDuel.getOfflinePlayer().getBoard().getFieldZone());
                     decks.add(singleCardDeck);
+                    break;
+                case "TR":
+                    singleCardDeck = new Deck("TR", null);
+                    singleCardDeck.getMainCards().add(EventHandler.getTrigger());
+                    decks.add(singleCardDeck);
+                    break;
                 case "AT":
                     singleCardDeck = new Deck("AT", null);
-                    singleCardDeck.addCard(currentDuel.getAttackingMonster());
+                    singleCardDeck.getMainCards().add(currentDuel.getAttackingMonster());
                     decks.add(singleCardDeck);
                     break;
             }

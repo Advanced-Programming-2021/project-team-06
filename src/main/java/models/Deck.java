@@ -58,7 +58,7 @@ public class Deck {
                 continue;
             }
             howMany--;
-            selectionDeck.addCard(collectedDeck.getMainCards().get(number - 1));
+            selectionDeck.getMainCards().add(collectedDeck.getMainCards().get(number - 1));
         }
         if (howMany < 0) {
             String progress = "notYet";
