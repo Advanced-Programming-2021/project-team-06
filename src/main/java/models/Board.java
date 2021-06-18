@@ -92,7 +92,7 @@ public class Board {
     }
 
     public Deck getHand() {
-         return hand;
+        return hand;
     }
 
     public void setHand(Deck hand) {
@@ -129,6 +129,14 @@ public class Board {
 
     public void setSelectedCard(Card selectedCard) {
         this.selectedCard = selectedCard;
+    }
+
+    public ArrayList<Card> getDeckZoneMainCards() {
+        return deckZone.getMainCards();
+    }
+
+    public ArrayList<Card> getDeckZoneSideCards() {
+        return deckZone.getSideCards();
     }
 
     public ArrayList<Card> getMonsterZoneCards() {

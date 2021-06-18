@@ -234,6 +234,22 @@ public class Deck {
         return sideCards.size();
     }
 
+    public Card getCardByNameInMainDeck(String name) {
+        for (Card card : mainCards) {
+            if (card.getName().equals(name)) return card;
+        }
+
+        return null;
+    }
+
+    public Card getCardByNameInSideDeck(String name) {
+        for (Card card : sideCards) {
+            if (card.getName().equals(name)) return card;
+        }
+
+        return null;
+    }
+
     @Override
     protected Deck clone() throws CloneNotSupportedException {
         Deck deck = new Deck(this.name, this.owner, true, false);

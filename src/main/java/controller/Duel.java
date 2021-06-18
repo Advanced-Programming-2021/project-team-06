@@ -66,6 +66,10 @@ public class Duel {
         return onlinePlayer;
     }
 
+    public void setOnlinePlayer(Player onlinePlayer) {
+        this.onlinePlayer = onlinePlayer;
+    }
+
     public Player getOpponent(Player player) {
         return (player == onlinePlayer) ? offlinePlayer : onlinePlayer;
     }
@@ -333,7 +337,7 @@ public class Duel {
                     ((Spell) card).die();
                 if (card instanceof Monster)
                     ((Monster) card).die();
-            getOpponent(player).getBoard().putInGraveyard(card);
+                getOpponent(player).getBoard().putInGraveyard(card);
                 break;
             case "F":
                 player.getBoard().putCardInFieldZone(card);

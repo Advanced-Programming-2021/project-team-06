@@ -50,7 +50,9 @@
     "Feral Imp",
     "Magic Jammer"
   ],
-  "sideCards": [],
+  "sideCards": [
+    "Magic Jammer"
+  ],
   "owner": "ali",
   "name": "firstDeck",
   "isActive": true

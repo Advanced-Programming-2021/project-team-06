@@ -5,6 +5,7 @@ import controller.Duel;
 import controller.ErrorChecker;
 import models.Database;
 import models.Player;
+import models.cards.Card;
 import view.GameInputs;
 import view.Output;
 
@@ -57,14 +58,22 @@ public class DuelMenuController {
 
         for (int i = 1; i <= numberOfRound; i++) {
             Output.getInstance().showMessage("game on");
+
             if (isAI) runSinglePlayer(firstPlayer, secondPlayer);
             if (!isAI) runMultiplePlayer(firstPlayer, secondPlayer);
-            if (Duel.getCurrentDuel().getWinner().getUsername().equals(firstPlayer.getUsername())) numberOfWinPlayer1++;
+
+            if (Duel.getCurrentDuel().getWinner().getUsername().equals(firstPlayer.getUsername()))
+                numberOfWinPlayer1++;
             if (Duel.getCurrentDuel().getWinner().getUsername().equals(secondPlayer.getUsername()))
                 numberOfWinPlayer2++;
+
             if ((numberOfWinPlayer1 == 2 && numberOfWinPlayer2 == 0) ||
                     (numberOfWinPlayer1 == 0 && numberOfWinPlayer2 == 2)) break;
+
+            if (i != numberOfRound) changeDeck(firstPlayer, secondPlayer, isAI);
+
         }
+
         if (numberOfWinPlayer1 > numberOfWinPlayer2)
             Output.getInstance().showMessage(firstUsername + "won the whole match with score: " +
                     firstPlayer.getScore() + "-" + secondPlayer.getScore());
@@ -97,6 +106,52 @@ public class DuelMenuController {
             if (duel.getOnlinePlayer().getUsername().equals(secondPlayer.getUsername()))
                 aiPlayer.action();
         }
+
+    }
+
+    private void changeDeck(Player firstPlayer, Player secondPlayer, boolean isAI) {
+
+        Output.getInstance().showMessage("Transferred cards between sideDeck and mainDeck for " + firstPlayer.getUsername() + ":");
+        GameInputs.getInstance().runChangeHand();
+        Output.getInstance().showMessage("end changing!");
+
+        Duel.getCurrentDuel().setOnlinePlayer(secondPlayer);
+        if (!isAI) {
+            Output.getInstance().showMessage("change cards between sideDeck and mainDeck for" + secondPlayer.getUsername() + ":");
+            GameInputs.getInstance().runChangeHand();
+            Output.getInstance().showMessage("end changing!");
+        }
+
+    }
+
+    public void showMainDeck(Player player) {
+        for (Card card : player.getBoard().getDeckZoneMainCards())
+            Output.getInstance().showMessage(card.toString());
+
+    }
+
+    public void showSideDeck(Player player) {
+        for (Card card : player.getBoard().getDeckZoneSideCards())
+            Output.getInstance().showMessage(card.toString());
+
+    }
+
+    public void swapCard(Player player, String cardName1, String cardName2) {
+        Card card1 = player.getBoard().getDeckZone().getCardByNameInMainDeck(cardName1);
+        Card card2 = player.getBoard().getDeckZone().getCardByNameInSideDeck(cardName2);
+
+        if (card1 == null || card2 == null) {
+            System.out.println("card with this name dose not exist!");
+            return;
+        }
+
+        player.getBoard().getDeckZone().mainCards.remove(card1);
+        player.getBoard().getDeckZone().sideCards.remove(card2);
+
+        player.getBoard().getDeckZone().mainCards.add(card2);
+        player.getBoard().getDeckZone().sideCards.add(card1);
+
+        System.out.println("card Transferred successfully.");
 
     }
 

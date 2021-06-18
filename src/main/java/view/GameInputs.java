@@ -1,6 +1,7 @@
 package view;
 
 import controller.Duel;
+import controller.menus.DuelMenuController;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.regex.Matcher;
@@ -38,6 +39,15 @@ public class GameInputs {
             "show turn"
     };
 
+    private final String[] changeDeckRegexes = {
+            "^show main cards$",
+            "^show side cards$",
+            "^change (?<card1>.+) with (?<card2>.+)$",
+            "^end$"
+    };
+
+    Matcher commandMatcher;
+    String command = "a";
 
     private Duel onlineDuel;
 
@@ -60,9 +70,6 @@ public class GameInputs {
 
 
     public void runGamePlay() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        Matcher commandMatcher;
-        String command;
-
         command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", " ");
         int whichCommand;
         for (whichCommand = 0; whichCommand < gamePlayRegexes.length; whichCommand++) {
@@ -74,22 +81,6 @@ public class GameInputs {
                 Output.getInstance().showMessage("invalid command");
         }
 
-    }
-
-    public boolean yesOrNoQuestion() {
-        while (true) {
-            String command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", "");
-            if (command.equals("yes")) return true;
-            else if (command.equals("no")) return false;
-        }
-    }
-
-    public boolean backQ() {
-        Output.getInstance().showMessage("\ntype \"back\" to return ");
-        while (true) {
-            String command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", " ");
-            if (command.equals("back")) return true;
-        }
     }
 
     private void executeGamePlayCommands(Matcher commandMatcher, int whichCommand) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
@@ -164,6 +155,34 @@ public class GameInputs {
         }
     }
 
+
+    public void runChangeHand() {
+
+        while (!command.equals("end")) {
+            command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", " ");
+
+            commandMatcher = findMatcher(command, changeDeckRegexes[0]);
+            if (commandMatcher.find())
+                DuelMenuController.getInstance().showMainDeck(onlineDuel.getOnlinePlayer());
+
+            commandMatcher = findMatcher(command, changeDeckRegexes[1]);
+            if (commandMatcher.find())
+                DuelMenuController.getInstance().showSideDeck(onlineDuel.getOnlinePlayer());
+
+            commandMatcher = findMatcher(command, changeDeckRegexes[2]);
+            if (commandMatcher.find())
+                DuelMenuController.getInstance().swapCard(onlineDuel.getOnlinePlayer(),
+                        commandMatcher.group("card1"), commandMatcher.group("card2"));
+
+            commandMatcher = findMatcher(command, changeDeckRegexes[3]);
+            if (commandMatcher.find())
+                break;
+
+        }
+
+    }
+
+
     public String getAddressForTribute() {
         String address;
         Output.getInstance().showMessage("enter Address For tribute: ");
@@ -176,6 +195,22 @@ public class GameInputs {
         Output.getInstance().showMessage("enter Address For delete card: ");
         address = ConsoleBasedMenus.scanner.nextLine();
         return address;
+    }
+
+    public boolean yesOrNoQuestion() {
+        while (true) {
+            String command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", "");
+            if (command.equals("yes")) return true;
+            else if (command.equals("no")) return false;
+        }
+    }
+
+    public boolean backQ() {
+        Output.getInstance().showMessage("\ntype \"back\" to return ");
+        while (true) {
+            String command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", " ");
+            if (command.equals("back")) return true;
+        }
     }
 
 
