@@ -10,10 +10,12 @@ import view.Output;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class Duel {
     private static Duel currentDuel = null;
+    private static boolean isPhaseSkipped = false, isAttackNegated = false, isActivationNegated = false, isSummonNegated = false;
     private final Player firstPlayer;
     private final Player secondPlayer;
     private Player onlinePlayer;
@@ -23,7 +25,6 @@ public class Duel {
     private Player winner;
     private Monster attackingMonster, targetMonster;
     private boolean isFirstTurn = true;
-    private static boolean isPhaseSkipped = false, isAttackNegated = false, isActivationNegated = false, isSummonNegated = false;
 
     public Duel(Player firstPlayer, Player secondPlayer) throws CloneNotSupportedException {
         this.firstPlayer = firstPlayer;
@@ -205,18 +206,17 @@ public class Duel {
     }
 
     public boolean isGameOver() {
+        if (chooseWinner(onlinePlayer, offlinePlayer)) return true;
+        if (chooseWinner(offlinePlayer, onlinePlayer)) return true;
+        return false;
+    }
+
+    private boolean chooseWinner(Player onlinePlayer, Player offlinePlayer) {
         if (onlinePlayer.getHealth() <= 0 || onlinePlayer.getBoard().getDeckZone().getMainCards().size() == 0) {
             setPrize(offlinePlayer, onlinePlayer);
             Output.getInstance().showMessage(offlinePlayer.getUsername() + "won the game and the score is: " +
                     offlinePlayer.getScore() + "-" + onlinePlayer.getScore());
             winner = offlinePlayer;
-            return true;
-        }
-        if (offlinePlayer.getHealth() <= 0 || offlinePlayer.getBoard().getDeckZone().getMainCards().size() == 0) {
-            setPrize(onlinePlayer, offlinePlayer);
-            Output.getInstance().showMessage(onlinePlayer.getUsername() + "won the game and the score is: " +
-                    onlinePlayer.getScore() + "-" + offlinePlayer.getScore());
-            winner = onlinePlayer;
             return true;
         }
         return false;
@@ -611,15 +611,7 @@ public class Duel {
         int cardPosition = setCardAddressInOpponentBoard(Integer.parseInt(address));
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
         if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
-        if (!onlinePlayer.getBoard().isInMonsterZone(selectedCard)) {
-            Output.getInstance().showMessage("you can't attack with this card");
-            return;
-        }
-        if (((Monster) selectedCard).getMonsterMode().equals(MonsterMode.defence)) {
-            Output.getInstance().showMessage("This model is a defense card");
-            return;
-        }
-        if (!ErrorChecker.isBattlePhase(phase)) return;
+        if (attackErrors(selectedCard)) return;
         if (((Monster) selectedCard).isHaveBeenAttackedWithMonsterInTurn()) {
             Output.getInstance().showMessage("this card already attacked");
             return;
@@ -628,6 +620,18 @@ public class Duel {
         runAttack(cardPosition, (Monster) selectedCard);
         ((Monster) selectedCard).setHaveBeenAttackedWithMonsterInTurn(true);
 
+    }
+
+    private boolean attackErrors(Card selectedCard) {
+        if (!onlinePlayer.getBoard().isInMonsterZone(selectedCard)) {
+            Output.getInstance().showMessage("you can't attack with this card");
+            return true;
+        }
+        if (((Monster) selectedCard).getMonsterMode().equals(MonsterMode.defence)) {
+            Output.getInstance().showMessage("This model is a defense card");
+            return true;
+        }
+        return !ErrorChecker.isBattlePhase(phase);
     }
 
     private void runAttack(int address, Monster selectedCard) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
@@ -740,15 +744,7 @@ public class Duel {
             return;
         }
         if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
-        if (!onlinePlayer.getBoard().isInMonsterZone(selectedCard)) {
-            Output.getInstance().showMessage("you can't attack with this card");
-            return;
-        }
-        if (((Monster) selectedCard).getMonsterMode().equals(MonsterMode.defence)) {
-            Output.getInstance().showMessage("This model is a defense card");
-            return;
-        }
-        if (!ErrorChecker.isBattlePhase(phase)) return;
+        if (attackErrors(selectedCard)) return;
         if (!ErrorChecker.isMonsterZoneEmpty(offlinePlayer.getBoard().getMonsterZoneCards())) {
             Output.getInstance().showMessage("you can't attack the opponent directly");
             return;
@@ -786,7 +782,7 @@ public class Duel {
         if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
         boolean status = false;
         for (Card card : offlinePlayer.getAllPlayerCard().getMainCards()) {
-            if (card.equals(selectedCard)) {
+            if (Objects.equals(card, selectedCard)) {
                 status = true;
                 break;
             }

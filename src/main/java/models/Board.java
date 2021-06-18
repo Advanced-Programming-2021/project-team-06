@@ -360,22 +360,7 @@ public class Board {
                 else if (card.getCardPlacement() == CardPlacement.faceUp) spellZoneString.append("\tO");
                 else spellZoneString.append("\tH");
             }
-            for (Card card : monsterZone.getMainCards()) {
-                if (card == null) {
-                    monsterZoneString.append("\tE");
-                    continue;
-                }
-                if (((Monster) card).getMonsterMode() == MonsterMode.attack)
-                    monsterZoneString.append("\tO");
-                else if (((Monster) card).getMonsterMode() == MonsterMode.defence)
-                    monsterZoneString.append("\tD");
-
-                if (card.getCardPlacement() == CardPlacement.faceUp)
-                    monsterZoneString.append("O");
-                else
-                    monsterZoneString.append("H");
-            }
-
+            showDetailsOfBoard(monsterZoneString);
             return "\n--------------------------\n" + player.getNickname() + "\t\t:\t\t" + player.getHealth() + "\n" +
                     handString + "\n" +
                     +deckZone.getNumberOfCardsInMainDeck() + "\n"
@@ -391,6 +376,19 @@ public class Board {
             else if (card.getCardPlacement() == CardPlacement.faceUp) spellZoneString.append("\tO");
             else spellZoneString.append("\tH");
         }
+        showDetailsOfBoard(monsterZoneString);
+
+        return ((fieldZone == null) ? "FZ" : "O") +
+                "\t\t\t\t\t\t" + graveyardZone.getNumberOfCardsInMainDeck() + "\n" +
+                monsterZoneString + "\n" +
+                spellZoneString + "\n" +
+                "\t\t\t\t\t\t" + deckZone.getNumberOfCardsInMainDeck() + "\n"
+                + handString + "\n" +
+                player.getNickname() + "\t\t:\t\t" + player.getHealth() + "\n--------------------------\n";
+
+    }
+
+    private void showDetailsOfBoard(StringBuilder monsterZoneString) {
         for (Card card : monsterZone.getMainCards()) {
             if (card == null) {
                 monsterZoneString.append("\tE");
@@ -406,15 +404,6 @@ public class Board {
             else
                 monsterZoneString.append("H");
         }
-
-        return ((fieldZone == null) ? "FZ" : "O") +
-                "\t\t\t\t\t\t" + graveyardZone.getNumberOfCardsInMainDeck() + "\n" +
-                monsterZoneString + "\n" +
-                spellZoneString + "\n" +
-                "\t\t\t\t\t\t" + deckZone.getNumberOfCardsInMainDeck() + "\n"
-                + handString + "\n" +
-                player.getNickname() + "\t\t:\t\t" + player.getHealth() + "\n--------------------------\n";
-
     }
 
 

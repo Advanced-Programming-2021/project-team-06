@@ -18,9 +18,9 @@ public class AI {
     private Duel onlineDuel;
     private Player aiPlayer;
     private Player singlePlayer;
+
     private AI() {
         new Player("ai", "ai", "ai");
-
     }
 
     public static AI getInstance() {
@@ -44,21 +44,31 @@ public class AI {
     public void action() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         switch (onlineDuel.getPhase()) {
             case DRAW:
+                onlineDuel.actionsInDrawPhase();
+                onlineDuel.changePhase();
+                break;
             case END:
+                onlineDuel.actionsInEndPhase();
+                onlineDuel.changePhase();
+                break;
             case STANDBY:
+                onlineDuel.actionInStandbyPhase();
                 onlineDuel.changePhase();
                 break;
             case MAIN1:
+                onlineDuel.actionsInMainPhase();
                 setMonster();
                 setSpellsAndTraps();
                 onlineDuel.changePhase();
                 break;
             case BATTLE:
+                onlineDuel.actionsInBattlePhase();
                 attackMonster();
                 handleSpell();
                 onlineDuel.changePhase();
                 break;
             case MAIN2:
+                onlineDuel.actionsInMainPhase();
                 handleSpell();
                 onlineDuel.changePhase();
                 break;
@@ -138,7 +148,9 @@ public class AI {
     public Monster findBestMonsterInHand() {
         int power = 0;
         Monster monster = null;
-        for (Card card : aiPlayer.getBoard().getHand().mainCards) {
+        ArrayList<Card> deck = aiPlayer.getBoard().getHand().mainCards;
+        if (deck == null) return null;
+        for (Card card : deck) {
             if (card instanceof Monster && ((Monster) card).getAttackPower() > power) {
                 power = ((Monster) card).getAttackPower();
                 monster = (Monster) card;
