@@ -19,6 +19,8 @@ public class AI {
     private Player aiPlayer;
     private Player singlePlayer;
     private AI() {
+        new Player("ai", "ai", "ai");
+
     }
 
     public static AI getInstance() {

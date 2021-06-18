@@ -1,9 +1,6 @@
 {
   "mainCards": [
-    "Command Knight",
     "Feral Imp",
-    "Feral Imp",
-    "Yomi Ship",
     "Yomi Ship",
     "Yomi Ship",
     "Leotron",
@@ -37,23 +34,19 @@
     "Man-Eater Bug",
     "Man-Eater Bug",
     "Dark Magician",
-    "Dark Magician",
-    "Dark Magician",
-    "Hero Of The East",
-    "Hero Of The East",
-    "Hero Of The East",
     "Fireyarou",
     "Fireyarou",
-    "Fireyarou",
-    "Herald Of Creation",
-    "Feral Imp",
-    "Feral Imp",
-    "Magic Jammer"
+    "Hero Of The East",
+    "Marshmallon",
+    "Harpie's Feather Duster",
+    "Marshmallon",
+    "Marshmallon",
+    "Fireyarou"
   ],
   "sideCards": [
-    "Magic Jammer"
+    "Crawling Dragon"
   ],
-  "owner": "ali",
-  "name": "firstDeck",
+  "owner": "ai",
+  "name": "aiDeck",
   "isActive": true
 }

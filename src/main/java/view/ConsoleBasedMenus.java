@@ -424,8 +424,7 @@ public class ConsoleBasedMenus {
             case 2:
             case 3:
                 round = commandMatcher.group("round");
-                new Player("AIPlayer", "AIPlayer", "AIPlayer");
-                DuelMenuController.getInstance().startGame(playerLoggedIn.getUsername(), "AIPlayer", round, true);
+                DuelMenuController.getInstance().startGame(playerLoggedIn.getUsername(), "ai", round, true);
             case 4:
                 Output.getInstance().showMessage("duel Menu");
                 break;
