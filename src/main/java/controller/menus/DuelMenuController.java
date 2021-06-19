@@ -12,10 +12,10 @@ import view.Output;
 import java.lang.reflect.InvocationTargetException;
 
 public class DuelMenuController {
+    private static DuelMenuController instance;
+
     private DuelMenuController() {
     }
-
-    private static DuelMenuController instance;
 
     public static DuelMenuController getInstance() {
         if (instance == null)
@@ -99,7 +99,8 @@ public class DuelMenuController {
         GameInputs.getInstance().setOnlineDuel(duel = new Duel(firstPlayer, secondPlayer));
         AI aiPlayer = AI.getInstance();
         aiPlayer.setOnlineDuel(duel);
-
+        aiPlayer.setSinglePlayer(firstPlayer);
+        aiPlayer.setAiPlayer(secondPlayer);
         while (!duel.isGameOver()) {
             if (duel.getOnlinePlayer().getUsername().equals(firstPlayer.getUsername()))
                 GameInputs.getInstance().runGamePlay();

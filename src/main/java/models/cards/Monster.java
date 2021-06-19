@@ -2,26 +2,20 @@ package models.cards;
 
 import com.google.gson.annotations.SerializedName;
 import controller.ActionJsonParser;
-import controller.ConditionChecker;
 import controller.Duel;
 import controller.EventHandler;
-import models.Deck;
-import view.GameInputs;
-import view.Output;
 
-import java.awt.font.TextHitInfo;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Monster extends Card implements Cloneable {
+    public transient boolean canBeUnderAttack = true;
     @SerializedName("Atk")
     int attackPower;
     @SerializedName("Def")
     int defencePower;
-
     @SerializedName("Monster Type")
     MonsterType monsterType;
     @SerializedName("Attribute")
@@ -41,8 +35,6 @@ public class Monster extends Card implements Cloneable {
     private transient String flipTimeActions;
     private transient String gettingRaidTimeActions;
     private transient String endOfTurnActions;
-    public transient boolean canBeUnderAttack = true;
-
     private boolean haveBeenAttackedWithMonsterInTurn = false;
 
 
@@ -95,16 +87,16 @@ public class Monster extends Card implements Cloneable {
         return monsterMode;
     }
 
-    public void setAction(String action) {
-        this.action = action;
+    public void setMonsterMode(MonsterMode monsterMode) {
+        this.monsterMode = monsterMode;
     }
 
     public String getAction() {
         return action;
     }
 
-    public void setMonsterMode(MonsterMode monsterMode) {
-        this.monsterMode = monsterMode;
+    public void setAction(String action) {
+        this.action = action;
     }
 
     public void setAdditionalAttackPower(int additionalAttackPower, Card clientCard) {
@@ -130,28 +122,28 @@ public class Monster extends Card implements Cloneable {
         return totalDefencePower;
     }
 
-    public void setAttackPower(int attackPower) {
-        this.attackPower = attackPower;
-    }
-
-    public void setDefencePower(int defencePower) {
-        this.defencePower = defencePower;
-    }
-
-    public void setLEVEL(int LEVEL) {
-        this.LEVEL = LEVEL;
-    }
-
     public int getAttackPower() {
         return attackPower;
+    }
+
+    public void setAttackPower(int attackPower) {
+        this.attackPower = attackPower;
     }
 
     public int getDefencePower() {
         return defencePower;
     }
 
+    public void setDefencePower(int defencePower) {
+        this.defencePower = defencePower;
+    }
+
     public int getLEVEL() {
         return LEVEL;
+    }
+
+    public void setLEVEL(int LEVEL) {
+        this.LEVEL = LEVEL;
     }
 
     public boolean isHaveBeenAttackedWithMonsterInTurn() {
@@ -228,7 +220,7 @@ public class Monster extends Card implements Cloneable {
             if (actionMatcher.group("condition").equals("") || ActionJsonParser.getInstance().checkConditionList(actionMatcher.group("condition"), this))
                 ActionJsonParser.getInstance().doActionList(actionMatcher.group("action"), this, "summon-time");
         }
-        EventHandler.assignWaitingEffect(trigger , this);
+        EventHandler.assignWaitingEffect(trigger, this);
     }
 
     public void getRaid() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
@@ -270,5 +262,8 @@ public class Monster extends Card implements Cloneable {
         overriddenName = "";
     }
 
+    public void setIsAttackable(String isAttackable) {
+        this.isAttackable = isAttackable;
+    }
 }
 

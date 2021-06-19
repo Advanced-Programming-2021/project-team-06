@@ -21,7 +21,6 @@ public class AI {
     private Player singlePlayer;
 
     private AI() {
-        new Player("ai", "ai", "ai");
     }
 
     public static AI getInstance() {
@@ -67,23 +66,23 @@ public class AI {
     }
 
     private void attackMonster() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        if(findBestMonsterToAttack() == null) return;
+        if (findBestMonsterToAttack() == null) return;
         Monster monster = findBestMonsterToAttack();
         Monster tale = isThereWeakerCard(monster);
-        onlineDuel.select(String.valueOf(aiPlayer.getBoard().getHand().mainCards.indexOf(monster) + 1), true, "m");
+        onlineDuel.select(String.valueOf(correctPositions(aiPlayer.getBoard().getHand().mainCards.indexOf(monster))), true, "m");
         Output.getInstance().showMessage("Ai Select a Card");
         if (tale == null) {
             onlineDuel.attackDirect();
 
         } else {
-            onlineDuel.attack(String.valueOf(onlineDuel.getOfflinePlayer().getBoard().getMonsterZone().mainCards.indexOf(tale) + 1));
+            onlineDuel.attack(String.valueOf(correctPositions(singlePlayer.getBoard().getMonsterZone().mainCards.indexOf(tale))));
         }
     }
 
     private void setSpellsAndTraps() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         for (Card card : getSpellsInHand()) {
             if (!aiPlayer.getBoard().isSpellZoneFull()) {
-                onlineDuel.select(String.valueOf(aiPlayer.getBoard().getHand().mainCards.indexOf(card) + 1), true, "s");
+                onlineDuel.select(String.valueOf(correctPositions(aiPlayer.getBoard().getHand().mainCards.indexOf(card))), true, "h");
                 onlineDuel.setSpellAndTrap();
                 Output.getInstance().showMessage("Ai Set an Spell");
             }
@@ -92,8 +91,7 @@ public class AI {
 
     private void setMonster() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Monster monster = findBestMonsterInHand();
-        System.out.println(aiPlayer.getBoard().getHand().mainCards.indexOf(monster));
-        onlineDuel.select(String.valueOf(aiPlayer.getBoard().getHand().mainCards.indexOf(monster)) + 1, true, "m");
+        onlineDuel.select(String.valueOf(correctPositions(aiPlayer.getBoard().getHand().mainCards.indexOf(monster))), true, "h");
         Output.getInstance().showMessage("Ai Select a Card");
         if (!monster.getTypeCard().equals("ritual")) {
             onlineDuel.setMonster();
@@ -121,9 +119,8 @@ public class AI {
         int power = 0;
         Monster monster = null;
         for (Card card : aiPlayer.getBoard().getHand().mainCards) {
-            if (card instanceof Monster && ((Monster) card).getAttackPower() > power
-                    && ((Monster) card).getMonsterMode().equals("attack") && isThereWeakerCard((Monster) card) != null) {
-                System.out.println("kireKhar");
+            if (card instanceof Monster && ((Monster) card).getAttackPower() > power && isThereWeakerCard((Monster) card) != null) {
+                System.out.println("kir");
                 power = ((Monster) card).getAttackPower();
                 monster = (Monster) card;
             }
@@ -159,7 +156,8 @@ public class AI {
     private void handleSpell() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Card spell = selectRandom(aiPlayer.getBoard().getSpellZone());
         if (singlePlayer.getBoard().isMonsterZoneEmpty() || spell == null) return;
-        onlineDuel.select(String.valueOf(aiPlayer.getBoard().getSpellZone().mainCards.indexOf(spell) + 1), true, "s");
+        onlineDuel.select(String.valueOf(correctPositions(aiPlayer.getBoard().getHand().mainCards.indexOf(spell))),
+                true, "s");
         onlineDuel.activateSpellCard();
     }
 
@@ -197,5 +195,18 @@ public class AI {
         } else {
             return null;
         }
+    }
+
+    public void setSinglePlayer(Player singlePlayer) {
+        this.singlePlayer = singlePlayer;
+    }
+
+    private int correctPositions(int address) {
+        if (address == 0) return 5;
+        if (address == 1) return 3;
+        if (address == 2) return 1;
+        if (address == 3) return 2;
+        if (address == 4) return 4;
+        return -1;
     }
 }

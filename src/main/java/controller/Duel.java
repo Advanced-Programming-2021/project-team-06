@@ -149,7 +149,6 @@ public class Duel {
                 return;
             }
             changeTurn();
-            getCurrentDuel().showBoard();
             actionsInDrawPhase();
             Output.getInstance().showMessage("phase: " + phase);
         }
