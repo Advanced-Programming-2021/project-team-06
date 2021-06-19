@@ -7,6 +7,7 @@ import models.cards.Card;
 import models.cards.Monster;
 import models.cards.Spell;
 import models.cards.Trap;
+import view.Output;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -44,31 +45,21 @@ public class AI {
     public void action() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         switch (onlineDuel.getPhase()) {
             case DRAW:
-                onlineDuel.actionsInDrawPhase();
-                onlineDuel.changePhase();
-                break;
             case END:
-                onlineDuel.actionsInEndPhase();
-                onlineDuel.changePhase();
-                break;
             case STANDBY:
-                onlineDuel.actionInStandbyPhase();
                 onlineDuel.changePhase();
                 break;
             case MAIN1:
-                onlineDuel.actionsInMainPhase();
                 setMonster();
                 setSpellsAndTraps();
                 onlineDuel.changePhase();
                 break;
             case BATTLE:
-                onlineDuel.actionsInBattlePhase();
                 attackMonster();
                 handleSpell();
                 onlineDuel.changePhase();
                 break;
             case MAIN2:
-                onlineDuel.actionsInMainPhase();
                 handleSpell();
                 onlineDuel.changePhase();
                 break;
@@ -76,12 +67,14 @@ public class AI {
     }
 
     private void attackMonster() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        if(findBestMonsterToAttack() == null) return;
         Monster monster = findBestMonsterToAttack();
         Monster tale = isThereWeakerCard(monster);
-        if (monster == null) return;
         onlineDuel.select(String.valueOf(aiPlayer.getBoard().getHand().mainCards.indexOf(monster) + 1), true, "m");
+        Output.getInstance().showMessage("Ai Select a Card");
         if (tale == null) {
             onlineDuel.attackDirect();
+
         } else {
             onlineDuel.attack(String.valueOf(onlineDuel.getOfflinePlayer().getBoard().getMonsterZone().mainCards.indexOf(tale) + 1));
         }
@@ -90,22 +83,25 @@ public class AI {
     private void setSpellsAndTraps() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         for (Card card : getSpellsInHand()) {
             if (!aiPlayer.getBoard().isSpellZoneFull()) {
-                onlineDuel.select(String.valueOf(aiPlayer.getBoard().getHand().mainCards.indexOf(card) + 1), true, "m");
+                onlineDuel.select(String.valueOf(aiPlayer.getBoard().getHand().mainCards.indexOf(card) + 1), true, "s");
                 onlineDuel.setSpellAndTrap();
+                Output.getInstance().showMessage("Ai Set an Spell");
             }
         }
     }
 
     private void setMonster() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Monster monster = findBestMonsterInHand();
-        if (monster == null) return;
-        onlineDuel.select(String.valueOf(aiPlayer.getBoard().getHand().mainCards.indexOf(monster) + 1), true, "m");
+        System.out.println(aiPlayer.getBoard().getHand().mainCards.indexOf(monster));
+        onlineDuel.select(String.valueOf(aiPlayer.getBoard().getHand().mainCards.indexOf(monster)) + 1, true, "m");
+        Output.getInstance().showMessage("Ai Select a Card");
         if (!monster.getTypeCard().equals("ritual")) {
             onlineDuel.setMonster();
             if (monster.getDefencePower() > monster.getAttackPower() || monster.getAttackPower() < 800 || monster.getDefencePower() > 1500)
                 onlineDuel.setPosition("defence");
             else
                 onlineDuel.setPosition("attack");
+            Output.getInstance().showMessage("Ai Set a Monster");
         }
     }
 
@@ -127,6 +123,7 @@ public class AI {
         for (Card card : aiPlayer.getBoard().getHand().mainCards) {
             if (card instanceof Monster && ((Monster) card).getAttackPower() > power
                     && ((Monster) card).getMonsterMode().equals("attack") && isThereWeakerCard((Monster) card) != null) {
+                System.out.println("kireKhar");
                 power = ((Monster) card).getAttackPower();
                 monster = (Monster) card;
             }
@@ -169,7 +166,7 @@ public class AI {
     public ArrayList<Card> getSpellsInHand() {
         ArrayList<Card> cards = new ArrayList<>();
         for (Card card : aiPlayer.getBoard().getHand().mainCards) {
-            if (card instanceof Spell) {
+            if (card instanceof Spell || card instanceof Trap) {
                 cards.add(card);
             }
         }

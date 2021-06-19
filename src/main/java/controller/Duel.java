@@ -148,13 +148,14 @@ public class Duel {
                 isPhaseSkipped = false;
                 return;
             }
+            changeTurn();
+            getCurrentDuel().showBoard();
             actionsInDrawPhase();
             Output.getInstance().showMessage("phase: " + phase);
         }
     }
 
     public void actionsInDrawPhase() {
-        changeTurn();
         Output.getInstance().showMessage("its " + onlinePlayer.getNickname() + "'s turn");
         onlinePlayer.getBoard().drawCard();
     }
