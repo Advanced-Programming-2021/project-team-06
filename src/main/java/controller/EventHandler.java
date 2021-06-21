@@ -15,6 +15,7 @@ public class EventHandler {
             opponentSpellTrapActivationEvent = new HashMap<>(),
             drawPhaseEvent = new HashMap<>(),
             standbyPhaseEvent = new HashMap<>(),
+            endPhaseEvent = new HashMap<>(),
             opponentMonsterSummonEvent = new HashMap<>(),
             spellActivationEvent = new HashMap<>(),
             opponentSpellActivationEvent = new HashMap<>(),
@@ -80,6 +81,10 @@ public class EventHandler {
         player = client;
         triggerEvents(drawPhaseEvent, true, "spell-activation-trigger");
     }
+    public static void triggerEndPhase(Player client) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        player = client;
+        triggerEvents(endPhaseEvent, true, "end-phase-trigger");
+    }
 
     public static void triggerStandbyPhase(Card trigger) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         EventHandler.trigger = trigger;
@@ -144,6 +149,9 @@ public class EventHandler {
     private static void waitForDrawPhase(Card waitingCard, String action) {
         drawPhaseEvent.put(waitingCard, action);
     }
+    private static void waitForEndPhase(Card waitingCard, String action) {
+        endPhaseEvent.put(waitingCard, action);
+    }
 
     private static void waitForStandbyPhase(Card waitingCard, String action) {
         standbyPhaseEvent.put(waitingCard, action);
@@ -206,6 +214,8 @@ public class EventHandler {
             case "ODP":
                 waitForDrawPhase(card, action);
                 break;
+            case "EP":
+                waitForEndPhase(card, action);
             case "OSP":
                 waitForStandbyPhase(card, action);
                 break;

@@ -3,7 +3,7 @@ Monster Reborn,Spell,Normal,Target 1 monster in either GY; Special Summon it.,Li
 Terraforming,Spell,Normal,Add 1 Field Spell from your Deck to your hand.,Limited,2500,->activation-time:**collect<D>[-Spell-SpellProperty=4];select{1};send-to{H},e
 Pot Of Greed,Spell,Normal,Draw 2 cards.,Limited,2500,->activation-time:**draw{2};die;,e
 Raigeki,Spell,Normal,Destroy all monsters your opponent controls.,Limited,2500,->activation-time:**collect<OMZ>[--];kill;die;,e
-Change Of Heart,Spell,Normal,Target 1 monster your opponent controls; take control of it until the End Phase.,Limited,2500,e,e
+Change Of Heart,Spell,Normal,Target 1 monster your opponent controls; take control of it until the End Phase.,Limited,2500,->activation-time:**collect<OMZ>[--];send-to{MZ};,wait-for{{EP}}then-do{{*?*get-collected{activation-time};die;}}
 Swords Of Revealing Light,Spell,Normal,After this card's activation it remains on the field but destroy it during the End Phase of your opponent's 3rd turn. When this card is activated: If your opponent controls a face-down monster flip all monsters they control face-up. While this card is face-up on the field your opponent's monsters cannot declare an attack.,Unlimited,2500,e,e
 Harpie's Feather Duster,Spell,Normal,Destroy all Spells and Traps your opponent controls.,Limited,2500,->activation-time:**collect<OSZ>[--];send-to{OGY};die;,e
 Dark Hole,Spell,Normal,Destroy all monsters on the field.,Unlimited,2500,->activation-time:**collect<MZ.OMZ>[--];kill;die;,e

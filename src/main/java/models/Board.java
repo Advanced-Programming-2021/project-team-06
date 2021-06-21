@@ -160,9 +160,11 @@ public class Board {
     }
 
     public void putCardInMonsterZone(Card card) {
-        if (card.getCurrentDeck() == card.getCurrentDeck().getOwner().getBoard().getMonsterZone())
-            return;
-        card.setCurrentDeck(card.getCurrentDeck().getOwner().getBoard().getMonsterZone());
+        for (Card cardInMonsterZone : monsterZone.getMainCards()) {
+            if (cardInMonsterZone == card)
+                return;
+        }
+        card.setCurrentDeck(player.getBoard().getMonsterZone());
         monsterZone.mainCards.set(getFirstFreeMonsterZoneIndex(), card);
     }
 

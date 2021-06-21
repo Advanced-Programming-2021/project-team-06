@@ -38,6 +38,7 @@ public class ActionJsonParser {
         actionsRegexes.put("negate-attack", "negateAttack");
         actionsRegexes.put("negate-activation", "negateActivation");
         actionsRegexes.put("negate-summon", "negateSummon");
+        actionsRegexes.put("get-collected\\{(?<eventName>.+)}", "getCollected");
 
     }
 

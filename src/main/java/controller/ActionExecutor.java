@@ -80,7 +80,17 @@ public class ActionExecutor {
         }
         ALL_ACTION_EXECUTORS.remove(this);
     }
-
+    public void getCollected() {
+        String[] eventNames = neededInformation.group("eventName").split("\\.");
+        ArrayList<Deck> deckList = new ArrayList<>();
+        for (String eventName : eventNames) {
+            ActionExecutor actionExecutor = ActionExecutor.getActionExecutorByName(eventName + ((Object) clientsCard).toString());
+            if (actionExecutor == null)
+                return;
+            collectedDeck = actionExecutor.collectedDeck;
+        }
+        ALL_ACTION_EXECUTORS.remove(this);
+    }
     private void collectCards() {
         collectedDeck = new Deck(name, clientsCard.getCurrentDeck().getOwner());
         ArrayList<Deck> deckList = ActionJsonParser.getInstance().getDecksByTheirName(neededInformation.group("deckList").split("\\.") , clientsCard.getCurrentDeck().getOwner());

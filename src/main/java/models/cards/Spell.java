@@ -89,6 +89,7 @@ public class Spell extends Card implements Cloneable {
                 ActionJsonParser.getInstance().doActionList(actionMatcher.group("action"), this, "activation-time");
         }
         isActive = true;
+        EventHandler.assignWaitingEffect(trigger , this);
     }
 
     protected boolean isLike() {

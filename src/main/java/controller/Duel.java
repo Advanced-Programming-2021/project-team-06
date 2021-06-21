@@ -131,6 +131,7 @@ public class Duel {
         }
         if (phase.equals(Phases.MAIN2)) {
             phase = Phases.END;
+            EventHandler.triggerEndPhase(onlinePlayer);
             if (isPhaseSkipped) {
                 changePhase();
                 isPhaseSkipped = false;
@@ -142,13 +143,13 @@ public class Duel {
         }
         if (phase.equals(Phases.END)) {
             phase = Phases.DRAW;
+            changeTurn();
             EventHandler.triggerDrawPhase(onlinePlayer);
             if (isPhaseSkipped) {
                 changePhase();
                 isPhaseSkipped = false;
                 return;
             }
-            changeTurn();
             actionsInDrawPhase();
             Output.getInstance().showMessage("phase: " + phase);
         }
@@ -277,15 +278,19 @@ public class Duel {
             case "MZ":
                 if (ErrorChecker.isMonsterCardZoneFull(player.getBoard().getMonsterZoneCards()))
                     return;
+                break;
             case "OMZ":
                 if (ErrorChecker.isMonsterCardZoneFull(getOpponent(player).getBoard().getMonsterZoneCards()))
                     return;
+                break;
             case "SZ":
                 if (!ErrorChecker.isSpellZoneFree(player.getBoard()))
                     return;
+                break;
             case "OSZ":
                 if (!ErrorChecker.isSpellZoneFree(getOpponent(player).getBoard()))
                     return;
+                break;
         }
         switch (cardDeck.getName()) {
             case "MZ":
@@ -397,8 +402,8 @@ public class Duel {
 
         selectedCard.setCardPlacement(CardPlacement.faceUp);
         ((Monster) selectedCard).setMonsterMode(MonsterMode.attack);
-        ((Monster) selectedCard).summon();
         onlinePlayer.getBoard().putCardInMonsterZone(selectedCard);
+        ((Monster) selectedCard).summon();
         onlinePlayer.getBoard().setSummonedOrSetCardInTurn(true);
         onlinePlayer.getBoard().removeFromHand(selectedCard);
         onlinePlayer.getBoard().setSelectedCard(null);
