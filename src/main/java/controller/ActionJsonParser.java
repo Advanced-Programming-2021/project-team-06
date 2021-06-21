@@ -20,17 +20,19 @@ public class ActionJsonParser {
 
     {
         actionsRegexes.put("collect<(?<deckList>.*)>\\[-(?<class>\\w*)-(?<attributeList>.*)]", "collectCards");
-        actionsRegexes.put("increase-attack-power\\{(?<amount>-?\\d+)}", "increaseAttackPower");
-        actionsRegexes.put("increase-defence-power\\{(?<amount>-?\\d+)}", "increaseDefencePower");
-        actionsRegexes.put("draw\\{(?<howMany>\\d+)}", "drawCard");
+        actionsRegexes.put("increase-attack-power\\{(?<amount>-?.+)}", "increaseAttackPower");
+        actionsRegexes.put("increase-life-point\\{(?<amount>-?.+)}", "increaseLifePoint");
+        actionsRegexes.put("increase-opponent-life-point\\{(?<amount>-?.+)}", "increaseOpponentLifePoint");
+        actionsRegexes.put("increase-defence-power\\{(?<amount>-?.+)}", "increaseDefencePower");
+        actionsRegexes.put("draw\\{(?<howMany>.+)}", "drawCard");
         actionsRegexes.put("cancel\\{(?<eventName>.+)}", "cancel");
         actionsRegexes.put("kill-offender", "killOffender");
         actionsRegexes.put("kill", "kill");
         actionsRegexes.put("die", "die");
-        actionsRegexes.put("set-attack-power\\{(?<amount>\\d+)}", "set-attack-power");
+        actionsRegexes.put("set-attack-power\\{(?<amount>.+)}", "set-attack-power");
         actionsRegexes.put("cancel-attack", "cancel-attack");
         actionsRegexes.put("consume-effect", "consumeEffect");
-        actionsRegexes.put("select\\{(?<howMany>\\d+)}", "selectCardsByUserChoice");
+        actionsRegexes.put("select\\{(?<howMany>.+)}", "selectCardsByUserChoice");
         actionsRegexes.put("send-to\\{(?<deckName>.+)}", "sendCardsToDeck");
         actionsRegexes.put("make-horcrux", "makeHorcrux");
         actionsRegexes.put("be-horcrux", "beHorcrux");

@@ -208,7 +208,7 @@ public class Deck {
         int sum = 0;
         for (Card card : mainCards) {
             Monster monster = (Monster) card;
-            sum += monster.getAttackPower();
+            sum += monster.getTotalAttackPower();
         }
         return sum;
     }

@@ -22,6 +22,7 @@ public class EventHandler {
             trapActivationEvent = new HashMap<>(),
             opponentTrapActivationEvent = new HashMap<>(),
             monsterAttackEvent = new HashMap<>(),
+            monsterDeathEvent = new HashMap<>(),
             opponentMonsterAttackEvent = new HashMap<>();
     private static Card trigger;
     private static Player player;
@@ -44,7 +45,7 @@ public class EventHandler {
 
     public static void triggerTrapActivation(Card trigger) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         EventHandler.trigger = trigger;
-        triggerEvents(trapActivationEvent, false, "spell-activation-trigger");
+        triggerEvents(trapActivationEvent, false, "trap-activation-trigger");
     }
 
     public static void triggerSpellActivation(Card trigger) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
@@ -54,32 +55,36 @@ public class EventHandler {
 
     public static void triggerMonsterSummon(Card trigger) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         EventHandler.trigger = trigger;
-        triggerEvents(monsterSummonEvent, false, "spell-activation-trigger");
+        triggerEvents(monsterSummonEvent, false, "monster-summon-trigger");
+    }
+    public static void triggerMonsterDeath(Card trigger) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        EventHandler.trigger = trigger;
+        triggerEvents(monsterDeathEvent, false, "monster-death-trigger");
     }
 
     public static void triggerMonsterAttack(Card trigger) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         EventHandler.trigger = trigger;
-        triggerEvents(monsterAttackEvent, false, "spell-activation-trigger");
+        triggerEvents(monsterAttackEvent, false, "monster-attack-trigger");
     }
 
     public static void triggerOpponentTrapActivation(Card trigger) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         EventHandler.trigger = trigger;
-        triggerEvents(opponentTrapActivationEvent, true, "spell-activation-trigger");
+        triggerEvents(opponentTrapActivationEvent, true, "opponent-trap-activation-trigger");
     }
 
     public static void triggerSpellTrapActivation(Card trigger) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         EventHandler.trigger = trigger;
-        triggerEvents(spellTrapActivationEvent, false, "spell-activation-trigger");
+        triggerEvents(spellTrapActivationEvent, false, "spell-trap-activation-trigger");
     }
 
     public static void triggerOpponentSpellTrapActivation(Card trigger) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         EventHandler.trigger = trigger;
-        triggerEvents(opponentSpellTrapActivationEvent, true, "spell-activation-trigger");
+        triggerEvents(opponentSpellTrapActivationEvent, true, "opponent-spell-trap-activation-trigger");
     }
 
     public static void triggerDrawPhase(Player client) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         player = client;
-        triggerEvents(drawPhaseEvent, true, "spell-activation-trigger");
+        triggerEvents(drawPhaseEvent, true, "draw-phase-trigger");
     }
     public static void triggerEndPhase(Player client) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         player = client;
@@ -88,7 +93,7 @@ public class EventHandler {
 
     public static void triggerStandbyPhase(Card trigger) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         EventHandler.trigger = trigger;
-        triggerEvents(standbyPhaseEvent, true, "spell-activation-trigger");
+        triggerEvents(standbyPhaseEvent, true, "standby-phase-trigger");
     }
 
     public static void triggerOpponentSpellActivation(Card trigger) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
@@ -132,6 +137,9 @@ public class EventHandler {
 
     private static void waitForMonsterAttack(Card waitingCard, String action) {
         monsterAttackEvent.put(waitingCard, action);
+    }
+    private static void waitForMonsterDeath(Card waitingCard, String action) {
+        monsterDeathEvent.put(waitingCard, action);
     }
 
     private static void waitForOpponentMonsterAttack(Card waitingCard, String action) {
@@ -218,6 +226,9 @@ public class EventHandler {
                 waitForEndPhase(card, action);
             case "OSP":
                 waitForStandbyPhase(card, action);
+                break;
+            case "MD":
+                waitForMonsterDeath(card , action);
                 break;
 
 
