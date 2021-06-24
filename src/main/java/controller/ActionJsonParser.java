@@ -34,6 +34,7 @@ public class ActionJsonParser {
         actionsRegexes.put("consume-effect", "consumeEffect");
         actionsRegexes.put("select\\{(?<howMany>.+)}", "selectCardsByUserChoice");
         actionsRegexes.put("send-to\\{(?<deckName>.+)}", "sendCardsToDeck");
+        actionsRegexes.put("get-in\\{(?<deckName>.+)}", "getCardsToDeck");
         actionsRegexes.put("make-horcrux", "makeHorcrux");
         actionsRegexes.put("be-horcrux", "beHorcrux");
         actionsRegexes.put("skip-phase", "skipPhase");

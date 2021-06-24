@@ -109,6 +109,8 @@ public class ConsoleBasedMenus {
         String command;
         while (runningMenu.equals("register")) {
             command = scanner.nextLine().replaceAll("\\s+", " ");
+            if (command.equals("end debugging"))
+                return;
             int whichCommand;
             for (whichCommand = 0; whichCommand < registerMenusRegexes.length; whichCommand++) {
                 commandMatcher = findMatcher(command, registerMenusRegexes[whichCommand]);
@@ -397,6 +399,8 @@ public class ConsoleBasedMenus {
         Matcher commandMatcher;
         String command;
         while (runningMenu.equals("duel")) {
+            if (!scanner.hasNext())
+                return;
             command = scanner.nextLine().replaceAll("\\s+", " ");
             int whichCommand;
             for (whichCommand = 0; whichCommand < duelMenusRegexes.length; whichCommand++) {

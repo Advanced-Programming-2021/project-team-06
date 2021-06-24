@@ -1,5 +1,5 @@
 Name,Type,Property,Description,Status,Price,Action,Trigger
-Monster Reborn,Spell,Normal,Target 1 monster in either GY; Special Summon it.,Limited,2500,->activation-time:**collect<GY.OGY>[-Monster-];select{1};send-to{MZ};die;,e
+Monster Reborn,Spell,Normal,Target 1 monster in either GY; Special Summon it.,Limited,2500,->activation-time:**collect<GY.OGY>[-Monster-];select{1};get-in{MZ};die;,e
 Terraforming,Spell,Normal,Add 1 Field Spell from your Deck to your hand.,Limited,2500,->activation-time:**collect<D>[-Spell-SpellProperty=4];select{1};send-to{H},e
 Pot Of Greed,Spell,Normal,Draw 2 cards.,Limited,2500,->activation-time:**draw{2};die;,e
 Raigeki,Spell,Normal,Destroy all monsters your opponent controls.,Limited,2500,->activation-time:**collect<OMZ>[--];kill;die;,e

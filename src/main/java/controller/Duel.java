@@ -206,7 +206,9 @@ public class Duel {
         }
     }
 
-    public boolean isGameOver() {
+    public boolean isGameOver(boolean isDebugMode) {
+        if (isDebugMode)
+            return true;
         if (chooseWinner(onlinePlayer, offlinePlayer)) return true;
         if (chooseWinner(offlinePlayer, onlinePlayer)) return true;
         return false;
@@ -270,10 +272,14 @@ public class Duel {
 
     }
 
-    public void changeDeck(Card card, String destination) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    public void changeDeckBasedOnClientCard(Card clientCard ,Card card, String destination) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        changeDeck(clientCard, card, destination);
+    }
+
+    private void changeDeck(Card clientCard, Card card, String destination) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Deck cardDeck = card.getCurrentDeck();
-        Player player = cardDeck.getOwner();
-        Board board = player.getBoard();
+        Player player = clientCard.getCurrentDeck().getOwner();
+        Board board = cardDeck.getOwner().getBoard();
         switch (destination) {
             case "MZ":
                 if (ErrorChecker.isMonsterCardZoneFull(player.getBoard().getMonsterZoneCards()))
@@ -348,6 +354,10 @@ public class Duel {
                 player.getBoard().putCardInFieldZone(card);
                 break;
         }
+    }
+
+    public void changeDeck(Card card, String destination) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        changeDeck(card, card, destination);
     }
 
     public void summon() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {

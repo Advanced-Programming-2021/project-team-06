@@ -149,6 +149,12 @@ public class ActionExecutor {
             Duel.getCurrentDuel().changeDeck(card, destination);
         }
     }
+    private void getCardsToDeck() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        String destination = neededInformation.group("deckName");
+        for (Card card : collectedDeck.getMainCards()) {
+            Duel.getCurrentDuel().changeDeckBasedOnClientCard(clientsCard , card , destination);
+        }
+    }
 
     private void killOffender() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Duel currentDuel = Duel.getCurrentDuel();

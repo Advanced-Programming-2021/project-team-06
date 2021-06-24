@@ -13,7 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class DuelMenuController {
     private static DuelMenuController instance;
-
+    public static boolean debugBool = false;
     private DuelMenuController() {
     }
 
@@ -62,6 +62,9 @@ public class DuelMenuController {
             if (isAI) runSinglePlayer(firstPlayer, secondPlayer);
             if (!isAI) runMultiplePlayer(firstPlayer, secondPlayer);
 
+            Player winner = Duel.getCurrentDuel().getWinner();
+            if (winner == null)
+                return;
             if (Duel.getCurrentDuel().getWinner().getUsername().equals(firstPlayer.getUsername()))
                 numberOfWinPlayer1++;
             if (Duel.getCurrentDuel().getWinner().getUsername().equals(secondPlayer.getUsername()))
@@ -88,7 +91,7 @@ public class DuelMenuController {
         Duel duel;
         GameInputs.getInstance().setOnlineDuel(duel = new Duel(firstPlayer, secondPlayer));
 
-        while (!duel.isGameOver())
+        while (!duel.isGameOver(debugBool))
             GameInputs.getInstance().runGamePlay();
 
     }
@@ -101,7 +104,7 @@ public class DuelMenuController {
         aiPlayer.setOnlineDuel(duel);
         aiPlayer.setSinglePlayer(firstPlayer);
         aiPlayer.setAiPlayer(secondPlayer);
-        while (!duel.isGameOver()) {
+        while (!duel.isGameOver(false)) {
             if (duel.getOnlinePlayer().getUsername().equals(firstPlayer.getUsername()))
                 GameInputs.getInstance().runGamePlay();
             if (duel.getOnlinePlayer().getUsername().equals(secondPlayer.getUsername()))

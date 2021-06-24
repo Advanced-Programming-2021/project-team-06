@@ -71,6 +71,10 @@ public class GameInputs {
 
     public void runGamePlay() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", " ");
+        if (command.equals("end debugging")){
+            DuelMenuController.debugBool = true;
+            return;
+        }
         int whichCommand;
         for (whichCommand = 0; whichCommand < gamePlayRegexes.length; whichCommand++) {
             commandMatcher = findMatcher(command, gamePlayRegexes[whichCommand]);
