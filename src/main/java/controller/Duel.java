@@ -272,7 +272,7 @@ public class Duel {
 
     }
 
-    public void changeDeckBasedOnClientCard(Card clientCard ,Card card, String destination) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    public void changeDeckBasedOnClientCard(Card clientCard, Card card, String destination) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         changeDeck(clientCard, card, destination);
     }
 
@@ -483,7 +483,7 @@ public class Duel {
         }
     }
 
-    public void setSpellAndTrap() {
+    public void setSpellAndTrap() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
         if (!(selectedCard instanceof Spell || selectedCard instanceof Trap)) return;
         if (!ErrorChecker.isCardSelected(onlinePlayer)) return;
@@ -497,6 +497,10 @@ public class Duel {
             Output.getInstance().showMessage("spell card zone is full");
             return;
         }
+        if (((Spell) selectedCard).getProperty().equals(SpellProperty.field)) {
+            setFieldCard();
+            return;
+        }
         selectedCard.setCardPlacement(CardPlacement.faceDown);
         onlinePlayer.getBoard().putCardInSpellZone(selectedCard);
         onlinePlayer.getBoard().removeFromHand(selectedCard);
@@ -504,7 +508,20 @@ public class Duel {
         Output.getInstance().showMessage("set successfully");
     }
 
-    public void activationOfSpellInOpponentTurn() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    private void setFieldCard() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        Card selectedCard = onlinePlayer.getBoard().getSelectedCard();
+        if (currentDuel.onlinePlayer.getBoard().getFieldZone() != null) {
+            ((Spell) currentDuel.onlinePlayer.getBoard().getFieldZone()).die();
+            currentDuel.onlinePlayer.getBoard().putInGraveyard(currentDuel.onlinePlayer.getBoard().getFieldZone());
+        }
+        currentDuel.onlinePlayer.getBoard().putCardInFieldZone(selectedCard);
+        onlinePlayer.getBoard().removeFromHand(selectedCard);
+        onlinePlayer.getBoard().setSelectedCard(null);
+        Output.getInstance().showMessage("set successfully");
+    }
+
+    public void activationOfSpellInOpponentTurn() throws
+            InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         turn *= -1;
         if (turn == 1)
             Output.getInstance().showMessage("now it will be " + firstPlayer.getUsername() + "'s turn");
@@ -617,7 +634,8 @@ public class Duel {
         Output.getInstance().showMessage("Ritual Summoned successfully");
     }
 
-    public void attack(String address) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    public void attack(String address) throws
+            InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (isFirstTurn) {
             Output.getInstance().showMessage("this is first turn and you can't attack the opponent!");
             return;
@@ -649,7 +667,8 @@ public class Duel {
         return !ErrorChecker.isBattlePhase(phase);
     }
 
-    public void runAttack(int address, Monster selectedCard) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    public void runAttack(int address, Monster selectedCard) throws
+            InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         EventHandler.triggerMonsterAttack(selectedCard);
         EventHandler.triggerOpponentMonsterAttack(selectedCard);
         if (!isAttackNegated) {
@@ -678,7 +697,8 @@ public class Duel {
         targetMonster = null;
     }
 
-    private void monsterAttackToAttack(Monster targetMonster, Monster selectedCard) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    private void monsterAttackToAttack(Monster targetMonster, Monster selectedCard) throws
+            InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (selectedCard.getTotalAttackPower() > targetMonster.getTotalAttackPower()) {
             int damage = selectedCard.getTotalAttackPower() - targetMonster.getTotalAttackPower();
             offlinePlayer.setHealth(offlinePlayer.getHealth() - damage);
@@ -719,13 +739,15 @@ public class Duel {
         targetMonster.setCardPlacement(CardPlacement.faceUp);
     }
 
-    public void kill(Player player, Monster monster) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    public void kill(Player player, Monster monster) throws
+            InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         player.getBoard().putInGraveyard(monster);
         player.getBoard().removeFromMonsterZone(monster);
         monster.die();
     }
 
-    public void kill(Monster monster) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    public void kill(Monster monster) throws
+            InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Player player = monster.getCurrentDeck().getOwner();
         player.getBoard().putInGraveyard(monster);
         player.getBoard().removeFromMonsterZone(monster);
