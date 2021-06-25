@@ -26,7 +26,7 @@ public class Monster extends Card implements Cloneable {
     private String action;
     @SerializedName("Trigger")
     private String trigger;
-    private String isAttackable;
+    private String isAttackAble;
     private transient HashMap<Card, Integer> additionalAttackPower = new HashMap<>();
     private transient HashMap<Card, Integer> additionalDefencePower = new HashMap<>();
     private transient ArrayList<String> normalSummonTimeActions = new ArrayList<>();
@@ -240,10 +240,10 @@ public class Monster extends Card implements Cloneable {
 
     }
 
-    public boolean isAttackable() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        if (isAttackable == null)
+    public boolean isAttackAble() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        if (isAttackAble == null)
             return true;
-        return ActionJsonParser.getInstance().checkConditionList(isAttackable, this);
+        return ActionJsonParser.getInstance().checkConditionList(isAttackAble, this);
     }
 
     boolean isLike(String attributeList) {
@@ -262,8 +262,8 @@ public class Monster extends Card implements Cloneable {
         overriddenName = "";
     }
 
-    public void setIsAttackable(String isAttackable) {
-        this.isAttackable = isAttackable;
+    public void setIsAttackAble(String isAttackAble) {
+        this.isAttackAble = isAttackAble;
     }
 }
 

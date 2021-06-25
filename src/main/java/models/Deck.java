@@ -286,14 +286,14 @@ public class Deck {
             for (Card card : mainCards) {
                 if (card == null)
                     continue;
-                output.append(number).append(". ").append(card.toString());
+                output.append(number).append(". ").append(card);
                 number++;
             }
         else
             for (Card card : sideCards) {
                 if (card == null)
                     continue;
-                output.append(number).append(". ").append(card.toString());
+                output.append(number).append(". ").append(card);
                 number++;
             }
         return output.toString();

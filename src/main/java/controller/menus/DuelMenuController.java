@@ -114,14 +114,14 @@ public class DuelMenuController {
     }
 
     private void changeDeck(Player firstPlayer, Player secondPlayer, boolean isAI) {
-
+        Duel.getCurrentDuel().setOnlinePlayer(firstPlayer);
         Output.getInstance().showMessage("Transferred cards between sideDeck and mainDeck for " + firstPlayer.getUsername() + ":");
         GameInputs.getInstance().runChangeHand();
         Output.getInstance().showMessage("end changing!");
 
         Duel.getCurrentDuel().setOnlinePlayer(secondPlayer);
         if (!isAI) {
-            Output.getInstance().showMessage("change cards between sideDeck and mainDeck for" + secondPlayer.getUsername() + ":");
+            Output.getInstance().showMessage("change cards between sideDeck and mainDeck for " + secondPlayer.getUsername() + ":");
             GameInputs.getInstance().runChangeHand();
             Output.getInstance().showMessage("end changing!");
         }
@@ -148,9 +148,8 @@ public class DuelMenuController {
             System.out.println("card with this name dose not exist!");
             return;
         }
-
-        player.getBoard().getDeckZone().mainCards.remove(card1);
-        player.getBoard().getDeckZone().sideCards.remove(card2);
+        player.getBoard().getDeckZone().removeCard(card1, true);
+        player.getBoard().getDeckZone().removeCard(card2, false);
 
         player.getBoard().getDeckZone().mainCards.add(card2);
         player.getBoard().getDeckZone().sideCards.add(card1);

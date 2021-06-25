@@ -217,7 +217,7 @@ public class Duel {
     private boolean chooseWinner(Player onlinePlayer, Player offlinePlayer) {
         if (onlinePlayer.getHealth() <= 0 || onlinePlayer.getBoard().getDeckZone().getMainCards().size() == 0) {
             setPrize(offlinePlayer, onlinePlayer);
-            Output.getInstance().showMessage(offlinePlayer.getUsername() + "won the game and the score is: " +
+            Output.getInstance().showMessage(offlinePlayer.getUsername() + " won the game and the score is: " +
                     offlinePlayer.getScore() + "-" + onlinePlayer.getScore());
             winner = offlinePlayer;
             return true;
@@ -676,7 +676,7 @@ public class Duel {
             targetMonster = (Monster) offlinePlayer.getBoard().getMonsterZoneCards().get(address);
             MonsterMode monsterMode = targetMonster.getMonsterMode();
             CardPlacement monsterPlacement = targetMonster.getCardPlacement();
-            if (!targetMonster.isAttackable()) {
+            if (!targetMonster.isAttackAble()) {
                 Output.getInstance().showMessage("you can't attack " + targetMonster.getName() + " because of its effect");
                 return;
             }

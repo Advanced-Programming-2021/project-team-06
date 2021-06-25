@@ -161,7 +161,7 @@ public class GameInputs {
 
 
     public void runChangeHand() {
-
+        String command = "";
         while (!command.equals("end")) {
             command = ConsoleBasedMenus.scanner.nextLine().replaceAll("\\s+", " ");
 
