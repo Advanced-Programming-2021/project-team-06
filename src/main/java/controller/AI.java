@@ -1,17 +1,12 @@
 package controller;
 
 
-import models.Deck;
 import models.Player;
-import models.cards.Card;
-import models.cards.Monster;
-import models.cards.Spell;
-import models.cards.Trap;
+import models.cards.*;
 import view.Output;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class AI {
 
@@ -37,10 +32,6 @@ public class AI {
         this.onlineDuel = onlineDuel;
     }
 
-    public void decisionMaker() {
-
-    }
-
     public void action() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         switch (onlineDuel.getPhase()) {
             case DRAW:
@@ -49,7 +40,7 @@ public class AI {
                 onlineDuel.changePhase();
                 break;
             case MAIN1:
-                setMonster();
+                setAMonster();
                 setSpellsAndTraps();
                 onlineDuel.changePhase();
                 break;
@@ -66,40 +57,63 @@ public class AI {
     }
 
     private void attackMonster() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        if (findBestMonsterToAttack() == null) return;
-        Monster monster = findBestMonsterToAttack();
-        Monster tale = isThereWeakerCard(monster);
-        onlineDuel.select(String.valueOf(correctPositions(aiPlayer.getBoard().getHand().mainCards.indexOf(monster))), true, "m");
-        Output.getInstance().showMessage("Ai Select a Card");
-        if (tale == null) {
-            onlineDuel.attackDirect();
-
+        if (singlePlayer.getBoard().isMonsterZoneEmpty()) {
+            ArrayList<Card> monsters = aiPlayer.getBoard().getMonsterZoneCards();
+            for (Card monster : monsters) {
+                if (monster == null) continue;
+                if (((Monster) monster).getMonsterMode().equals(MonsterMode.defence)) continue;
+                onlineDuel.select(String.valueOf(correctPositions(aiPlayer.getBoard().getMonsterZone().mainCards.indexOf(monster))), true, "m");
+                Card selectedCard = aiPlayer.getBoard().getSelectedCard();
+                singlePlayer.setHealth(singlePlayer.getHealth() - ((Monster) selectedCard).getAttackPower());
+                ((Monster) selectedCard).setHaveBeenAttackedWithMonsterInTurn(true);
+                Output.getInstance().showMessage("you have been received " + ((Monster) selectedCard).getAttackPower() + " battle damage" + "by" + monster.getName());
+            }
         } else {
-            onlineDuel.attack(String.valueOf(correctPositions(singlePlayer.getBoard().getMonsterZone().mainCards.indexOf(tale))));
+            if (findBestMonsterToAttack() == null) return;
+            Monster monster = findBestMonsterToAttack();
+            Monster tale = isThereWeakerCard(monster);
+            assert tale != null;
+            if (monster.getAttackPower() < tale.getDefencePower()) return;
+            onlineDuel.select(String.valueOf(correctPositions(aiPlayer.getBoard().getMonsterZone().mainCards.indexOf(monster))), true, "m");
+            int cardPosition = (singlePlayer.getBoard().getMonsterZone().mainCards.indexOf(tale));
+            Card selectedCard = aiPlayer.getBoard().getSelectedCard();
+            onlineDuel.runAttack(cardPosition, (Monster) selectedCard);
+            ((Monster) selectedCard).setHaveBeenAttackedWithMonsterInTurn(true);
+            System.out.println(monster.getName() + " attacked " + tale.getName());
         }
     }
 
     private void setSpellsAndTraps() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         for (Card card : getSpellsInHand()) {
             if (!aiPlayer.getBoard().isSpellZoneFull()) {
-                onlineDuel.select(String.valueOf(correctPositions(aiPlayer.getBoard().getHand().mainCards.indexOf(card))), true, "h");
-                onlineDuel.setSpellAndTrap();
+                if (!(card instanceof Spell) && !(card instanceof Trap)) return;
+                if(card == null) return;
+                card.setCardPlacement(CardPlacement.faceDown);
+                aiPlayer.getBoard().putCardInSpellZone(card);
+                aiPlayer.getBoard().removeFromHand(card);
+                aiPlayer.getBoard().setSelectedCard(null);
                 Output.getInstance().showMessage("Ai Set an Spell");
             }
         }
     }
 
-    private void setMonster() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    private void setAMonster() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Monster monster = findBestMonsterInHand();
         onlineDuel.select(String.valueOf(correctPositions(aiPlayer.getBoard().getHand().mainCards.indexOf(monster))), true, "h");
         Output.getInstance().showMessage("Ai Select a Card");
         if (!monster.getTypeCard().equals("ritual")) {
-            onlineDuel.setMonster();
-            if (monster.getDefencePower() > monster.getAttackPower() || monster.getAttackPower() < 800 || monster.getDefencePower() > 1500)
-                onlineDuel.setPosition("defence");
-            else
-                onlineDuel.setPosition("attack");
-            Output.getInstance().showMessage("Ai Set a Monster");
+            Card selectedCard = aiPlayer.getBoard().getSelectedCard();
+            if (monster.getDefencePower() > monster.getAttackPower() || monster.getAttackPower() < 800 || monster.getDefencePower() > 2500) {
+                selectedCard.setCardPlacement(CardPlacement.faceDown);
+                ((Monster) selectedCard).setMonsterMode(MonsterMode.defence);
+                aiPlayer.getBoard().putCardInMonsterZone(selectedCard);
+                aiPlayer.getBoard().setSummonedOrSetCardInTurn(true);
+                aiPlayer.getBoard().removeFromHand(selectedCard);
+                aiPlayer.getBoard().setSelectedCard(null);
+                Output.getInstance().showMessage("AI set a Monster");
+            } else {
+                onlineDuel.summon();
+            }
         }
     }
 
@@ -118,9 +132,9 @@ public class AI {
     public Monster findBestMonsterToAttack() {
         int power = 0;
         Monster monster = null;
-        for (Card card : aiPlayer.getBoard().getHand().mainCards) {
-            if (card instanceof Monster && ((Monster) card).getAttackPower() > power && isThereWeakerCard((Monster) card) != null) {
-                System.out.println("kir");
+        for (Card card : aiPlayer.getBoard().getMonsterZoneCards()) {
+            if (card == null) continue;
+            if (((Monster) card).getAttackPower() > power && isThereWeakerCard((Monster) card) != null) {
                 power = ((Monster) card).getAttackPower();
                 monster = (Monster) card;
             }
@@ -150,15 +164,27 @@ public class AI {
                 monster = (Monster) card;
             }
         }
+        assert monster != null;
+        System.out.println(monster.getName() + " has been chosen");
         return monster;
     }
 
     private void handleSpell() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        Card spell = selectRandom(aiPlayer.getBoard().getSpellZone());
-        if (singlePlayer.getBoard().isMonsterZoneEmpty() || spell == null) return;
-        onlineDuel.select(String.valueOf(correctPositions(aiPlayer.getBoard().getHand().mainCards.indexOf(spell))),
+        Card spell = selectSpell();
+        if (numberOfSpellsInTheField() == 0 && spell != null) return;
+        onlineDuel.select(String.valueOf(correctPositions(aiPlayer.getBoard().getSpellZone().mainCards.indexOf(spell))),
                 true, "s");
         onlineDuel.activateSpellCard();
+    }
+
+    public int numberOfSpellsInTheField() {
+        int count = 0;
+        for (Card card : aiPlayer.getBoard().getSpellZone().mainCards) {
+            if (card != null && ((card instanceof Spell) || (card instanceof Trap))) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public ArrayList<Card> getSpellsInHand() {
@@ -186,15 +212,16 @@ public class AI {
         this.aiPlayer = aiPlayer;
     }
 
-    private Card selectRandom(Deck deck) {
-        if (deck != null && deck.getMainCards().size() != 0) {
-            int random = new Random().nextInt(deck.mainCards.size());
-            if (deck.mainCards.get(random) != null)
-                return deck.mainCards.get(random);
-            else return null;
-        } else {
-            return null;
+    private Card selectSpell() {
+        if (aiPlayer.getBoard().getSpellZone() != null && numberOfSpellsInTheField() != 0) {
+            for (Card card : aiPlayer.getBoard().getSpellZone().mainCards) {
+                if (card != null) {
+                    System.out.println(card.getName());
+                    return card;
+                }
+            }
         }
+        return null;
     }
 
     public void setSinglePlayer(Player singlePlayer) {

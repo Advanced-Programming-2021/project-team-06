@@ -649,7 +649,7 @@ public class Duel {
         return !ErrorChecker.isBattlePhase(phase);
     }
 
-    private void runAttack(int address, Monster selectedCard) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    public void runAttack(int address, Monster selectedCard) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         EventHandler.triggerMonsterAttack(selectedCard);
         EventHandler.triggerOpponentMonsterAttack(selectedCard);
         if (!isAttackNegated) {
