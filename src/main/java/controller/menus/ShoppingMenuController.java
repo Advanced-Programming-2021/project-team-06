@@ -4,9 +4,8 @@ import controller.ErrorChecker;
 import models.Database;
 import models.Player;
 import models.cards.Card;
-import view.Output;
+import view.console.Output;
 
-import java.net.PortUnreachableException;
 import java.util.Arrays;
 import java.util.Comparator;
 

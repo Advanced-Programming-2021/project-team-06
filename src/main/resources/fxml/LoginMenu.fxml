@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="680.0" prefWidth="1200.0"
+            xmlns="http://javafx.com/javafx/16" fx:controller="view.graphics.menus.LoginMenuView">
+
+    <Label layoutX="568.0" layoutY="93.0" text="Login Menu"/>
+
+    <VBox alignment="CENTER" layoutX="492.0" layoutY="251.0" spacing="10">
+        <TextField fx:id="usernameInput" maxHeight="70" maxWidth="335" prefHeight="25.0" prefWidth="239.0"/>
+        <TextField fx:id="passwordInput" maxHeight="70" maxWidth="335"/>
+        <Button onMouseClicked="#openMainMenu" text="login!"/>
+    </VBox>
+    <Button fx:id="backButton" layoutX="103.0" layoutY="527.0" onMouseClicked="#openFirstPage" text="Back"/>
+    <Label layoutX="412.0" layoutY="251.0" text="Username"/>
+    <Label layoutX="414.0" layoutY="290.0" text="Password"/>
+
+
+</AnchorPane>

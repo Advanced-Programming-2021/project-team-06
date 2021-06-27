@@ -8,7 +8,7 @@ import models.Deck;
 import models.Player;
 import models.cards.Card;
 import org.junit.jupiter.api.*;
-import view.Output;
+import view.console.Output;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

@@ -1,12 +1,10 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import view.console.RunFromConsole;
 
 import java.io.*;
-import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.PublicKey;
 import java.util.ArrayList;
 
 public class EffectsTest {
@@ -26,7 +24,7 @@ public class EffectsTest {
         System.setOut(new PrintStream(outContent));
         ByteArrayInputStream in = new ByteArrayInputStream(inputFile.getBytes());
         System.setIn(in);
-        Main.main(null);
+        RunFromConsole.main(null);
         ArrayList<String> result = new ArrayList<String>();
         result.add(outputFile.replaceAll("\\s",""));
         result.add(String.valueOf(outContent).replaceAll("\\s", ""));

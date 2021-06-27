@@ -2,7 +2,7 @@ package controller.menus;
 
 import controller.ErrorChecker;
 import models.Player;
-import view.Output;
+import view.console.Output;
 
 public class ProfileMenuController {
 

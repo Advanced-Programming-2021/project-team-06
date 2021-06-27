@@ -4,9 +4,9 @@ import models.Board;
 import models.Deck;
 import models.Player;
 import models.cards.*;
-import view.ConsoleBasedMenus;
-import view.GameInputs;
-import view.Output;
+import view.console.ConsoleBasedMenus;
+import view.console.GameInputs;
+import view.console.Output;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;

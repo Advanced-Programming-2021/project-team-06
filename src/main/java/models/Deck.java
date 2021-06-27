@@ -4,8 +4,8 @@ import models.cards.Card;
 import models.cards.Monster;
 import models.cards.Spell;
 import models.cards.Trap;
-import view.ConsoleBasedMenus;
-import view.Output;
+import view.console.ConsoleBasedMenus;
+import view.console.Output;
 
 import java.util.ArrayList;
 

@@ -3,7 +3,8 @@ package controller.menus;
 import models.Database;
 import controller.ErrorChecker;
 import models.Player;
-import view.Output;
+import view.graphics.Prompt;
+import view.graphics.PromptType;
 
 public class RegisterMenuController {
 
@@ -20,31 +21,31 @@ public class RegisterMenuController {
 
     public void createUser(String username, String nickname, String password) {
         if (ErrorChecker.doesUsernameExist(username)) {
-            Output.getInstance().showMessage("user with username " + username + " already exists");
+            Prompt.showMessage("user with username " + username + " already exists", PromptType.Error);
             return;
         }
         if (ErrorChecker.doesNicknameExist(nickname)) {
-            Output.getInstance().showMessage("user with nickname " + nickname + " already exists");
+            Prompt.showMessage("user with nickname " + nickname + " already exists", PromptType.Error);
             return;
         }
 
         new Player(username, nickname, password);
-        Output.getInstance().showMessage("user created successfully!");
+        Prompt.showMessage("user created successfully!", PromptType.Success);
     }
 
     public void login(String username, String password) {
 
         if (!ErrorChecker.doesUsernameExist(username)) {
-            Output.getInstance().showMessage("username and password didn't match!");
+            Prompt.showMessage("username and password didn't match!", PromptType.Error);
             return;
         }
         Player player = Database.getInstance().getPlayerByUsername(username);
         if (!ErrorChecker.isPasswordCorrect(player, password)) {
-            Output.getInstance().showMessage("username and password didn't match!");
+            Prompt.showMessage("username and password didn't match!", PromptType.Error);
             return;
         }
 
-        MainMenu.getInstance().setPlayerLoggedIn(player);
-        Output.getInstance().showMessage("user loggedIn successfully!");
+        MainMenuController.getInstance().setPlayerLoggedIn(player);
+        Prompt.showMessage("user loggedIn successfully!", PromptType.Success);
     }
 }

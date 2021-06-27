@@ -6,9 +6,7 @@ import models.cards.Card;
 import models.cards.Monster;
 import models.cards.Spell;
 import models.cards.Trap;
-import view.Output;
-
-import java.awt.datatransfer.StringSelection;
+import view.console.Output;
 
 public class ImpExpMenuController {
 

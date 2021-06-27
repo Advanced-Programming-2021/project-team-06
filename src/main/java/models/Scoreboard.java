@@ -1,6 +1,6 @@
 package models;
 
-import view.Output;
+import view.console.Output;
 
 import java.util.ArrayList;
 

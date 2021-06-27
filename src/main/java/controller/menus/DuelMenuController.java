@@ -6,8 +6,8 @@ import controller.ErrorChecker;
 import models.Database;
 import models.Player;
 import models.cards.Card;
-import view.GameInputs;
-import view.Output;
+import view.console.GameInputs;
+import view.console.Output;
 
 import java.lang.reflect.InvocationTargetException;
 

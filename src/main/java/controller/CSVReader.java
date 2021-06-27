@@ -1,12 +1,11 @@
 package controller;
 
-import view.Output;
+import view.console.Output;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
 
 public class CSVReader {
     public CSVReader(String pathToReadFrom , String pathToWriteTo) {

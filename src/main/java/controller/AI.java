@@ -3,7 +3,7 @@ package controller;
 
 import models.Player;
 import models.cards.*;
-import view.Output;
+import view.console.Output;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;

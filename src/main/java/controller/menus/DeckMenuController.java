@@ -5,7 +5,8 @@ import models.Database;
 import models.Deck;
 import models.Player;
 import models.cards.Card;
-import view.Output;
+import view.console.Output;
+
 import java.util.Objects;
 
 public class DeckMenuController {

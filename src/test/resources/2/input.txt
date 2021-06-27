@@ -1,5 +1,5 @@
 user login -u ali -p p
-menu enter Main
+menu enter view.console.RunFromConsole
 menu enter Duel
 duel new --second-player mhdi --rounds 3
 next phase

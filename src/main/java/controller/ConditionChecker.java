@@ -3,11 +3,9 @@ import models.Deck;
 import models.cards.Card;
 import models.cards.Monster;
 import models.cards.Spell;
-import models.cards.SpellProperty;
-import view.GameInputs;
-import view.Output;
+import view.console.GameInputs;
+import view.console.Output;
 
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
