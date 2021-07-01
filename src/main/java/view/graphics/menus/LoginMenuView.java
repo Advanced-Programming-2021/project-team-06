@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -21,7 +22,7 @@ import javafx.util.Duration;
 import java.io.IOException;
 
 public class LoginMenuView {
-    public Button backButton;
+    public ImageView backButton;
     public StackPane stackPane;
     public TextField usernameInput;
     public TextField passwordInput;
@@ -57,7 +58,7 @@ public class LoginMenuView {
         RegisterMenuController.getInstance().login(username, password);
         if (MainMenuController.getInstance().getPlayerLoggedIn() == null)
             return;
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/MainPage.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/MainMenu.fxml"));
         Scene scene = backButton.getScene();
         stackPane = (StackPane) scene.getRoot();
         stackPane.getChildren().add(root);
@@ -77,7 +78,5 @@ public class LoginMenuView {
         animationTimeLine.getKeyFrames().add(nextPageKeyFrame);
         animationTimeLine.play();
         currentPageAnimationTimeLine.play();
-        HBox hBox = ((HBox) (((VBox) root.getChildrenUnmodifiable().get(0)).getChildren().get(1)));
-        ((Label) hBox.getChildren().get(0)).setText(MainMenuController.getInstance().getPlayerLoggedIn().getUsername());
     }
 }

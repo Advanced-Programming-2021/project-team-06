@@ -10,13 +10,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
 import java.io.IOException;
 
 public class RegisterMenuView {
-    public Button backButton;
+    public ImageView backButton;
     public StackPane stackPane;
     public TextField registerUsernameInput;
     public TextField registerPasswordInput;

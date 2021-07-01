@@ -8,7 +8,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -19,8 +19,7 @@ import java.io.IOException;
 
 public class WelcomeMenuView extends Application {
 
-    public Button registerButton;
-    public Button loginButton;
+    public ImageView registerButton;
     public StackPane stackPane;
 
     public static void main(String[] args) {
@@ -32,7 +31,6 @@ public class WelcomeMenuView extends Application {
     public void start(Stage stage) throws Exception {
         Parent pane = FXMLLoader.load(getClass().getResource("/fxml/WelcomeMenu.fxml"));
         Scene scene = new Scene(pane);
-        //scene.getStylesheets().add(getClass().getResource("css/FirstPage.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
     }
@@ -47,7 +45,7 @@ public class WelcomeMenuView extends Application {
         Scene scene = registerButton.getScene();
         root.translateXProperty().set(-1200);
         stackPane.getChildren().add(root);
-        //scene.getStylesheets().add(getClass().getResource("css/RegisterPage.css").toExternalForm());
+        System.out.println(12);
         Timeline animationTimeLine = new Timeline();
         Timeline currentPageAnimationTimeLine = new Timeline();
         KeyValue currentPageKeyValue = new KeyValue(scene.getRoot().getChildrenUnmodifiable().get(0).translateXProperty(), 1200, Interpolator.EASE_IN);
@@ -58,6 +56,7 @@ public class WelcomeMenuView extends Application {
         animationTimeLine.getKeyFrames().add(nextPageKeyFrame);
         animationTimeLine.play();
         currentPageAnimationTimeLine.play();
+        System.out.println(scene);
         animationTimeLine.setOnFinished(actionEvent -> stackPane.getChildren().remove(scene.getRoot().getChildrenUnmodifiable().get(0)));
     }
 
@@ -66,7 +65,6 @@ public class WelcomeMenuView extends Application {
         Scene scene = registerButton.getScene();
         root.translateXProperty().set(+1200);
         stackPane.getChildren().add(root);
-        //scene.getStylesheets().add(getClass().getResource("css/RegisterPage.css").toExternalForm());
         Timeline animationTimeLine = new Timeline();
         Timeline currentPageAnimationTimeLine = new Timeline();
         KeyValue currentPageKeyValue = new KeyValue(scene.getRoot().getChildrenUnmodifiable().get(0).translateXProperty(), -1200, Interpolator.EASE_IN);
