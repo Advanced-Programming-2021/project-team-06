@@ -45,7 +45,6 @@ public class WelcomeMenuView extends Application {
         Scene scene = registerButton.getScene();
         root.translateXProperty().set(-1200);
         stackPane.getChildren().add(root);
-        System.out.println(12);
         Timeline animationTimeLine = new Timeline();
         Timeline currentPageAnimationTimeLine = new Timeline();
         KeyValue currentPageKeyValue = new KeyValue(scene.getRoot().getChildrenUnmodifiable().get(0).translateXProperty(), 1200, Interpolator.EASE_IN);
@@ -56,7 +55,6 @@ public class WelcomeMenuView extends Application {
         animationTimeLine.getKeyFrames().add(nextPageKeyFrame);
         animationTimeLine.play();
         currentPageAnimationTimeLine.play();
-        System.out.println(scene);
         animationTimeLine.setOnFinished(actionEvent -> stackPane.getChildren().remove(scene.getRoot().getChildrenUnmodifiable().get(0)));
     }
 

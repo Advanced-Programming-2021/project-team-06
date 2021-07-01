@@ -30,7 +30,7 @@
                 <Image url="@../image/button.jpg"/>
             </ImageView>
             <Text fill="#daa3a3" layoutX="577.0" layoutY="406.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Register"
-                  textAlignment="CENTER" wrappingWidth="83.13671875">
+                  textAlignment="CENTER" wrappingWidth="83.13671875" onMouseClicked="#registerUser">
                 <font>
                     <Font name="NPIOuj" size="24.0"/>
                 </font>
