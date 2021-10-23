@@ -1,6 +1,6 @@
 # Advanced Programming Project - Spring 2021
 ## Team 06
-
+it's well known game called "yugioh" and our team tried to remake it on java platform for advanced programming project in spring 2021
 ### Team Members:
 - Mahdi Alizade 99101932
 - Ali Safarafard 99105583
